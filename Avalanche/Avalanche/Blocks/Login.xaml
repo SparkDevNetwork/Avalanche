@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalanche.Blocks.Login">
+    <ContentView.Content>
+        <StackLayout>
+            <Label Text="Login" FontSize="Large" />
+            <Entry x:Name="username" Placeholder="Username" />
+            <Entry x:Name="password" IsPassword="True" Placeholder="password" />
+            <Button x:Name="btnSubmit" Text="Login" Clicked="btnSubmit_Clicked" />
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

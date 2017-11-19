@@ -13,7 +13,7 @@ namespace Avalanche
 		{
 			InitializeComponent();
 
-			MainPage = new Avalanche.MainPage();
+			MainPage = new Avalanche.MainPage( "page/1489" );
 		}
 
 		protected override void OnStart ()

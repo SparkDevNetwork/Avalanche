@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalanche.Layouts.FullWidth">
+  <ContentView.Content>
+        <StackLayout>
+            <StackLayout x:Name="Feature">
+            </StackLayout>
+            <StackLayout x:Name="Main">
+            </StackLayout>
+            <StackLayout x:Name="SectionA">
+            </StackLayout>
+            <StackLayout Orientation="Horizontal">
+                <StackLayout x:Name="SectionB">
+                </StackLayout>
+                <StackLayout x:Name="SectionC">
+                </StackLayout>
+                <StackLayout x:Name="SectionD">
+                </StackLayout>
+            </StackLayout>
+        </StackLayout>
+  </ContentView.Content>
+</ContentView>
