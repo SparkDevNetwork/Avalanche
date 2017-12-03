@@ -14,20 +14,9 @@ namespace Avalanche
             InitializeComponent();
             RockClient.CreateDatabase();
             RockClient.ClearDatabase();
-            LoadConverters();
             MainPage = new Avalanche.MainPage( "page/509" );
         }
 
-        private void LoadConverters()
-        {
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                       .SelectMany( assembly => assembly.GetTypes() )
-                       .Where( type => type.IsSubclassOf( typeof( TypeConverter ) ) ).ToList();
-            foreach (var type in types )
-            {
-                var attributes = type.GetCustomAttributes( false );
-            }
-        }
 
         protected override void OnStart()
         {
