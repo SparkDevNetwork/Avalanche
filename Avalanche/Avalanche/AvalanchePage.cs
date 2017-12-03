@@ -19,7 +19,7 @@ namespace Avalanche
                 var mainGrid = this.FindByName<Grid>( "MainGrid" );
                 if ( mainGrid != null )
                 {
-                    var image = new Image()
+                    var image = new FFImageLoading.Forms.CachedImage()
                     {
                         Aspect = Aspect.AspectFill,
                         Source = value

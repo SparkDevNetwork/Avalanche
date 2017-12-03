@@ -40,6 +40,10 @@ namespace Avalanche.Utilities
                 {
                     property.SetValue( obj, new ColorTypeConverter().ConvertFromInvariantString( attribute.Value ) );
                 }
+                else if ( property.PropertyType == typeof( ImageSource ) )
+                {
+                    property.SetValue( obj, new FFImageLoading.Forms.ImageSourceConverter().ConvertFromInvariantString( attribute.Value ) );
+                }
             }
         }
     }

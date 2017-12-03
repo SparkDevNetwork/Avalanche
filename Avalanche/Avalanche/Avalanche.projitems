@@ -13,6 +13,7 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AvalanchePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Button.xaml.cs">
