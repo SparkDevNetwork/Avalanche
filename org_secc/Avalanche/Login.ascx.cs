@@ -14,12 +14,12 @@ using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
 
-namespace RockWeb.Plugins.org_secc.Avalanche
+namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Login App" )]
     [Category( "SECC > Avalanche" )]
     [Description( "Login Screen" )]
-    public partial class Login : RockBlock, IAvalanche
+    public partial class Login : RockBlock, IMobileResource
     {
 
         /// <summary>

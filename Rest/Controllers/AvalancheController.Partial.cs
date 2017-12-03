@@ -23,7 +23,7 @@ namespace Avalanche.Rest.Controllers
     {
         [HttpGet]
         [Authenticate]
-        [System.Web.Http.Route( "api/org.secc/avalanche/page/{id}" )]
+        [System.Web.Http.Route( "api/avalanche/page/{id}" )]
         public MobilePage GetPage( int id )
         {
             var person = GetPerson();
@@ -41,6 +41,10 @@ namespace Avalanche.Rest.Controllers
 
             MobilePage mobilePage = new MobilePage();
             mobilePage.LayoutType = pageCache.Layout.Name;
+            foreach (var attribute in pageCache.AttributeValues )
+            {
+                mobilePage.Attributes.Add( attribute.Key, attribute.Value.ValueFormatted );
+            }
             foreach ( var block in pageCache.Blocks )
             {
                 if ( block.IsAuthorized( Authorization.VIEW, person ) )
@@ -48,14 +52,15 @@ namespace Avalanche.Rest.Controllers
                     var blockCache = BlockCache.Read( block.Id );
                     var control = ( RockBlock ) cmsPage.TemplateControl.LoadControl( blockCache.BlockType.Path );
 
-                    if ( control is IAvalanche && control is RockBlock )
+                    if ( control is RockBlock && control is IMobileResource )
                     {
                         control.SetBlock( pageCache, blockCache );
-                        var avalanche = control as IAvalanche;
-                        var mobileBlock = avalanche.GetMobile();
+                        var mobileResource = control as IMobileResource;
+                        var mobileBlock = mobileResource.GetMobile();
                         mobileBlock.BlockId = blockCache.Id;
                         mobileBlock.Zone = blockCache.Zone;
                         mobilePage.Blocks.Add( mobileBlock );
+
                     }
                 }
             }

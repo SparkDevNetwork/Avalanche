@@ -16,12 +16,12 @@ using Rock.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Button" )]
+    [DisplayName( "Html Detail" )]
     [Category( "SECC > Avalanche" )]
-    [Description( "A button." )]
-    [TextField( "Text", "Text which will appear on the button." )]
-    [TextField( "Page Number", "Number of the page to navigate to." )]
-    public partial class Button : RockBlock, IMobileResource
+    [Description( "A control to display Markdown." )]
+    [CodeEditorField( "Html", "Html code to be rendered in app.", Rock.Web.UI.Controls.CodeEditorMode.Html,
+        Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
+    public partial class HtmlDetail : RockBlock, IMobileResource
     {
 
         /// <summary>
@@ -30,18 +30,17 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            btnButton.Text = GetAttributeValue( "Text" );
+            lbHtml.Text = GetAttributeValue( "Html" );
         }
 
         public MobileBlock GetMobile()
         {
             return new MobileBlock()
             {
-                BlockType = "Avalanche.Blocks.Button",
+                BlockType = "Avalanche.Blocks.HtmlDetail",
                 Body = new Dictionary<string, string>
                 {
-                    { "Text", GetAttributeValue("Text") },
-                    { "PageNumber", GetAttributeValue("PageNumber") }
+                    { "Content", GetAttributeValue("Html") }
                 }
             };
         }
@@ -49,11 +48,6 @@ namespace RockWeb.Plugins.Avalanche
         public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
         {
             return Body;
-        }
-
-        protected void btnButton_Click( object sender, EventArgs e )
-        {
-            Response.Redirect( "/page/" + GetAttributeValue( "PageNumber" ) );
         }
     }
 }

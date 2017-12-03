@@ -16,12 +16,13 @@ using Rock.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Button" )]
+    [DisplayName( "Markdown Detail" )]
     [Category( "SECC > Avalanche" )]
-    [Description( "A button." )]
-    [TextField( "Text", "Text which will appear on the button." )]
-    [TextField( "Page Number", "Number of the page to navigate to." )]
-    public partial class Button : RockBlock, IMobileResource
+    [Description( "A control to display Markdown." )]
+    [CodeEditorField( "Markdown", "Markdown code to be rendered in app.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
+        Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
+    [TextField( "Margin", "Comma separated margins starting on the left and moving counter clockwise.", false )]
+    public partial class MarkdownDetail : RockBlock, IMobileResource
     {
 
         /// <summary>
@@ -30,18 +31,19 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            btnButton.Text = GetAttributeValue( "Text" );
+            lbMarkdown.Text = GetAttributeValue( "Markdown" );
         }
 
         public MobileBlock GetMobile()
         {
             return new MobileBlock()
             {
-                BlockType = "Avalanche.Blocks.Button",
+                BlockType = "Avalanche.Blocks.MarkdownDetail",
                 Body = new Dictionary<string, string>
                 {
-                    { "Text", GetAttributeValue("Text") },
-                    { "PageNumber", GetAttributeValue("PageNumber") }
+                    { "Content", GetAttributeValue("Markdown") },
+                    {"Margin", GetAttributeValue("Margin") }
+
                 }
             };
         }
@@ -49,11 +51,6 @@ namespace RockWeb.Plugins.Avalanche
         public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
         {
             return Body;
-        }
-
-        protected void btnButton_Click( object sender, EventArgs e )
-        {
-            Response.Redirect( "/page/" + GetAttributeValue( "PageNumber" ) );
         }
     }
 }

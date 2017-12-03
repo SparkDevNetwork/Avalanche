@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Button.ascx.cs" Inherits="RockWeb.Plugins.org_secc.Avalanche.Button" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="Button.ascx.cs" Inherits="RockWeb.Plugins.Avalanche.Button" %>
 
 <asp:UpdatePanel runat="server">
     <ContentTemplate>
