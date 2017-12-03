@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace org.secc.Avalanche.Models
+namespace Avalanche.Models
 {
     public class MobileBlock
     {

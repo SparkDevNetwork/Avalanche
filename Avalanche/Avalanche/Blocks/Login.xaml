@@ -8,6 +8,7 @@
             <Entry x:Name="username" Placeholder="Username" />
             <Entry x:Name="password" IsPassword="True" Placeholder="password" />
             <Button x:Name="btnSubmit" Text="Login" Clicked="btnSubmit_Clicked" />
+            <Button x:Name="btnLogout" Text="Logout" Clicked="btnLogout_Clicked" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Avalanche.Utilities;
-using Avalanche;
+
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Avalanche.Blocks
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class Login : ContentView, IRenderable
+    public partial class HtmlDetail : ContentView, IRenderable
     {
-        public Login()
+        public HtmlDetail()
         {
             InitializeComponent();
         }
@@ -22,17 +21,10 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
+            var html = Attributes["Content"];
+            var htmlSource = new HtmlWebViewSource() { Html = html };
+            wvContent.Source = html;
             return this;
-        }
-
-        private async void btnSubmit_Clicked( object sender, EventArgs e )
-        {
-            var response = await RockClient.LogIn( username.Text, password.Text );
-        }
-
-        private async void btnLogout_Clicked( object sender, EventArgs e )
-        {
-            RockClient.Logout();
         }
     }
 }

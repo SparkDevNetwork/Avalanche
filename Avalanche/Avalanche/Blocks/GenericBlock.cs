@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using org.secc.Avalanche;
+using Avalanche;
 using Xamarin.Forms;
 
 namespace Avalanche.Blocks

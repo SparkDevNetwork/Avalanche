@@ -6,15 +6,17 @@ using System.Text;
 using System.Threading.Tasks;
 using RestSharp;
 using Xamarin.Forms;
-using org.secc.Avalanche.Models;
-using org.secc.Avalanche;
+using Avalanche;
 using Avalanche.Blocks;
 using Avalanche.Utilities;
+using Avalanche.Models;
 
 namespace Avalanche
 {
-    public partial class MainPage : ContentPage
+    public partial class MainPage : AvalanchePage
     {
+        ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
+
         public MainPage()
         {
             throw new NotImplementedException();
@@ -23,22 +25,43 @@ namespace Avalanche
         public MainPage( string resource )
         {
             InitializeComponent();
-            var client = new RestClient( Constants.serverUrl );
-            var request = new RestRequest( "/api/org.secc/avalanche/" + resource, Method.GET );
-            request.AddHeader( "Accept", "application/json" );
-            var response = client.Execute<MobilePage>( request );
-            var page = response.Data;
+            observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
+        }
+
+        private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
+        {
+            HandleResponse();
+        }
+
+        private void HandleResponse()
+        {
+            var page = observableResource.Resource as MobilePage;
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
             var layout = ( ContentView ) Activator.CreateInstance( layoutType );
 
-            foreach ( var child in page.Blocks )
+            //Modify the page with attributes
+            AttributeHelper.ApplyTranslation( this, page.Attributes );
+
+            //Put blocks into the layout
+            foreach ( var block in page.Blocks )
             {
-                IRenderable mobileBlock = ( IRenderable ) Activator.CreateInstance( Type.GetType( child.BlockType ) );
-                mobileBlock.Attributes = child.Body;
-                var zone = layout.FindByName<Layout<View>>( child.Zone );
-                zone.Children.Add( mobileBlock.Render() );
+                var blockType = Type.GetType( block.BlockType );
+                if ( blockType != null )
+                {
+                    IRenderable mobileBlock = ( IRenderable ) Activator.CreateInstance( blockType );
+                    mobileBlock.Attributes = block.Body;
+                    var zone = layout.FindByName<Layout<View>>( block.Zone );
+                    if ( zone != null )
+                    {
+                        var renderedBlock = mobileBlock.Render();
+                        AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
+                        zone.Children.Add( renderedBlock );
+                    }
+                }
             }
-            Content = layout;
+            MainGrid.Children.Add( layout );
+            ActivityIndicator.IsRunning = false;
         }
 
 

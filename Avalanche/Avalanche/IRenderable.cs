@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace org.secc.Avalanche
+namespace Avalanche
 {
     public interface IRenderable
     {

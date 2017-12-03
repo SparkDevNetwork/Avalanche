@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+<local:AvalanchePage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Avalanche"
              x:Class="Avalanche.MainPage">
-</ContentPage>
+    <Grid x:Name="MainGrid">
+        <ActivityIndicator Color="Orange" Scale=".5" x:Name="ActivityIndicator" IsRunning="True"/>
+    </Grid>
+</local:AvalanchePage>
