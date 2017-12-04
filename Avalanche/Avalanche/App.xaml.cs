@@ -14,7 +14,7 @@ namespace Avalanche
             InitializeComponent();
             RockClient.CreateDatabase();
             RockClient.ClearDatabase();
-            MainPage = new Avalanche.MainPage( "page/509" );
+            MainPage = new NavigationPage( new Avalanche.MainPage( "page/509" ) );
         }
 
 

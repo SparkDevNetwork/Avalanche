@@ -13,14 +13,11 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AvalanchePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\LabelBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\Button.xaml.cs">
-      <DependentUpon>Button.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\GenericBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\HtmlDetail.xaml.cs">
       <DependentUpon>HtmlDetail.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -63,12 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\FullWidth.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\Button.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -25,6 +25,7 @@ namespace Avalanche
         public MainPage( string resource )
         {
             InitializeComponent();
+            NavigationPage.SetHasNavigationBar( this, false );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
         }
@@ -60,8 +61,17 @@ namespace Avalanche
                     }
                 }
             }
-            MainGrid.Children.Add( layout );
-            ActivityIndicator.IsRunning = false;
+            if ( ActivityIndicator.IsRunning == false )
+            {
+                layout.Opacity = 0;
+                MainGrid.Children.Add( layout );
+                layout.FadeTo( 1, 500, Easing.CubicInOut );
+            }
+            else
+            {
+                MainGrid.Children.Add( layout );
+                ActivityIndicator.IsRunning = false;
+            }
         }
 
 

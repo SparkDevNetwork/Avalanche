@@ -18,7 +18,7 @@ namespace Avalanche.Utilities
             {typeof(GridLength).Name, new GridLengthTypeConverter() },
             {typeof(Keyboard).Name, new KeyboardTypeConverter() },
             // Image source converter added as a comment to say this conversion is handled specially
-            // because of the FFLoadingCache has a slightly different image source type
+            // because of the FFLoadingCache has a slightly different converter
             // {typeof(ImageSource).Name, new ImageSourceConverter() }, 
             {typeof(List<string>).Name, new ListStringTypeConverter() },
             {typeof(LayoutOptions).Name, new LayoutOptionsConverter() },
@@ -41,7 +41,7 @@ namespace Avalanche.Utilities
                 }
 
                 var property = obj.GetType().GetProperty( attribute.Key );
-                if ( property == null )
+                if ( property == null || !property.CanWrite )
                 {
                     continue;
                 }
@@ -52,8 +52,7 @@ namespace Avalanche.Utilities
                 }
                 else if ( property.PropertyType == typeof( int ) )
                 {
-                    int value = 0;
-                    int.TryParse( attribute.Value, out value );
+                    int.TryParse( attribute.Value, out int value );
                     property.SetValue( obj, value );
                 }
                 else if ( property.PropertyType == typeof( ImageSource ) )
