@@ -16,14 +16,13 @@ using Rock.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Image Block" )]
+    [DisplayName( "Label Block" )]
     [Category( "SECC > Avalanche" )]
     [Description( "A button." )]
-    [BinaryFileField( Rock.SystemGuid.BinaryFiletype.CONTENT_CHANNEL_ITEM_IMAGE, "Image", "Image to be displayed" )]
 
-    [IntegerField( "Aspect", "Aspect to use. AspectFit: 0, AspectFill:1, Fit:2", false )]
+    [TextField( "Text", "The text of the label to be displayed.", false )]
     [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
-    public partial class ImageBlock : RockBlock, IMobileResource
+    public partial class LabelBlock : RockBlock, IMobileResource
     {
 
         /// <summary>
@@ -32,24 +31,24 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
+            lbLabel.Text = GetAttributeValue( "Text" );
+            var fontsize = GetAttributeValue( "FontSize" ).AsInteger();
+            if ( fontsize != 0 )
             {
-                iImage.ImageUrl = string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) );
+                lbLabel.Style.Add( "font-size", GetAttributeValue( "FontSize" ) + "px" );
+            }
+            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "TextColor" ) ) )
+            {
+                lbLabel.Style.Add( "color", GetAttributeValue( "TextColor" ) );
             }
         }
 
         public MobileBlock GetMobile()
         {
-            var attributes = new Dictionary<string, string>();
-
-            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
+            var attributes = new Dictionary<string, string>
             {
-                attributes.Add( "Source", string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) ) );
-            }
-            if ( new List<string> { "0", "1", "2" }.Contains( GetAttributeValue( "Aspect" ) ) )
-            {
-                attributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
-            }
+                { "Text", GetAttributeValue("Text") }
+            };
 
             var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
             foreach ( var item in customs )
@@ -59,7 +58,7 @@ namespace RockWeb.Plugins.Avalanche
 
             return new MobileBlock()
             {
-                BlockType = "Avalanche.Blocks.ImageBlock",
+                BlockType = "Avalanche.Blocks.LabelBlock",
                 Body = attributes
             };
         }
@@ -67,11 +66,6 @@ namespace RockWeb.Plugins.Avalanche
         public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
         {
             return Body;
-        }
-
-        protected void btnButton_Click( object sender, EventArgs e )
-        {
-            Response.Redirect( "/page/" + GetAttributeValue( "PageNumber" ) );
         }
     }
 }
