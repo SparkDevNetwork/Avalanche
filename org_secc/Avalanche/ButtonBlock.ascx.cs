@@ -33,7 +33,7 @@ namespace RockWeb.Plugins.Avalanche
             btnButton.Text = GetAttributeValue( "Text" );
         }
 
-        public MobileBlock GetMobile()
+        public MobileBlock GetMobile( string arg )
         {
             var attributes = new Dictionary<string, string> {
                 { "Text", GetAttributeValue("Text") },
@@ -52,10 +52,15 @@ namespace RockWeb.Plugins.Avalanche
                 Body = attributes
             };
         }
-
-        public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
+        public MobileBlockResponse HandleRequest( string arg, Dictionary<string, string> Body )
         {
-            return Body;
+            var cu = CurrentUser;
+            return new MobileBlockResponse()
+            {
+                Arg = arg,
+                Response = Rock.RockDateTime.Now.ToString( "h:mm ss" ),
+                TTL = 30
+            };
         }
 
         protected void btnButton_Click( object sender, EventArgs e )

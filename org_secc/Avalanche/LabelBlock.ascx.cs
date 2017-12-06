@@ -43,7 +43,7 @@ namespace RockWeb.Plugins.Avalanche
             }
         }
 
-        public MobileBlock GetMobile()
+        public MobileBlock GetMobile( string arg )
         {
             var attributes = new Dictionary<string, string>
             {
@@ -63,9 +63,9 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
+        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
         {
-            return Body;
+            throw new NotImplementedException();
         }
     }
 }

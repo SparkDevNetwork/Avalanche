@@ -59,6 +59,7 @@
   <ItemGroup>
     <Compile Include="AvalancheUtilities.cs" />
     <Compile Include="IMobileResource.cs" />
+    <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />
     <Compile Include="Models\MobilePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -33,7 +33,7 @@ namespace RockWeb.Plugins.Avalanche
             lbHtml.Text = GetAttributeValue( "Html" );
         }
 
-        public MobileBlock GetMobile()
+        public MobileBlock GetMobile( string arg )
         {
             return new MobileBlock()
             {
@@ -44,10 +44,9 @@ namespace RockWeb.Plugins.Avalanche
                 }
             };
         }
-
-        public Dictionary<string, string> HandlePostback( Dictionary<string, string> Body )
+        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
         {
-            return Body;
+            throw new NotImplementedException();
         }
     }
 }
