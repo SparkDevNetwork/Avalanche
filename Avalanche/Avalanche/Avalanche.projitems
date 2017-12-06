@@ -16,6 +16,9 @@
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\LabelBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlockResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\HtmlDetail.xaml.cs">

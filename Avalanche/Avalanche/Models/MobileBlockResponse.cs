@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using SQLite;
 
 namespace Avalanche.Models
 {
-    public class WebResource
+    public class MobileBlockResponse
     {
-        [PrimaryKey]
-        public string Url { get; set; }
+        public string Arg { get; set; }
         public string Response { get; set; }
-        public DateTime EOL { get; set; }
+        public int TTL { get; set; }
     }
 }

@@ -12,7 +12,7 @@ namespace Avalanche
     {
         public static void GetPage( string resource )
         {
-            App.Current.MainPage.Navigation.PushAsync( new MainPage( resource ) );
+            App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource ) );
         }
     }
 }

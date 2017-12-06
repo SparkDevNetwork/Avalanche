@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Avalanche.Models;
 using Xamarin.Forms;
 
 namespace Avalanche
@@ -8,6 +9,7 @@ namespace Avalanche
     public class AvalanchePage : ContentPage
     {
         private string _backgroundImage;
+
         public new string BackgroundImage
         {
             get
@@ -16,6 +18,7 @@ namespace Avalanche
             }
             set
             {
+                _backgroundImage = value;
                 var mainGrid = this.FindByName<Grid>( "MainGrid" );
                 if ( mainGrid != null )
                 {

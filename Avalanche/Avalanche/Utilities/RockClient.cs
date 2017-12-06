@@ -25,14 +25,14 @@ namespace Avalanche.Utilities
             var webResource = await GetDBResource( url );
             if ( webResource != null && refresh == false )
             {
-                var resourceObject = JsonConvert.DeserializeObject<T>( webResource.Resource );
+                var resourceObject = Deserialize<T>( webResource.Response );
                 resource.Resource = resourceObject;
                 if ( webResource.EOL < DateTime.Now )
                 {
                     var newWebResource = await DownloadResource( url );
-                    if ( newWebResource != null && webResource.Resource != newWebResource.Resource )
+                    if ( newWebResource != null && webResource.Response != newWebResource.Response )
                     {
-                        resource.Resource = JsonConvert.DeserializeObject<T>( newWebResource.Resource );
+                        resource.Resource = Deserialize<T>( newWebResource.Response );
                     }
                 }
             }
@@ -41,10 +41,52 @@ namespace Avalanche.Utilities
                 webResource = await DownloadResource( url );
                 if ( webResource != null )
                 {
-                    resource.Resource = JsonConvert.DeserializeObject<T>( webResource.Resource );
+                    resource.Resource = Deserialize<T>( webResource.Response );
                 }
             }
 
+        }
+
+        public async static void PostResource<T>( ObservableResource<T> resource, string url, Dictionary<string, string> body )
+        {
+            try
+            {
+                using ( var client = new HttpClient() )
+                {
+                    client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+
+                    string token = await GetAccessToken();
+                    if ( !string.IsNullOrWhiteSpace( token ) )
+                    {
+                        client.DefaultRequestHeaders.Add( "client_id", Constants.client_id );
+                        client.DefaultRequestHeaders.Add( "client_id", Constants.client_secret );
+                        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( "Bearer", token );
+                    }
+                    var content = new FormUrlEncodedContent( body );
+                    using ( var r = await client.PostAsync( new Uri( Constants.serverUrl + url ), content ) )
+                    {
+                        string result = await r.Content.ReadAsStringAsync();
+                        if ( string.IsNullOrWhiteSpace( result ) )
+                        {
+                            return;
+                        }
+                        resource.Resource = Deserialize<T>( result );
+                    }
+                }
+            }
+            catch
+            {
+                return;
+            } //Eat network issues
+        }
+
+        private static T Deserialize<T>( string response )
+        {
+            if ( typeof( T ) == typeof( string ) )
+            {
+                return ( T ) Convert.ChangeType( response, typeof( T ) );
+            }
+            return JsonConvert.DeserializeObject<T>( response );
         }
 
         private async static Task<WebResource> DownloadResource( string url )
@@ -82,7 +124,7 @@ namespace Avalanche.Utilities
                         var webResource = new WebResource()
                         {
                             Url = url,
-                            Resource = result,
+                            Response = result,
                             EOL = DateTime.Now.AddSeconds( ttl )
                         };
 
@@ -101,6 +143,7 @@ namespace Avalanche.Utilities
             } //Eat network issues
         }
 
+
         private async static Task<string> GetAccessToken()
         {
             var appProp = App.Current.Properties;
@@ -113,7 +156,7 @@ namespace Avalanche.Utilities
             }
             try
             {
-                return ( string ) await Refresh();
+                return ( string ) await RefreshAuth();
             }
             catch ( Exception e )
             {
@@ -121,7 +164,7 @@ namespace Avalanche.Utilities
             }
         }
 
-        private async static Task<string> Refresh()
+        private async static Task<string> RefreshAuth()
         {
             var appProp = App.Current.Properties;
 

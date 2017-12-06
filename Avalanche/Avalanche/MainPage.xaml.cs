@@ -52,6 +52,14 @@ namespace Avalanche
                 {
                     IRenderable mobileBlock = ( IRenderable ) Activator.CreateInstance( blockType );
                     mobileBlock.Attributes = block.Body;
+
+                    //Setup postback handler if required
+                    if ( mobileBlock is IHasBlockMessenger )
+                    {
+                        var hasPostbackBlock = mobileBlock as IHasBlockMessenger;
+                        hasPostbackBlock.MessageHandler = new BlockMessenger( block.BlockId );
+                    }
+
                     var zone = layout.FindByName<Layout<View>>( block.Zone );
                     if ( zone != null )
                     {
