@@ -10,6 +10,8 @@ namespace Avalanche.Models
     public class MobilePage
     {
         public int PageId { get; set; }
+        public string Title { get; set; }
+        public bool ShowTitle { get; set; }
         public string LayoutType { get; set; }
         public List<MobileBlock> Blocks { get; set; }
         public Dictionary<string, string> Attributes { get; set; }

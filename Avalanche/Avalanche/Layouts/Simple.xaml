@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="Avalanche.Layouts.Simple">
+    <ContentView.Content>
+        <StackLayout Spacing="0">
+            <StackLayout x:Name="Feature" Spacing="0" />
+            <ScrollView>
+                <StackLayout Spacing="0">
+                    <Grid>
+                        <StackLayout x:Name="Bottom" Spacing="0" />
+                        <StackLayout x:Name="Middle" Spacing="0" />
+                        <StackLayout x:Name="Top" Spacing="0" />
+                    </Grid>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="1*" />
+                        </Grid.ColumnDefinitions>
+                        <StackLayout x:Name="Left" Spacing="0" Grid.Column="0" />
+                        <StackLayout x:Name="Right" Spacing="0" Grid.Column="1" />
+                    </Grid>
+                </StackLayout>
+            </ScrollView>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

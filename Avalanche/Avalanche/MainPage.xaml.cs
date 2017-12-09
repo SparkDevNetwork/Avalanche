@@ -38,6 +38,8 @@ namespace Avalanche
         private void HandleResponse()
         {
             var page = observableResource.Resource as MobilePage;
+            this.Title = page.Title;
+            NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
             var layout = ( ContentView ) Activator.CreateInstance( layoutType );
 
@@ -51,7 +53,7 @@ namespace Avalanche
                 if ( blockType != null )
                 {
                     IRenderable mobileBlock = ( IRenderable ) Activator.CreateInstance( blockType );
-                    mobileBlock.Attributes = block.Body;
+                    mobileBlock.Attributes = block.Attributes;
 
                     //Setup postback handler if required
                     if ( mobileBlock is IHasBlockMessenger )
@@ -63,15 +65,23 @@ namespace Avalanche
                     var zone = layout.FindByName<Layout<View>>( block.Zone );
                     if ( zone != null )
                     {
-                        var renderedBlock = mobileBlock.Render();
-                        AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
-                        zone.Children.Add( renderedBlock );
+                        try
+                        {
+                            var renderedBlock = mobileBlock.Render();
+                            AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
+                            zone.Children.Add( renderedBlock );
+                        }
+                        catch
+                        {
+                            //
+                        }
                     }
                 }
             }
             if ( ActivityIndicator.IsRunning == false )
             {
                 layout.Opacity = 0;
+                MainGrid.Children.Clear();
                 MainGrid.Children.Add( layout );
                 layout.FadeTo( 1, 500, Easing.CubicInOut );
             }
@@ -81,7 +91,5 @@ namespace Avalanche
                 ActivityIndicator.IsRunning = false;
             }
         }
-
-
     }
 }
