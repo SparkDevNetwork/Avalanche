@@ -19,7 +19,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Login App" )]
     [Category( "SECC > Avalanche" )]
     [Description( "Login Screen" )]
-    public partial class Login : RockBlock, IMobileResource
+    public partial class Login : AvalancheBlock
     {
 
         /// <summary>
@@ -30,18 +30,13 @@ namespace RockWeb.Plugins.Avalanche
         {
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string arg )
         {
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.Login",
-                Body = new Dictionary<string, string>()
+                Attributes = new Dictionary<string, string>()
             };
-        }
-
-        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
-        {
-            throw new NotImplementedException();
         }
     }
 }

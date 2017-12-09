@@ -2,6 +2,6 @@
 
 <asp:UpdatePanel runat="server">
     <ContentTemplate>
-        <asp:Image ID="iImage" runat="server" />
+        <Rock:ImageUploader runat="server" ID="img" OnImageUploaded="img_ImageUploaded" OnImageRemoved="img_ImageRemoved" />
     </ContentTemplate>
 </asp:UpdatePanel>

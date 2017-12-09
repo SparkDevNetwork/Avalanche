@@ -57,7 +57,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AvalancheBlockCustomSettings.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="AvalancheUtilities.cs" />
+    <Compile Include="AvalancheBlock.cs">
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
     <Compile Include="IMobileResource.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />

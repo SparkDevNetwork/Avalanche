@@ -43,6 +43,8 @@ namespace Avalanche.Rest.Controllers
 
             MobilePage mobilePage = new MobilePage();
             mobilePage.LayoutType = pageCache.Layout.Name;
+            mobilePage.Title = pageCache.PageTitle;
+            mobilePage.ShowTitle = pageCache.PageDisplayTitle;
             foreach ( var attribute in pageCache.AttributeValues )
             {
                 mobilePage.Attributes.Add( attribute.Key, attribute.Value.ValueFormatted );

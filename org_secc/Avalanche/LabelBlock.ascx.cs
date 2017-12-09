@@ -21,8 +21,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "A button." )]
 
     [TextField( "Text", "The text of the label to be displayed.", false )]
-    [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
-    public partial class LabelBlock : RockBlock, IMobileResource
+    public partial class LabelBlock : AvalancheBlock
     {
 
         /// <summary>
@@ -43,29 +42,15 @@ namespace RockWeb.Plugins.Avalanche
             }
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string arg )
         {
-            var attributes = new Dictionary<string, string>
-            {
-                { "Text", GetAttributeValue("Text") }
-            };
-
-            var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
-            foreach ( var item in customs )
-            {
-                attributes[item.Key] = HttpUtility.UrlDecode( ( string ) item.Value );
-            }
+            CustomAttributes["Text"] = GetAttributeValue( "Text" );
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.LabelBlock",
-                Body = attributes
+                Attributes = CustomAttributes
             };
-        }
-
-        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
-        {
-            throw new NotImplementedException();
         }
     }
 }

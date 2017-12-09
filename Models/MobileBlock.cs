@@ -11,6 +11,6 @@ namespace Avalanche.Models
         public int BlockId { get; set; }
         public string Zone { get; set; }
         public string BlockType { get; set; }
-        public Dictionary<string, string> Body { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
     }
 }

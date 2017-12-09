@@ -22,8 +22,7 @@ namespace RockWeb.Plugins.Avalanche
     [BinaryFileField( Rock.SystemGuid.BinaryFiletype.CONTENT_CHANNEL_ITEM_IMAGE, "Image", "Image to be displayed" )]
 
     [IntegerField( "Aspect", "Aspect to use. AspectFit: 0, AspectFill:1, Fit:2", false )]
-    [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
-    public partial class ImageBlock : RockBlock, IMobileResource
+    public partial class ImageBlock : AvalancheBlock
     {
 
         /// <summary>
@@ -32,41 +31,52 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
+            img.BinaryFileTypeGuid = Rock.SystemGuid.BinaryFiletype.MEDIA_FILE.AsGuid();
+            if ( !Page.IsPostBack )
             {
-                iImage.ImageUrl = string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) );
+                RockContext rockContext = new RockContext();
+                BinaryFile file = new BinaryFileService( rockContext ).Get( GetAttributeValue( "Image" ).AsGuid() );
+                if ( file != null )
+                {
+                    img.BinaryFileId = file.Id;
+                }
             }
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string arg )
         {
-            var attributes = new Dictionary<string, string>();
 
             if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
             {
-                attributes.Add( "Source", string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) ) );
+                CustomAttributes.Add( "Source", string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) ) );
             }
             if ( new List<string> { "0", "1", "2" }.Contains( GetAttributeValue( "Aspect" ) ) )
             {
-                attributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
-            }
-
-            var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
-            foreach ( var item in customs )
-            {
-                attributes[item.Key] = HttpUtility.UrlDecode( ( string ) item.Value );
+                CustomAttributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
             }
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ImageBlock",
-                Body = attributes
+                Attributes = CustomAttributes
             };
         }
 
-        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        protected void img_ImageUploaded( object sender, Rock.Web.UI.Controls.ImageUploaderEventArgs e )
         {
-            throw new NotImplementedException();
+            RockContext rockContext = new RockContext();
+            BinaryFile file = new BinaryFileService( rockContext ).Get( img.BinaryFileId ?? 0 );
+            if ( file != null )
+            {
+                file.IsTemporary = false;
+                SetAttributeValue( "Image", file.Guid.ToString() );
+                SaveAttributeValues();
+            }
+        }
+
+        protected void img_ImageRemoved( object sender, Rock.Web.UI.Controls.ImageUploaderEventArgs e )
+        {
+            SetAttributeValue( "Image", "" );
         }
     }
 }

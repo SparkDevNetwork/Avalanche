@@ -21,8 +21,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "A button." )]
     [TextField( "Text", "Text which will appear on the button." )]
     [TextField( "Page Number", "Number of the page to navigate to." )]
-    [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
-    public partial class ButtonBlock : RockBlock, IMobileResource
+    public partial class ButtonBlock : AvalancheBlock
     {
         /// <summary>
         /// Raises the <see cref="E:System.Web.UI.Control.Load" /> event.
@@ -33,33 +32,16 @@ namespace RockWeb.Plugins.Avalanche
             btnButton.Text = GetAttributeValue( "Text" );
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string arg )
         {
-            var attributes = new Dictionary<string, string> {
-                { "Text", GetAttributeValue("Text") },
-                { "PageNumber", GetAttributeValue("PageNumber") }
-            };
 
-            var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
-            foreach ( var item in customs )
-            {
-                attributes[item.Key] = HttpUtility.UrlDecode( ( string ) item.Value );
-            }
+            CustomAttributes.Add( "Text", GetAttributeValue( "Text" ) );
+            CustomAttributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ButtonBlock",
-                Body = attributes
-            };
-        }
-        public MobileBlockResponse HandleRequest( string arg, Dictionary<string, string> Body )
-        {
-            var cu = CurrentUser;
-            return new MobileBlockResponse()
-            {
-                Arg = arg,
-                Response = Rock.RockDateTime.Now.ToString( "h:mm ss" ),
-                TTL = 30
+                Attributes = CustomAttributes
             };
         }
 
