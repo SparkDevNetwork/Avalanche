@@ -65,7 +65,5 @@ namespace Avalanche
             );
             this.Controls.AddAt( 0, div );
         }
-
-
     }
 }
