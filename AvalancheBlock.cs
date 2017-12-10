@@ -1,5 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web;
+using System.Web.UI.HtmlControls;
 using Avalanche.Models;
 using Rock;
 using Rock.Attribute;
@@ -38,5 +41,31 @@ namespace Avalanche
                 TTL = 0
             };
         }
+
+        protected override void OnPreRender( EventArgs e )
+        {
+            base.OnPreRender( e );
+            var mobileBlock = this.GetMobile( "" );
+            var atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+            HtmlGenericControl div = new HtmlGenericControl( "div" );
+            div.InnerHtml = string.Format( @"
+            <details style=""margin:0px 0px -18px -18px"">
+                <summary><i class='fa fa-info-circle'></i></summary>
+                <div class=""mobileBlockInformation"">
+                    <div class=""mobileBlockInformationHeader"">
+                        <b>{0}</b>
+                    </div>
+                    <div style=""padding:3px 20px"">
+                        {1}
+                    </div>
+                </div>
+            </details>",
+            mobileBlock.BlockType,
+            atts
+            );
+            this.Controls.AddAt( 0, div );
+        }
+
+
     }
 }

@@ -64,6 +64,7 @@
     <Compile Include="AvalancheBlock.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Controls\WarningBlock.cs" />
     <Compile Include="IMobileResource.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />
