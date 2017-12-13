@@ -105,35 +105,42 @@ namespace Avalanche.Utilities
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( "Bearer", token );
                     }
 
-                    using ( var r = await client.GetAsync( new Uri( Constants.serverUrl + url ) ) )
+                    using ( var response = await client.GetAsync( new Uri( Constants.serverUrl + url ) ) )
                     {
-                        string result = await r.Content.ReadAsStringAsync();
-                        if ( string.IsNullOrWhiteSpace( result ) )
+                        if ( response.IsSuccessStatusCode )
+                        {
+                            string result = await response.Content.ReadAsStringAsync();
+                            if ( string.IsNullOrWhiteSpace( result ) )
+                            {
+                                return null;
+                            }
+                            var ttl = 0;
+                            if ( response.Headers.Contains( "TTL" ) )
+                            {
+                                var ttlString = response.Headers.GetValues( "TTL" ).FirstOrDefault();
+                                if ( !string.IsNullOrWhiteSpace( ttlString ) )
+                                {
+                                    int.TryParse( ttlString, out ttl );
+                                }
+                            }
+                            var webResource = new WebResource()
+                            {
+                                Url = url,
+                                Response = result,
+                                EOL = DateTime.Now.AddSeconds( ttl )
+                            };
+
+                            var conn = GetConnection();
+                            if ( ( await conn.UpdateAsync( webResource ) ) == 0 )
+                            {
+                                await conn.InsertAsync( webResource );
+                            }
+                            return webResource;
+                        }
+                        else
                         {
                             return null;
                         }
-                        var ttl = 0;
-                        if ( r.Headers.Contains( "TTL" ) )
-                        {
-                            var ttlString = r.Headers.GetValues( "TTL" ).FirstOrDefault();
-                            if ( !string.IsNullOrWhiteSpace( ttlString ) )
-                            {
-                                int.TryParse( ttlString, out ttl );
-                            }
-                        }
-                        var webResource = new WebResource()
-                        {
-                            Url = url,
-                            Response = result,
-                            EOL = DateTime.Now.AddSeconds( ttl )
-                        };
-
-                        var conn = GetConnection();
-                        if ( ( await conn.UpdateAsync( webResource ) ) == 0 )
-                        {
-                            await conn.InsertAsync( webResource );
-                        }
-                        return webResource;
                     }
                 }
             }

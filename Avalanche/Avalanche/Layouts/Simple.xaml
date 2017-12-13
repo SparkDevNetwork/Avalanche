@@ -23,6 +23,7 @@
                     </Grid>
                 </StackLayout>
             </ScrollView>
+            <StackLayout x:Name="Footer" Spacing="0" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

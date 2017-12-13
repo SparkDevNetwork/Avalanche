@@ -7,6 +7,34 @@ namespace Avalanche.CustomControls
 {
     class FontAwesomeIcon : ContentView
     {
+        public static readonly BindableProperty TextProperty = BindableProperty.Create(
+            "Text",
+            typeof( string ),
+            typeof( FontAwesomeIcon ),
+            propertyChanged: TextPropertyChange,
+            defaultValue: ""
+            );
+
+        private static void TextPropertyChange( BindableObject bindable, object oldValue, object newValue )
+        {
+            var icon = ( FontAwesomeIcon ) bindable;
+            icon.Text = ( string ) newValue;
+        }
+
+        public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
+            "FontSize",
+            typeof( double ),
+            typeof( FontAwesomeIcon ),
+            propertyChanged: FontSizePropertyChange,
+            defaultValue: 20d
+            );
+
+        private static void FontSizePropertyChange( BindableObject bindable, object oldValue, object newValue )
+        {
+            var icon = ( FontAwesomeIcon ) bindable;
+            icon.FontSize = ( double ) newValue;
+        }
+
         private Label label;
         public FontAwesomeIcon()
         {
@@ -77,10 +105,11 @@ namespace Avalanche.CustomControls
 
         private string lookupIcon( string source )
         {
-            if ( lookupTable.ContainsKey( source ) )
+            if ( !string.IsNullOrWhiteSpace( source ) && lookupTable.ContainsKey( source ) )
             {
                 return lookupTable[source];
             }
+
             return "";
         }
 

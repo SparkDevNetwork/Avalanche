@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Avalanche.CustomControls"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="Avalanche.Blocks.ImageListView">
+  <ContentView.Content>
+        <ListView
+            x:Name="lvListView"
+            HasUnevenRows="True"
+            IsPullToRefreshEnabled="True">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell>
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="1*" />
+                                <ColumnDefinition Width="4*" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="6*" />
+                                <RowDefinition Height="3*" />
+                            </Grid.RowDefinitions>
+
+                            <local:FontAwesomeIcon Text="{Binding Icon}" Grid.RowSpan="2" FontSize="{Binding IconFontSize}"
+                                HorizontalOptions="Center" VerticalOptions="Center" />
+                            <ff:CachedImage Source="{Binding Image}" Aspect="AspectFit" Grid.RowSpan="2" /> 
+                            <Label Text="{Binding Title}" Grid.Column="1" TextColor="Black" LineBreakMode="TailTruncation" FontSize="{Binding FontSize}" />
+                            <Label Text="{Binding Subtitle}" Grid.Column="1" Grid.Row="1"  LineBreakMode="TailTruncation" Margin="0,-8,0,0" FontSize="{Binding SubtitleFontSize}" />
+                        </Grid>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+
+        </ListView>
+  </ContentView.Content>
+</ContentView>

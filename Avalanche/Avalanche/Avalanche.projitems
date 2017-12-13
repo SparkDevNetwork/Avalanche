@@ -19,6 +19,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageListView.xaml.cs">
+      <DependentUpon>ImageListView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\LabelBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\FontAwesomeIcon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
@@ -27,6 +31,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlockResponse.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MobileListView.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
@@ -102,6 +107,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\Simple.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\ImageListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
