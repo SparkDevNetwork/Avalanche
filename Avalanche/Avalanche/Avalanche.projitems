@@ -19,11 +19,17 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageListView.xaml.cs">
-      <DependentUpon>ImageListView.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\ListViewBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\IListViewComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml.cs">
+      <DependentUpon>ThumbnailListView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\LabelBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\MobileContentItem.xaml.cs">
+      <DependentUpon>MobileContentItem.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\FontAwesomeIcon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layouts\Simple.xaml.cs">
@@ -112,7 +118,13 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\ImageListView.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\MobileContentItem.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

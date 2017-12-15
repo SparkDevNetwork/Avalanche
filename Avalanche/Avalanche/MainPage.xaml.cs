@@ -22,11 +22,15 @@ namespace Avalanche
             throw new NotImplementedException();
         }
 
-        public MainPage( string resource )
+        public MainPage( string resource, string argument = "" )
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar( this, false );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            if ( !string.IsNullOrWhiteSpace( argument ) )
+            {
+                resource += "/" + argument;
+            }
             RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
         }
 
@@ -71,7 +75,7 @@ namespace Avalanche
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
                         }
-                        catch
+                        catch (Exception e)
                         {
                             //
                         }

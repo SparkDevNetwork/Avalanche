@@ -1,0 +1,118 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using Avalanche.Components.ListView;
+using Avalanche.Models;
+using Avalanche.Utilities;
+using Newtonsoft.Json;
+using Xamarin.Forms;
+
+namespace Avalanche.Blocks
+{
+    public class ListViewBlock : IRenderable, IHasBlockMessenger
+    {
+        private IListViewComponent listViewComponent;
+        private bool _manualRefresh = false;
+        private int _pageNumber = 1;
+        private bool _useFresh = false;
+        private bool _endOfList = false;
+        public string DetailPage { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
+        public BlockMessenger MessageHandler { get; set; }
+
+        public ObservableCollection<MobileListView> mobileListView = new ObservableCollection<MobileListView>();
+
+        public View Render()
+        {
+            listViewComponent = new ThumbnailListView();
+            listViewComponent.ItemsSource = mobileListView;
+            listViewComponent.Refreshing += ListView_Refreshing;
+            listViewComponent.ItemAppearing += ListView_ItemAppearing;
+
+            if ( Attributes.ContainsKey( "DetailPage" ) && !string.IsNullOrWhiteSpace( Attributes["DetailPage"] ) )
+            {
+                DetailPage = Attributes["DetailPage"];
+                listViewComponent.ItemSelected += ListView_ItemSelected;
+            }
+
+            MessageHandler.Response += MessageHandler_Response;
+
+            MessageHandler.Get( "" );
+
+            return ( View ) listViewComponent;
+        }
+
+        #region Events
+        private void MessageHandler_Response( object sender, MobileBlockResponse e )
+        {
+            var response = e.Response;
+            if ( _manualRefresh )
+            {
+                mobileListView.Clear();
+                _manualRefresh = false;
+            }
+
+            List<MobileListView> mlv = JsonConvert.DeserializeObject<List<MobileListView>>( response );
+            if ( !mlv.Any() )
+            {
+                _endOfList = false;
+            }
+            foreach ( var item in mlv )
+            {
+                item.FontSize = listViewComponent.FontSize;
+                foreach ( var i in mobileListView )
+                {
+                    if ( i.Id != null && i.Id == item.Id )
+                    {
+                        mobileListView.Remove( i );
+                        break;
+                    }
+                }
+                mobileListView.Add( item );
+            }
+            listViewComponent.IsRefreshing = false;
+
+        }
+
+        private void ListView_Refreshing( object sender, EventArgs e )
+        {
+            _endOfList = false;
+            _manualRefresh = true;
+            _useFresh = true;
+            listViewComponent.IsRefreshing = true;
+            _pageNumber = 1;
+            MessageHandler.Get( _pageNumber.ToString(), true );
+        }
+
+        private void ListView_ItemAppearing( object sender, ItemVisibilityEventArgs e )
+        {
+            if ( listViewComponent.IsRefreshing || mobileListView.Count == 0 || _endOfList )
+                return;
+
+            //hit bottom!
+            if ( ( ( MobileListView ) e.Item ).Id == mobileListView[mobileListView.Count - 1].Id )
+            {
+                _pageNumber++;
+                listViewComponent.IsRefreshing = true;
+                MessageHandler.Get( _pageNumber.ToString(), _useFresh );
+            }
+        }
+
+        private void ListView_ItemSelected( object sender, SelectedItemChangedEventArgs e )
+        {
+            if ( e.SelectedItem == null )
+            {
+                return;
+            }
+
+            var item = listViewComponent.SelectedItem as MobileListView;
+            listViewComponent.SelectedItem = null;
+
+            AvalancheNavigation.GetPage( DetailPage, item.Id );
+        }
+        #endregion
+    }
+}
