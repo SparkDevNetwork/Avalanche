@@ -1,4 +1,4 @@
-﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="HtmlDetail.ascx.cs" Inherits="RockWeb.Plugins.Avalanche.HtmlDetail" %>
+﻿<%@ Control Language="C#" AutoEventWireup="true" CodeFile="WebViewBlock.ascx.cs" Inherits="RockWeb.Plugins.Avalanche.WebViewBlock" %>
 
 <asp:UpdatePanel runat="server">
     <ContentTemplate>

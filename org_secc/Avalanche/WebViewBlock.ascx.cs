@@ -16,12 +16,12 @@ using Rock.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Html Detail" )]
-    [Category( "SECC > Avalanche" )]
+    [DisplayName( "WebViewBlock" )]
+    [Category( "Avalanche" )]
     [Description( "A control to display Markdown." )]
-    [CodeEditorField( "Html", "Html code to be rendered in app.", Rock.Web.UI.Controls.CodeEditorMode.Html,
-        Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
-    public partial class HtmlDetail : RockBlock, IMobileResource
+    [TextField( "Url", "Webpage to display.")]
+    [TextField( "Regex Limit", "If a page is opened that doesn't match this Regex. A request to open in external browser will appear." )]
+    public partial class WebViewBlock : AvalancheBlock
     {
 
         /// <summary>
@@ -30,23 +30,18 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            lbHtml.Text = GetAttributeValue( "Html" );
+            lbHtml.Text = GetAttributeValue( "Url" );
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string arg )
         {
+            CustomAttributes["Url"] = GetAttributeValue( "Url" );
+            CustomAttributes["Domain"] = GetAttributeValue( "RegexLimit");
             return new MobileBlock()
             {
-                BlockType = "Avalanche.Blocks.HtmlDetail",
-                Body = new Dictionary<string, string>
-                {
-                    { "Content", GetAttributeValue("Html") }
-                }
+                BlockType = "Avalanche.Blocks.WebViewBlock",
+                Attributes =CustomAttributes
             };
-        }
-        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
-        {
-            throw new NotImplementedException();
         }
     }
 }
