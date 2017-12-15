@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalanche.Components;
 using Avalanche.Components.ListView;
 using Avalanche.Models;
 using Avalanche.Utilities;
@@ -23,12 +24,9 @@ namespace Avalanche.Blocks
         public Dictionary<string, string> Attributes { get; set; }
         public BlockMessenger MessageHandler { get; set; }
 
-        public ObservableCollection<MobileListView> mobileListView = new ObservableCollection<MobileListView>();
-
         public View Render()
         {
-            listViewComponent = new ThumbnailListView();
-            listViewComponent.ItemsSource = mobileListView;
+            listViewComponent = new ColumnListView();
             listViewComponent.Refreshing += ListView_Refreshing;
             listViewComponent.ItemAppearing += ListView_ItemAppearing;
 
@@ -51,27 +49,29 @@ namespace Avalanche.Blocks
             var response = e.Response;
             if ( _manualRefresh )
             {
-                mobileListView.Clear();
+                listViewComponent.ItemsSource.Clear();
                 _manualRefresh = false;
             }
 
             List<MobileListView> mlv = JsonConvert.DeserializeObject<List<MobileListView>>( response );
             if ( !mlv.Any() )
             {
-                _endOfList = false;
+                _endOfList = true;
+                listViewComponent.IsRefreshing = false;
+                return;
             }
             foreach ( var item in mlv )
             {
                 item.FontSize = listViewComponent.FontSize;
-                foreach ( var i in mobileListView )
+                foreach ( var i in listViewComponent.ItemsSource )
                 {
                     if ( i.Id != null && i.Id == item.Id )
                     {
-                        mobileListView.Remove( i );
+                        listViewComponent.ItemsSource.Remove( i );
                         break;
                     }
                 }
-                mobileListView.Add( item );
+                listViewComponent.ItemsSource.Add( item );
             }
             listViewComponent.IsRefreshing = false;
 
@@ -89,11 +89,11 @@ namespace Avalanche.Blocks
 
         private void ListView_ItemAppearing( object sender, ItemVisibilityEventArgs e )
         {
-            if ( listViewComponent.IsRefreshing || mobileListView.Count == 0 || _endOfList )
+            if ( listViewComponent.IsRefreshing || listViewComponent.ItemsSource.Count == 0 || _endOfList )
                 return;
 
             //hit bottom!
-            if ( ( ( MobileListView ) e.Item ).Id == mobileListView[mobileListView.Count - 1].Id )
+            if ( ( ( MobileListView ) e.Item ).Id == listViewComponent.ItemsSource[listViewComponent.ItemsSource.Count - 1].Id )
             {
                 _pageNumber++;
                 listViewComponent.IsRefreshing = true;

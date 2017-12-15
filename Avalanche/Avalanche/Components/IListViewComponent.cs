@@ -5,7 +5,7 @@ using System.Text;
 using Avalanche.Models;
 using Xamarin.Forms;
 
-namespace Avalanche.Components.ListView
+namespace Avalanche.Components
 {
     public interface IListViewComponent
     {

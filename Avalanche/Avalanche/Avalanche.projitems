@@ -20,7 +20,11 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ListViewBlock.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\IListViewComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml.cs">
+      <DependentUpon>ColumnListView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IListViewComponent.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml.cs">
       <DependentUpon>ThumbnailListView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -41,8 +45,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\HtmlDetail.xaml.cs">
-      <DependentUpon>HtmlDetail.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\WebViewBlock.xaml.cs">
+      <DependentUpon>WebViewBlock.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Login.xaml.cs">
@@ -100,7 +104,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\HtmlDetail.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\WebViewBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -125,6 +129,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\MobileContentItem.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

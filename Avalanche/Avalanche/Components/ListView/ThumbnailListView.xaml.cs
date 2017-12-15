@@ -39,19 +39,7 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private ObservableCollection<MobileListView> _itemsSource;
-        public ObservableCollection<MobileListView> ItemsSource
-        {
-            get
-            {
-                return _itemsSource;
-            }
-            set
-            {
-                _itemsSource = value;
-                lvListView.ItemsSource = ItemsSource;
-            }
-        }
+        public ObservableCollection<MobileListView> ItemsSource { get; set; }
 
         private double _fontSize;
         public double FontSize
@@ -99,6 +87,9 @@ namespace Avalanche.Components.ListView
         public ThumbnailListView()
         {
             InitializeComponent();
+            ItemsSource = new ObservableCollection<MobileListView>();
+            lvListView.ItemsSource = ItemsSource;
+
             lvListView.Refreshing += LvListView_Refreshing;
             lvListView.ItemSelected += LvListView_ItemSelected;
             lvListView.ItemAppearing += LvListView_ItemAppearing;

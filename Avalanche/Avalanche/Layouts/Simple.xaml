@@ -5,7 +5,7 @@
              x:Class="Avalanche.Layouts.Simple">
     <ContentView.Content>
         <StackLayout Spacing="0">
-            <StackLayout x:Name="Feature" Spacing="0" />
+            <StackLayout x:Name="Featured" Spacing="0" />
             <ScrollView>
                 <StackLayout Spacing="0">
                     <Grid>

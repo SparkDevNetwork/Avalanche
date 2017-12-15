@@ -1,8 +1,0 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
-<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Avalanche.Blocks.HtmlDetail" BackgroundColor="Blue">
-    <ContentView.Content>
-        <WebView x:Name="wvContent" HeightRequest="600" WidthRequest="200"/>
-    </ContentView.Content>
-</ContentView>
