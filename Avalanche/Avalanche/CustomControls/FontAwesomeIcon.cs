@@ -5,100 +5,31 @@ using Xamarin.Forms;
 
 namespace Avalanche.CustomControls
 {
-    class FontAwesomeIcon : ContentView
+    class FontAwesomeIcon : Label
     {
-        public static readonly BindableProperty TextProperty = BindableProperty.Create(
-            "Text",
-            typeof( string ),
-            typeof( FontAwesomeIcon ),
-            propertyChanged: TextPropertyChange,
-            defaultValue: ""
-            );
-
-        private static void TextPropertyChange( BindableObject bindable, object oldValue, object newValue )
-        {
-            var icon = ( FontAwesomeIcon ) bindable;
-            icon.Text = ( string ) newValue;
-        }
-
-        public static readonly BindableProperty FontSizeProperty = BindableProperty.Create(
-            "FontSize",
-            typeof( double ),
-            typeof( FontAwesomeIcon ),
-            propertyChanged: FontSizePropertyChange,
-            defaultValue: 20d
-            );
-
-        private static void FontSizePropertyChange( BindableObject bindable, object oldValue, object newValue )
-        {
-            var icon = ( FontAwesomeIcon ) bindable;
-            icon.FontSize = ( double ) newValue;
-        }
-
-        private Label label;
         public FontAwesomeIcon()
         {
-            label = new Label();
 
             if ( Device.RuntimePlatform == Device.Android )
             {
-                label.FontFamily = "fontawesome.ttf#fontawesome";
+                FontFamily = "fontawesome.ttf#fontawesome";
             }
             else if ( Device.RuntimePlatform == Device.iOS )
             {
-                label.FontFamily = "fontawesome";
-            }
-
-            Content = label;
-        }
-
-        public Color TextColor
-        {
-            get
-            {
-                return label.TextColor;
-            }
-            set
-            {
-                label.TextColor = value;
+                FontFamily = "fontawesome";
             }
         }
 
-        public double FontSize
-        {
-            get
-            {
-                return label.FontSize;
-            }
-            set
-            {
-                label.FontSize = value;
-            }
-        }
 
-        public FontAttributes FontAttributes
+        public new string Text
         {
             get
             {
-                return label.FontAttributes;
+                return base.Text;
             }
             set
             {
-                label.FontAttributes = value;
-            }
-        }
-
-        private string _text;
-        public string Text
-        {
-            get
-            {
-                return _text;
-            }
-            set
-            {
-                label.Text = lookupIcon( value );
-                _text = label.Text;
+                base.Text = lookupIcon( value );
             }
         }
 
