@@ -54,12 +54,14 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <Rock:RockTextBox ID="tbImageKey" runat="server" Label="Image Key Attribute" Help="The attribute key of the image"
+                                    <Rock:RockTextBox ID="tbTitleLava" runat="server" Label="Title Lava" Help="Lava to display the details of each \{\{Item\}\}"
                                         Required="false" />
-                                    <Rock:RockTextBox ID="tbIconKey" runat="server" Label="Icon Key Attrribute" Help="The attribute key of the icon"
+                                    <Rock:RockTextBox ID="tbImageLava" runat="server" Label="Image Lava" Help="Lava to display the details of each \{\{Item\}\}"
                                         Required="false" />
-                                    <Rock:RockTextBox ID="tbSubtitleKey" runat="server" Label="Subtitle Key Attribute" 
-                                        Help="The attribute key of the markdown to show in the list." Required="false" />
+                                    <Rock:RockTextBox ID="tbIconLava" runat="server" Label="Icon Lava" Help="Lava to display the details of each \{\{Item\}\}"
+                                        Required="false" />
+                                    <Rock:RockTextBox ID="tbSubtitleLava" runat="server" Label="Subtitle Lava" 
+                                        Help="Lava to display the details of each \{\{Item\}\}" Required="false" />
                                 </div>
                                 <div class="col-md-6">
                                     <Rock:KeyValueList ID="kvlOrder" runat="server" Label="Order Items By" KeyPrompt="Field" ValuePrompt="Direction"

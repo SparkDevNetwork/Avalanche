@@ -57,9 +57,10 @@ namespace RockWeb.Plugins.Avalanche
     [IntegerField( "Filter Id", "The data filter that is used to filter items", false, 0, "CustomSetting" )]
     [BooleanField( "Query Parameter Filtering", "Determines if block should evaluate the query string parameters for additional filter criteria.", false, "CustomSetting" )]
     [TextField( "Order", "The specifics of how items should be ordered. This value is set through configuration and should not be modified here.", false, "", "CustomSetting" )]
-    [TextField( "Subtitle Key", "The attribute key of the subtitle formatted for mobile.", false, "", "CustomSetting" )]
-    [TextField( "Image Key", "The attribute key of the image to show on the list view will hide icon if not blank.", false, "", "CustomSetting" )]
-    [TextField( "Icon Key", "The attribute key of the icon to show on the list view.", false, "", "CustomSetting" )]
+    [TextField( "Title Lava", "Lava to display the details of each {{Item}}", true, "{{Item.Title}}", "CustomSetting" )]
+    [TextField( "Subtitle Lava", "The attribute key of the subtitle formatted for mobile.", false, "", "CustomSetting" )]
+    [TextField( "Image Lava", "The attribute key of the image to show on the list view will hide icon if not blank.", false, "", "CustomSetting" )]
+    [TextField( "Icon Lava", "The attribute key of the icon to show on the list view.", false, "", "CustomSetting" )]
 
     public partial class ContentChannelMobileList : AvalancheBlockCustomSettings
     {
@@ -252,9 +253,10 @@ namespace RockWeb.Plugins.Avalanche
             SetAttributeValue( "OutputCacheDuration", ( nbOutputCacheDuration.Text.AsIntegerOrNull() ?? 0 ).ToString() );
             SetAttributeValue( "FilterId", dataViewFilter.Id.ToString() );
             SetAttributeValue( "Order", kvlOrder.Value );
-            SetAttributeValue( "IconKey", tbIconKey.Text );
-            SetAttributeValue( "ImageKey", tbImageKey.Text );
-            SetAttributeValue( "SubtitleKey", tbSubtitleKey.Text );
+            SetAttributeValue( "TitleLava", tbTitleLava.Text );
+            SetAttributeValue( "IconLava", tbIconLava.Text );
+            SetAttributeValue( "ImageLava", tbImageLava.Text );
+            SetAttributeValue( "SubtitleLava", tbSubtitleLava.Text );
 
             var ppFieldType = new PageReferenceFieldType();
             SetAttributeValue( "DetailPage", ppFieldType.GetEditValue( ppDetailPage, null ) );
@@ -376,9 +378,10 @@ $(document).ready(function() {
             nbOutputCacheDuration.Text = GetAttributeValue( "OutputCacheDuration" );
             hfDataFilterId.Value = GetAttributeValue( "FilterId" );
 
-            tbIconKey.Text = GetAttributeValue( "IconKey" );
-            tbImageKey.Text = GetAttributeValue( "ImageKey" );
-            tbSubtitleKey.Text = GetAttributeValue( "SubtitleKey" );
+            tbTitleLava.Text = GetAttributeValue( "TitleLava" );
+            tbIconLava.Text = GetAttributeValue( "IconLava" );
+            tbImageLava.Text = GetAttributeValue( "ImageLava" );
+            tbSubtitleLava.Text = GetAttributeValue( "SubtitleLava" );
 
             var ppFieldType = new PageReferenceFieldType();
             ppFieldType.SetEditValue( ppDetailPage, null, GetAttributeValue( "DetailPage" ) );
@@ -427,32 +430,36 @@ $(document).ready(function() {
 
             content = content.Skip( page * count ).Take( count ).ToList();
 
-            var subtitleKey = GetAttributeValue( "SubtitleKey" );
-            var imageKey = GetAttributeValue( "ImageKey" );
-            var iconKey = GetAttributeValue( "IconKey" );
+            var titleLava = GetAttributeValue( "TitleLava" );
+            var subtitleLava = GetAttributeValue( "SubtitleLava" );
+            var imageLava = GetAttributeValue( "ImageLava" );
+            var iconLava = GetAttributeValue( "IconLava" );
+
+
             List<MobileListView> listViews = new List<MobileListView>();
             foreach ( var item in content )
             {
                 var mlv = new MobileListView()
                 {
                     Id = item.Guid.ToString(),
-                    Title = item.Title,
                     Subtitle = "",
                     Image = "",
                     Icon = ""
                 };
 
-                if ( !string.IsNullOrWhiteSpace( subtitleKey ) )
+                mlv.Title = ProcessLava( titleLava, item );
+
+                if ( !string.IsNullOrWhiteSpace( subtitleLava ) )
                 {
-                    mlv.Subtitle = item.GetAttributeValue( subtitleKey ).Truncate( 30 );
+                    mlv.Subtitle = ProcessLava( subtitleLava, item );
                 }
-                if ( !string.IsNullOrWhiteSpace( imageKey ) && !string.IsNullOrWhiteSpace( item.GetAttributeValue( imageKey ) ) )
+                if ( !string.IsNullOrWhiteSpace( imageLava ) )
                 {
-                    mlv.Image = string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), item.GetAttributeValue( imageKey ) );
+                    mlv.Image = ProcessLava( imageLava, item );
                 }
-                if ( !string.IsNullOrWhiteSpace( iconKey ) )
+                if ( !string.IsNullOrWhiteSpace( iconLava ) )
                 {
-                    mlv.Icon = item.GetAttributeValue( iconKey );
+                    mlv.Icon = ProcessLava( iconLava, item );
                 }
                 listViews.Add( mlv );
             }
@@ -1008,7 +1015,7 @@ $(document).ready(function() {
             return new MobileBlock()
             {
                 Attributes = CustomAttributes,
-                BlockType = "Avalanche.Blocks.ImageListView"
+                BlockType = "Avalanche.Blocks.ListViewBlock"
             };
         }
 
@@ -1024,6 +1031,14 @@ $(document).ready(function() {
                 TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
             };
         }
+
+        private string ProcessLava( string lava, ContentChannelItem item )
+        {
+            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, CurrentPerson );
+            mergeObjects["Item"] = item;
+            return lava.ResolveMergeFields( mergeObjects );
+        }
+
     }
     #endregion
 
@@ -1035,5 +1050,4 @@ $(document).ready(function() {
         public string Image { get; set; }
         public string Icon { get; set; }
     }
-
 }
