@@ -49,7 +49,11 @@ namespace Avalanche
             if ( CurrentUser != null && UserCanAdministrate )
             {
                 var mobileBlock = this.GetMobile( "" );
-                var atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+                var atts = "";
+                if ( mobileBlock.Attributes != null )
+                {
+                    atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+                }
                 HtmlGenericControl div = new HtmlGenericControl( "div" );
                 div.InnerHtml = string.Format( @"
 <details style=""margin:0px 0px -18px -18px"">

@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Xml;
 using System.Xml.Serialization;
 using Avalanche.Models;
+using Rock;
 using Rock.Model;
 using Rock.Rest;
 using Rock.Rest.Filters;
@@ -22,6 +23,14 @@ namespace Avalanche.Rest.Controllers
 {
     public class AvalancheController : ApiControllerBase
     {
+        [HttpGet]
+        [Authenticate]
+        [System.Web.Http.Route( "api/avalanche/home" )]
+        public MobilePage GetHome()
+        {
+            return GetPage( GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger() );
+        }
+
         [HttpGet]
         [Authenticate]
         [System.Web.Http.Route( "api/avalanche/page/{id}" )]
@@ -102,6 +111,7 @@ namespace Avalanche.Rest.Controllers
             HttpContext.Current.Response.Headers.Set( "TTL", "0" );
             return new MobileBlockResponse();
         }
+
 
         [HttpPost]
         [Authenticate]
