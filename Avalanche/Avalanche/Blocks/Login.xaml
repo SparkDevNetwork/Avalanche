@@ -3,12 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Avalanche.Blocks.Login">
     <ContentView.Content>
-        <StackLayout>
-            <Label Text="Login" FontSize="Large" />
-            <Entry x:Name="username" Placeholder="Username" />
-            <Entry x:Name="password" IsPassword="True" Placeholder="password" />
-            <Button x:Name="btnSubmit" Text="Login" Clicked="btnSubmit_Clicked" />
-            <Button x:Name="btnLogout" Text="Logout" Clicked="btnLogout_Clicked" />
-        </StackLayout>
+        <Grid>
+            <ActivityIndicator x:Name="aiActivity"/>
+            <StackLayout x:Name="slForm">
+                <Label Text="Login" FontSize="Large" />
+                <Entry x:Name="username" Placeholder="Username" />
+                <Entry x:Name="password" IsPassword="True" Placeholder="password" />
+                <Button x:Name="btnSubmit" Text="Login" Clicked="btnSubmit_Clicked" />
+                <Button x:Name="btnForgot" Text="Forgot My Password" Clicked="btnForgot_Clicked"/>
+            </StackLayout>
+        </Grid>
     </ContentView.Content>
 </ContentView>

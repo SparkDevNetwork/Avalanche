@@ -8,8 +8,34 @@ namespace Avalanche.Models
     public class MobileListView : INotifyPropertyChanged
     {
         public string Id { get; set; }
-        public string Title { get; set; }
-        public string Subtitle { get; set; }
+        private string _title;
+        public string Title
+        {
+            get
+            {
+                return _title;
+            }
+            set
+            {
+                _title = value;
+                OnPropertyChanged( "Title" );
+            }
+        }
+
+        private string _subtitle;
+        public string Subtitle
+        {
+            get
+            {
+                return _subtitle;
+            }
+            set
+            {
+                _subtitle = value;
+                OnPropertyChanged( "Subtitle" );
+            }
+        }
+
         private string _image;
         public string Image
         {
@@ -19,10 +45,6 @@ namespace Avalanche.Models
             }
             set
             {
-                if ( _icon != null )
-                {
-                    Icon = null;
-                }
                 _image = value;
                 OnPropertyChanged( "Image" );
             }
@@ -36,14 +58,7 @@ namespace Avalanche.Models
             }
             set
             {
-                if ( !string.IsNullOrWhiteSpace( _image ) )
-                {
-                    _icon = null;
-                }
-                else
-                {
-                    _icon = value;
-                }
+                _icon = value;
                 OnPropertyChanged( "Icon" );
             }
         }
@@ -89,7 +104,7 @@ namespace Avalanche.Models
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected virtual new void OnPropertyChanged( string propertyName )
+        protected virtual void OnPropertyChanged( string propertyName )
         {
             PropertyChanged?.Invoke( this, new PropertyChangedEventArgs( propertyName ) );
         }

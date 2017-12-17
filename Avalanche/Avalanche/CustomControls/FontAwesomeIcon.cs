@@ -20,6 +20,19 @@ namespace Avalanche.CustomControls
             }
         }
 
+        public static readonly new BindableProperty TextProperty = BindableProperty.Create(
+            "Text",
+            typeof( string ),
+            typeof( FontAwesomeIcon ),
+            propertyChanged: TextPropertyChange,
+            defaultValue: ""
+            );
+
+        private static void TextPropertyChange( BindableObject bindable, object oldValue, object newValue )
+        {
+            var icon = ( FontAwesomeIcon ) bindable;
+            icon.Text = ( string ) newValue;
+        }
 
         public new string Text
         {

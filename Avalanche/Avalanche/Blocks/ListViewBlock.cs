@@ -26,7 +26,23 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
-            listViewComponent = new ColumnListView();
+            if ( Attributes.ContainsKey( "Component" ) && !string.IsNullOrWhiteSpace( Attributes["Component"] ) )
+            {
+                var component = Type.GetType( Attributes["Component"] );
+                if (component != null )
+                {
+                listViewComponent = ( IListViewComponent ) Activator.CreateInstance( component );
+                }
+                else
+                {
+                    listViewComponent = new ThumbnailListView();
+                }
+            }
+            else
+            {
+                listViewComponent = new ThumbnailListView();
+            }
+
             listViewComponent.Refreshing += ListView_Refreshing;
             listViewComponent.ItemAppearing += ListView_ItemAppearing;
 
@@ -38,7 +54,15 @@ namespace Avalanche.Blocks
 
             MessageHandler.Response += MessageHandler_Response;
 
-            MessageHandler.Get( "" );
+            if ( Attributes.ContainsKey( "Resource" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
+            {
+                MessageHandler.Get( Attributes["Resource"] );
+
+            }
+            else
+            {
+                MessageHandler.Get( "" );
+            }
 
             return ( View ) listViewComponent;
         }

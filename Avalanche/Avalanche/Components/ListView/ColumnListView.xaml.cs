@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,7 +18,20 @@ namespace Avalanche.Components.ListView
     {
 
         public int Columns { get; set; }
-        public bool IsRefreshing { get; set; }
+
+        private bool _isRefreshing;
+        public bool IsRefreshing
+        {
+            get
+            {
+                return _isRefreshing;
+            }
+            set
+            {
+                _isRefreshing = value;
+                aiLoading.IsRunning = value;
+            }
+        }
         public ObservableCollection<MobileListView> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
         public double FontSize { get; set; }
@@ -32,8 +46,6 @@ namespace Avalanche.Components.ListView
             ItemsSource = new ObservableCollection<MobileListView>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
             Columns = 2;
-
-            gGrid.BackgroundColor = Color.LightGray;
 
             for ( var i = 0; i < Columns; i++ )
             {
@@ -59,32 +71,84 @@ namespace Avalanche.Components.ListView
 
         private void ItemsSource_CollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
         {
-            if ( e.Action == System.Collections.Specialized.NotifyCollectionChangedAction.Add )
+            if ( e.Action == NotifyCollectionChangedAction.Add )
             {
-                foreach ( MobileListView item in e.NewItems )
-                {
-                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-
-                    StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
-                    if ( !string.IsNullOrWhiteSpace( item.Image ) )
-                    {
-                        CachedImage img = new CachedImage() { Source = item.Image, Aspect = Aspect.AspectFit, WidthRequest = App.Current.MainPage.Width / Columns };
-                        sl.Children.Add( img );
-                    }
-                    else
-                    {
-                        FontAwesomeIcon fai = new FontAwesomeIcon() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
-                        sl.Children.Add( fai );
-                    }
-
-                    Label label = new Label() { Text = item.Title, HorizontalOptions = LayoutOptions.Center, FontSize = 20 };
-                    sl.Children.Add( label );
-
-                    gGrid.Children.Add( sl,
-                        ( ItemsSource.Count - 1 ) % Columns,
-                        ( ( ItemsSource.Count + 1 ) / Columns ) - 1 );
-                }
+                AddItems( e );
+            }
+            else
+            {
+                ResetItems( e );
             }
         }
+
+        private void ResetItems( NotifyCollectionChangedEventArgs e )
+        {
+            gGrid.Children.Clear();
+            gGrid.RowDefinitions.Clear();
+
+            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+
+            var rowCounter = 0;
+            var columnCounter = 0;
+
+            foreach ( var item in ItemsSource )
+            {
+                if ( columnCounter > Columns )
+                {
+                    columnCounter = 0;
+                    rowCounter++;
+                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+                }
+
+                AddCell( item, rowCounter, columnCounter );
+                columnCounter++;
+            }
+        }
+
+        private void AddItems( NotifyCollectionChangedEventArgs e )
+        {
+            while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
+            {
+                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+            }
+
+            foreach ( MobileListView item in e.NewItems )
+            {
+                AddCell( item,
+                        ( ItemsSource.Count - 1 ) % Columns,
+                        ( ( ItemsSource.Count + 1 ) / Columns ) - 1 );
+            }
+        }
+
+        private void AddCell( MobileListView item, int x, int y )
+        {
+            StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
+            if ( !string.IsNullOrWhiteSpace( item.Image ) )
+            {
+                CachedImage img = new CachedImage() { Source = item.Image, Aspect = Aspect.AspectFit, WidthRequest = App.Current.MainPage.Width / Columns };
+                sl.Children.Add( img );
+            }
+            else
+            {
+                FontAwesomeIcon fai = new FontAwesomeIcon() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
+                sl.Children.Add( fai );
+            }
+
+            Label label = new Label() { Text = item.Title, HorizontalOptions = LayoutOptions.Center, FontSize = 20 };
+            sl.Children.Add( label );
+
+            TapGestureRecognizer tgr = new TapGestureRecognizer()
+            {
+                NumberOfTapsRequired = 1
+            };
+            tgr.Tapped += ( s, ee ) =>
+            {
+                SelectedItem = item;
+                ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
+            };
+            sl.GestureRecognizers.Add( tgr );
+            gGrid.Children.Add( sl, x, y );
+        }
+
     }
 }

@@ -17,8 +17,6 @@ namespace Avalanche.Blocks
         public WebViewBlock()
         {
             InitializeComponent();
-            //HeightRequest = App.Current.MainPage.Height;
-            //WidthRequest = App.Current.MainPage.Width;
             VerticalOptions = LayoutOptions.FillAndExpand;
             HorizontalOptions = LayoutOptions.FillAndExpand;
         }

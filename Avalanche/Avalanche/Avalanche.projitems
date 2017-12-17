@@ -14,6 +14,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AvalanchePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\GroupMemberDetail.xaml.cs">
+      <DependentUpon>GroupMemberDetail.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -135,6 +139,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\GroupMemberDetail.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
