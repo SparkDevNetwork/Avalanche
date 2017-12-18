@@ -441,7 +441,7 @@ $(document).ready(function() {
             {
                 var mlv = new MobileListView()
                 {
-                    Id = item.Guid.ToString(),
+                    Id = item.Id.ToString(),
                     Subtitle = "",
                     Image = "",
                     Icon = ""

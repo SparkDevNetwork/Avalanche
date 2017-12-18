@@ -1,0 +1,124 @@
+﻿using System;
+using System.ComponentModel;
+using Rock.Model;
+using Rock.Security;
+using System.Web.UI;
+using Rock.Web.Cache;
+using Rock.Web.UI;
+using System.Web;
+using Rock.Data;
+using System.Linq;
+using System.Collections.Generic;
+using Rock;
+using Avalanche;
+using Avalanche.Models;
+using Rock.Attribute;
+
+namespace RockWeb.Plugins.Avalanche
+{
+    [DisplayName( "Phone Number Login" )]
+    [Category( "Avalanche" )]
+    [Description( "Block to log in with your phone number" )]
+    [WorkflowTypeField( "Workflow", "Workflow which will send the text message" )]
+    public partial class PhoneNumberLogin : AvalancheBlock
+    {
+
+        /// <summary>
+        /// Raises the <see cref="E:System.Web.UI.Control.Load" /> event.
+        /// </summarysni>
+        /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
+        protected override void OnLoad( EventArgs e )
+        {
+        }
+
+        public override MobileBlock GetMobile( string arg )
+        {
+            return new MobileBlock()
+            {
+                BlockType = "Avalanche.Blocks.PhoneNumberLogin",
+                Attributes = CustomAttributes
+            };
+        }
+
+        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        {
+            string response = GenerateCode( resource );
+
+
+            return new MobileBlockResponse()
+            {
+                Arg = resource,
+                Response = response,
+                TTL = 0
+            };
+        }
+
+        private string GenerateCode( string resource )
+        {
+            if ( resource == null || resource.Length != 10 )
+            {
+                return "Please enter a 10 digit phone number.";
+            }
+
+            RockContext rockContext = new RockContext();
+            PhoneNumberService phoneNumberService = new PhoneNumberService( rockContext );
+            var numberOwners = phoneNumberService.Queryable()
+                .Where( pn => pn.Number == resource )
+                .Select( pn => pn.Person )
+                .DistinctBy( p => p.Id )
+                .ToList();
+
+            if ( numberOwners.Count == 0 )
+            {
+                return "0|We are sorry, we could not find your phone number in our records.";
+            }
+
+            if ( numberOwners.Count > 1 )
+            {
+                return "2|We are sorry, we dected more than one person with your number in our records.";
+            }
+
+            var person = numberOwners.FirstOrDefault();
+
+            UserLoginService userLoginService = new UserLoginService( rockContext );
+            var userLogin = userLoginService.Queryable()
+                .Where( u => u.UserName == ( "__PHONENUMBER__+1" + resource ) )
+                .FirstOrDefault();
+
+            if ( userLogin == null )
+            {
+                var entityTypeId = EntityTypeCache.Read( "Avalanche.Security.Authentication.PhoneNumber" ).Id;
+
+                userLogin = new UserLogin()
+                {
+                    UserName = "__PHONENUMBER__+1" + resource,
+                    EntityTypeId = entityTypeId,
+                };
+                userLoginService.Add( userLogin );
+            }
+
+            userLogin.PersonId = person.Id;
+            userLogin.LastPasswordChangedDateTime = Rock.RockDateTime.Now;
+            userLogin.FailedPasswordAttemptWindowStartDateTime = Rock.RockDateTime.Now;
+            userLogin.FailedPasswordAttemptCount = 0;
+            userLogin.IsConfirmed = true;
+            userLogin.Password = new Random().Next( 100000, 999999 ).ToString();
+
+            rockContext.SaveChanges();
+
+            var workflowName = string.Format( "{0} ({1})", person.FullName, resource );
+            var atts = new Dictionary<string, string>
+            {
+                { "PhoneNumber",resource },
+                { "Password" , userLogin.Password }
+            };
+
+            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Workflow" ) ) )
+            {
+                userLogin.LaunchWorkflow( GetAttributeValue( "Workflow" ).AsGuid(), workflowName, atts );
+            }
+
+            return "1|Success!";
+        }
+    }
+}

@@ -25,6 +25,7 @@ namespace RockWeb.Plugins.Avalanche
     [TextField( "Text", "The text of the label to be displayed.", false )]
     [TextField( "Icon", "Icon to use on the button." )]
     [IntegerField( "PageNumber", "The rock page number to link to." )]
+    [TextField( "Argument", "Optional argument to send to the page.", false )]
     public partial class IconButton : AvalancheBlock
     {
 
@@ -53,6 +54,7 @@ namespace RockWeb.Plugins.Avalanche
 
             attributes.Add( "Text", GetAttributeValue( "Text" ) );
             attributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
+            attributes.Add( "Argument", GetAttributeValue( "Argument" ) );
             attributes.Add( "Icon", GetAttributeValue( "Icon" ) );
 
             return new MobileBlock()

@@ -41,7 +41,7 @@ namespace RockWeb.Plugins.Avalanche
         {
             RockContext rockContext = new RockContext();
             ContentChannelItemService contentChannelItemService = new ContentChannelItemService( rockContext );
-            var item = contentChannelItemService.Get( arg.AsGuid() );
+            var item = contentChannelItemService.Get( arg.AsInteger() );
             if ( item != null && item.IsAuthorized( "View", CurrentPerson )
                 && ( string.IsNullOrWhiteSpace( GetAttributeValue( "ContentChannel" ) ) || item.ContentChannel.Guid == GetAttributeValue( "ContentChannel" ).AsGuid() ) )
             {

@@ -114,7 +114,7 @@ namespace RockWeb.Plugins.Avalanche
                     g => g.Id,
                     m => m.GroupId,
                     ( g, m ) => new { Group = g, Member = m }
-                ).Where( m => m.Member.PersonId == personId && m.Member.GroupRole.IsLeader )
+                ).Where( m => m.Member.PersonId == personId && m.Member.GroupRole.IsLeader && m.Member.GroupMemberStatus == GroupMemberStatus.Active )
                 .ToList() // leave sql server
                 .Select( m => new
                 {

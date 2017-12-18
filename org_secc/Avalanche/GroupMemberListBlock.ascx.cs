@@ -115,7 +115,13 @@ namespace RockWeb.Plugins.Avalanche
                 return null;
             }
 
-            return members.ToList();
+            return members
+                .OrderByDescending( m => m.GroupRole.IsLeader )
+                .ThenBy( m => m.Person.FirstName )
+                .ThenBy( m => m.Person.LastName )
+                .ToList()
+                .Where( m => m.GroupMemberStatus != GroupMemberStatus.Inactive )
+                .ToList();
         }
 
     }
