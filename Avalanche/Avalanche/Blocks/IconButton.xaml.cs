@@ -95,7 +95,17 @@ namespace Avalanche.Blocks
 
         private void BtnButton_Clicked( object sender, EventArgs e )
         {
-            AvalancheNavigation.GetPage( Attributes["PageNumber"] );
+            if ( Attributes.ContainsKey( "PageNumber" ) )
+            {
+                if ( Attributes.ContainsKey( "Argument" ) )
+                {
+                    AvalancheNavigation.GetPage( Attributes["PageNumber"], Attributes["Argument"] );
+                }
+                else
+                {
+                    AvalancheNavigation.GetPage( Attributes["PageNumber"] );
+                }
+            }
         }
 
         public Dictionary<string, string> Attributes { get; set; }

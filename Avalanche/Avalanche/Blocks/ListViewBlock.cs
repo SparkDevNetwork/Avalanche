@@ -29,9 +29,9 @@ namespace Avalanche.Blocks
             if ( Attributes.ContainsKey( "Component" ) && !string.IsNullOrWhiteSpace( Attributes["Component"] ) )
             {
                 var component = Type.GetType( Attributes["Component"] );
-                if (component != null )
+                if ( component != null )
                 {
-                listViewComponent = ( IListViewComponent ) Activator.CreateInstance( component );
+                    listViewComponent = ( IListViewComponent ) Activator.CreateInstance( component );
                 }
                 else
                 {
@@ -64,7 +64,10 @@ namespace Avalanche.Blocks
                 MessageHandler.Get( "" );
             }
 
-            return ( View ) listViewComponent;
+            var view = ( View ) listViewComponent;
+            view.HeightRequest = App.Current.MainPage.Height;
+
+            return view;
         }
 
         #region Events
@@ -108,7 +111,15 @@ namespace Avalanche.Blocks
             _useFresh = true;
             listViewComponent.IsRefreshing = true;
             _pageNumber = 1;
-            MessageHandler.Get( _pageNumber.ToString(), true );
+            if ( Attributes.ContainsKey( "Resource" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
+            {
+                MessageHandler.Get( Attributes["Resource"], true );
+
+            }
+            else
+            {
+                MessageHandler.Get( "", true );
+            }
         }
 
         private void ListView_ItemAppearing( object sender, ItemVisibilityEventArgs e )

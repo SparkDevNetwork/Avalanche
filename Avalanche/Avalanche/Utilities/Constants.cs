@@ -10,7 +10,7 @@ namespace Avalanche.Utilities
 
         public const string client_secret = "9fe03185-03a7-4a1b-aa64-4adc64a0492f";
 
-        public const string serverUrl = "http://192.168.56.1:6229";
+        public const string serverUrl = "https://rockdev.secc.org";
         //public const string serverUrl = "http://10.100.81.69:6229";
         //public const string serverUrl = "http://192.168.1.47:6229";
 

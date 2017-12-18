@@ -24,6 +24,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ListViewBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\PhoneNumberLogin.xaml.cs">
+      <DependentUpon>PhoneNumberLogin.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml.cs">
       <DependentUpon>ColumnListView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -40,6 +44,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\FontAwesomeIcon.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml.cs">
+      <DependentUpon>NoScroll.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Layouts\Simple.xaml.cs">
       <DependentUpon>Simple.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -63,10 +71,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)IPageAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IRenderable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Layouts\FullWidth.xaml.cs">
-      <DependentUpon>FullWidth.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -85,12 +89,6 @@
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)App.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\FullWidth.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -145,6 +143,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\GroupMemberDetail.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\PhoneNumberLogin.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

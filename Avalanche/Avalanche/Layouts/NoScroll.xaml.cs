@@ -10,9 +10,9 @@ using Xamarin.Forms.Xaml;
 namespace Avalanche.Layouts
 {
 	[XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class FullWidth : ContentView
+	public partial class NoScroll : ContentView
 	{
-		public FullWidth ()
+		public NoScroll ()
 		{
 			InitializeComponent ();
 		}

@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalanche.Blocks.PhoneNumberLogin">
+    <ContentView.Content>
+        <StackLayout Margin="40">
+            <StackLayout x:Name="slPhoneNumber">
+                <Label Text="Please enter your ten digit mobile phone number to log in." HorizontalOptions="Center" FontSize="20"/>
+                <Entry x:Name="ePhoneNumber" Keyboard="Telephone" FontSize="45" Placeholder="Phone Number"/>
+                <Button x:Name="btnPhoneNumber" Text="Next" Clicked="btnPhoneNumber_Clicked" FontSize="45"/>
+            </StackLayout>
+            <StackLayout Orientation="Horizontal" HorizontalOptions="Center" x:Name="slLoading" IsVisible="False" MinimumHeightRequest="400">
+                <Label Text="Loading." FontSize="45"/>
+                <ActivityIndicator IsRunning="True"/>
+            </StackLayout>
+            <StackLayout x:Name="slPin" IsVisible="False">
+                <Label Text="We have texted you a six digit number. It should be arriving shortly. Please enter it here to continue." FontSize="20"/>
+                <Entry x:Name="ePin" Keyboard="Numeric" FontSize="45"/>
+                <Button x:Name="btnPin" Text="Login" Clicked="btnPin_Clicked" FontSize="45"/>
+            </StackLayout>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

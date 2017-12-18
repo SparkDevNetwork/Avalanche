@@ -75,7 +75,7 @@ namespace Avalanche
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
                         }
-                        catch (Exception e)
+                        catch ( Exception e )
                         {
                             //
                         }

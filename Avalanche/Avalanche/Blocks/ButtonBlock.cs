@@ -8,14 +8,12 @@ using Xamarin.Forms;
 
 namespace Avalanche.Blocks
 {
-    class ButtonBlock : Button, IRenderable, IHasBlockMessenger
+    class ButtonBlock : Button, IRenderable
     {
         public Dictionary<string, string> Attributes { get; set; }
-        public BlockMessenger MessageHandler { get; set; }
 
         public View Render()
         {
-            MessageHandler.Response += MessageHandler_Response;
             Clicked += ButtonBlock_Clicked;
             return this;
         }
@@ -30,9 +28,7 @@ namespace Avalanche.Blocks
 
         private void ButtonBlock_Clicked( object sender, EventArgs e )
         {
-            var body = new Dictionary<string, string> { { "Test", "OK" }, { "Second", "Yes" } };
-            MessageHandler.Post( "", body );
-            //AvalancheNavigation.GetPage( Attributes["PageNumber"] );
+            AvalancheNavigation.GetPage( Attributes["PageNumber"] );
         }
     }
 }

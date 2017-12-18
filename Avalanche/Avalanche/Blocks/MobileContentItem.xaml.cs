@@ -21,9 +21,19 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
-            App.Current.MainPage.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1].Title = Attributes["Title"];
-            ffImage.Source = Attributes["Image"];
-            mdMarkdown.Markdown = Attributes["Markdown"];
+            if ( Attributes.ContainsKey( "Title" ) )
+            {
+                App.Current.MainPage.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1].Title = Attributes["Title"];
+            }
+
+            if ( Attributes.ContainsKey( "Image" ) )
+            {
+                ffImage.Source = Attributes["Image"];
+            }
+            if ( Attributes.ContainsKey( "Markdown" ) )
+            {
+                mdMarkdown.Markdown = Attributes["Markdown"];
+            }
             return this;
         }
     }

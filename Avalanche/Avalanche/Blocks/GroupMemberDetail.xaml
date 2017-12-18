@@ -8,7 +8,8 @@
     <ContentView.Content>
         <StackLayout Spacing="0">
             <StackLayout x:Name="slAccent" Padding="20" Spacing="0">
-                <ff:CachedImage x:Name="ffImage" HorizontalOptions="Center" WidthRequest="300">
+                <ff:CachedImage x:Name="ffImage" HorizontalOptions="Center" WidthRequest="200"
+                                LoadingPlaceholder="profilePlaceholder.png">
                     <ff:CachedImage.Transformations>
                         <fftransformations:CircleTransformation/>
                     </ff:CachedImage.Transformations>

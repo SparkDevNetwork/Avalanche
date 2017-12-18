@@ -7,7 +7,7 @@
     <ContentView.Content>
         <StackLayout Spacing="0">
             <ff:CachedImage x:Name="ffImage" Aspect="AspectFit"/>
-            <markdown:MarkdownView x:Name="mdMarkdown" />
+            <markdown:MarkdownView x:Name="mdMarkdown" Margin="20,0" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>
