@@ -14,6 +14,8 @@ using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
 using Rock.Web.UI.Controls;
+using System.IO;
+using System.Text;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -41,6 +43,7 @@ namespace RockWeb.Plugins.Avalanche
 
             if ( groupMember != null )
             {
+                CustomAttributes["PersonGuid"] = groupMember.Person.Guid.ToString();
                 CustomAttributes["Name"] = groupMember.Person.FullName;
                 CustomAttributes["Image"] = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + groupMember.Person.PhotoUrl;
                 CustomAttributes["Markdown"] = ProcessLava( GetAttributeValue( "MarkdownLava" ), groupMember );
@@ -60,6 +63,59 @@ namespace RockWeb.Plugins.Avalanche
                 Attributes = CustomAttributes
             };
 
+        }
+
+        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        {
+            RockContext rockContext = new RockContext();
+            PersonService personService = new PersonService( rockContext );
+            BinaryFileService binaryFileService = new BinaryFileService( rockContext );
+
+            var person = personService.Get( resource.AsGuid() );
+            if ( person == null )
+            {
+                return base.HandleRequest( resource, Body );
+            }
+
+            var data = new BinaryFileData()
+            {
+                Content = Convert.FromBase64String( Body["Photo"] )
+            };
+
+            var file = new BinaryFile()
+            {
+                MimeType = "image/jpg",
+                DatabaseData = data,
+                FileName = person.FullName,
+                BinaryFileType = new BinaryFileTypeService( rockContext ).Get( Rock.SystemGuid.BinaryFiletype.PERSON_IMAGE.AsGuid() ),
+            };
+
+            binaryFileService.Add( file );
+            rockContext.SaveChanges();
+
+            AddOrUpdatePersonInPhotoRequestGroup( person, rockContext );
+            person.PhotoId = file.Id;
+            rockContext.SaveChanges();
+
+            return base.HandleRequest( resource, Body );
+        }
+
+        private void AddOrUpdatePersonInPhotoRequestGroup( Person person, RockContext rockContext )
+        {
+            GroupService service = new GroupService( rockContext );
+            var _photoRequestGroup = service.GetByGuid( Rock.SystemGuid.Group.GROUP_PHOTO_REQUEST.AsGuid() );
+
+            var groupMember = _photoRequestGroup.Members.Where( m => m.PersonId == person.Id ).FirstOrDefault();
+            if ( groupMember == null )
+            {
+                groupMember = new GroupMember();
+                groupMember.GroupId = _photoRequestGroup.Id;
+                groupMember.PersonId = person.Id;
+                groupMember.GroupRoleId = _photoRequestGroup.GroupType.DefaultGroupRoleId ?? -1;
+                _photoRequestGroup.Members.Add( groupMember );
+            }
+
+            groupMember.GroupMemberStatus = GroupMemberStatus.Pending;
         }
 
         private string ProcessLava( string lava, GroupMember groupMember )

@@ -11,6 +11,7 @@ using System.Web.Http;
 using System.Xml;
 using System.Xml.Serialization;
 using Avalanche.Models;
+using Newtonsoft.Json;
 using Rock;
 using Rock.Model;
 using Rock.Rest;
@@ -121,13 +122,7 @@ namespace Avalanche.Rest.Controllers
         {
             HttpContent requestContent = Request.Content;
             string content = requestContent.ReadAsStringAsync().Result;
-            var collection = HttpUtility.ParseQueryString( content );
-            var body = new Dictionary<string, string>();
-            foreach ( var k in collection.AllKeys )
-            {
-                body.Add( k, collection[k] );
-            }
-
+            var body = JsonConvert.DeserializeObject<Dictionary<string, string>>( content );
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
             var blockCache = BlockCache.Read( id );

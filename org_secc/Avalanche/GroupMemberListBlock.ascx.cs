@@ -78,7 +78,7 @@ namespace RockWeb.Plugins.Avalanche
             {
                 Id = m.Guid.ToString(),
                 Title = m.Person.FullName,
-                Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + m.Person.PhotoUrl,
+                Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + m.Person.PhotoUrl + "&width=100",
                 Subtitle = m.GroupRole.Name
             } ).ToList();
 
