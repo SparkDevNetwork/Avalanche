@@ -15,6 +15,8 @@ using Android.App;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
+[assembly: UsesFeature( "android.hardware.camera", Required = false )]
+[assembly: UsesFeature( "android.hardware.camera.autofocus", Required = false )]
 
 // Version information for an assembly consists of the following four values:
 //

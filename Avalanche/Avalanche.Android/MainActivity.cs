@@ -7,6 +7,8 @@ using Android.Views;
 using Android.Widget;
 using Android.OS;
 using FFImageLoading.Forms.Droid;
+using Plugin.Permissions;
+using Plugin.Permissions.Abstractions;
 
 namespace Avalanche.Droid
 {
@@ -24,6 +26,11 @@ namespace Avalanche.Droid
 
             global::Xamarin.Forms.Forms.Init( this, bundle );
             LoadApplication( new Avalanche.App() );
+        }
+
+        public override void OnRequestPermissionsResult( int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults )
+        {
+            PermissionsImplementation.Current.OnRequestPermissionsResult( requestCode, permissions, grantResults );
         }
     }
 }

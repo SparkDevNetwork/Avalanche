@@ -62,7 +62,7 @@ namespace Avalanche.Utilities
                         client.DefaultRequestHeaders.Add( "client_id", Constants.client_secret );
                         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue( "Bearer", token );
                     }
-                    var content = new FormUrlEncodedContent( body );
+                    var content = new StringContent( JsonConvert.SerializeObject( body ) );
                     using ( var r = await client.PostAsync( new Uri( Constants.serverUrl + url ), content ) )
                     {
                         string result = await r.Content.ReadAsStringAsync();
@@ -74,7 +74,7 @@ namespace Avalanche.Utilities
                     }
                 }
             }
-            catch
+            catch ( Exception e )
             {
                 return;
             } //Eat network issues

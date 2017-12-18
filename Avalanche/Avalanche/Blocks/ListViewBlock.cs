@@ -42,6 +42,7 @@ namespace Avalanche.Blocks
             {
                 listViewComponent = new ThumbnailListView();
             }
+            //listViewComponent.IsRefreshing = true;
 
             listViewComponent.Refreshing += ListView_Refreshing;
             listViewComponent.ItemAppearing += ListView_ItemAppearing;
