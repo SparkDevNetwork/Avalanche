@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attribute\ActionItemFieldAttribute.cs" />
     <Compile Include="AvalancheBlockCustomSettings.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -66,6 +67,8 @@
     <Compile Include="AvalancheBlock.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
+    <Compile Include="Controls\ActionItem.cs" />
+    <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />
@@ -80,15 +83,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Rock\Rock.Rest\Rock.Rest.csproj">
-      <Project>{ADD1EDD0-A4CB-4E82-B6AD-6AD1D556DEAE}</Project>
+    <ProjectReference Include="..\RockForAvalanche\Rock\Rock.Rest\Rock.Rest.csproj">
+      <Project>{add1edd0-a4cb-4e82-b6ad-6ad1d556deae}</Project>
       <Name>Rock.Rest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Rock\Rock\Rock.csproj">
-      <Project>{185A31D7-3037-4DAE-8797-0459849A84BD}</Project>
+    <ProjectReference Include="..\RockForAvalanche\Rock\Rock\Rock.csproj">
+      <Project>{185a31d7-3037-4dae-8797-0459849a84bd}</Project>
       <Name>Rock</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>xcopy /Y /R "$(ProjectDir)bin\Debug\Avalanche.dll" "$(SolutionDir)RockWeb\bin"

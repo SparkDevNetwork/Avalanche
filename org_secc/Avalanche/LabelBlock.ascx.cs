@@ -44,13 +44,19 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string arg )
         {
-            CustomAttributes["Text"] = GetAttributeValue( "Text" );
+            CustomAttributes["Text"] = ProcessLava( GetAttributeValue( "Text" ) );
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.LabelBlock",
                 Attributes = CustomAttributes
             };
+        }
+
+        private string ProcessLava( string lava )
+        {
+            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, CurrentPerson );
+            return lava.ResolveMergeFields( mergeObjects );
         }
     }
 }

@@ -13,15 +13,17 @@ using Rock;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
+using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Image Block" )]
     [Category( "SECC > Avalanche" )]
     [Description( "A button." )]
-    [BinaryFileField( Rock.SystemGuid.BinaryFiletype.CONTENT_CHANNEL_ITEM_IMAGE, "Image", "Image to be displayed" )]
+    [TextField( "Image", "Image to be displayed", false )]
+    [CustomDropdownListField( "Aspect", "Aspect type", "0^AspectFit,1^AspectFill,2^Fit" )]
+    [ActionItemField( "Action Item", "Action to take on touch.", false )]
 
-    [IntegerField( "Aspect", "Aspect to use. AspectFit: 0, AspectFill:1, Fit:2", false )]
     public partial class ImageBlock : AvalancheBlock
     {
 
@@ -45,15 +47,13 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string arg )
         {
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 
             if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
             {
                 CustomAttributes.Add( "Source", string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) ) );
             }
-            if ( new List<string> { "0", "1", "2" }.Contains( GetAttributeValue( "Aspect" ) ) )
-            {
-                CustomAttributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
-            }
+            CustomAttributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
 
             return new MobileBlock()
             {

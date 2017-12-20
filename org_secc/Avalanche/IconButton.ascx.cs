@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Rock;
 using Avalanche;
 using Avalanche.Models;
+using Avalanche.Attribute;
 using Rock.Attribute;
 using System.Web.UI.WebControls;
 using System.Web.UI.HtmlControls;
@@ -19,13 +20,12 @@ using System.Web.UI.HtmlControls;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Icon Button" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "An icon button" )]
 
     [TextField( "Text", "The text of the label to be displayed.", false )]
     [TextField( "Icon", "Icon to use on the button." )]
-    [IntegerField( "PageNumber", "The rock page number to link to." )]
-    [TextField( "Argument", "Optional argument to send to the page.", false )]
+    [ActionItemField( "Action Item", "", false )]
     public partial class IconButton : AvalancheBlock
     {
 
@@ -35,33 +35,29 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            lbLabel.Text = "[Icon Button]";
+            var text = string.Format( "<i class='{0}'></i> {1}", GetAttributeValue( "Icon" ), GetAttributeValue( "Text" ) );
+            btnButton.Text = text;
+
         }
-
-
 
         public override MobileBlock GetMobile( string arg )
         {
-            var attributes = new Dictionary<string, string>
-            {
-            };
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 
-            var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
-            foreach ( var item in customs )
-            {
-                attributes[item.Key] = HttpUtility.UrlDecode( ( string ) item.Value );
-            }
-
-            attributes.Add( "Text", GetAttributeValue( "Text" ) );
-            attributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
-            attributes.Add( "Argument", GetAttributeValue( "Argument" ) );
-            attributes.Add( "Icon", GetAttributeValue( "Icon" ) );
+            CustomAttributes.Add( "Text", GetAttributeValue( "Text" ) );
+            CustomAttributes.Add( "Icon", GetAttributeValue( "Icon" ) );
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.IconButton",
-                Attributes = attributes
+                Attributes = CustomAttributes
             };
+        }
+
+        protected void btnButton_Click( object sender, EventArgs e )
+        {
+            GetMobile( "" );
+            Response.Redirect( "/page/" + CustomAttributes["Resource"] );
         }
     }
 }
