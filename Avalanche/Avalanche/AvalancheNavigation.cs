@@ -15,13 +15,16 @@ namespace Avalanche
             App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
         }
 
-        public static void ReplacePage( string resource, string argument = "" )
+        public static void RemovePage()
         {
-            if ( App.Current.MainPage.Navigation.NavigationStack.Count > 0 )
-            {
-                App.Current.MainPage.Navigation.PopAsync();
-            }
-            App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
+            App.Current.MainPage.Navigation.PopAsync();
+        }
+
+        public async static void ReplacePage( string resource, string argument = "" )
+        {
+            var page = App.Current.MainPage.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1];
+            await App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
+            App.Current.MainPage.Navigation.RemovePage( page );
         }
     }
 }

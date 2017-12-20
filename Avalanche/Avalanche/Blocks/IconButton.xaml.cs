@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using Avalanche.Utilities;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -95,17 +95,7 @@ namespace Avalanche.Blocks
 
         private void BtnButton_Clicked( object sender, EventArgs e )
         {
-            if ( Attributes.ContainsKey( "PageNumber" ) )
-            {
-                if ( Attributes.ContainsKey( "Argument" ) )
-                {
-                    AvalancheNavigation.GetPage( Attributes["PageNumber"], Attributes["Argument"] );
-                }
-                else
-                {
-                    AvalancheNavigation.GetPage( Attributes["PageNumber"] );
-                }
-            }
+            AttributeHelper.HandleActionItem( Attributes );
         }
 
         public Dictionary<string, string> Attributes { get; set; }

@@ -72,5 +72,54 @@ namespace Avalanche.Utilities
                 }
             }
         }
+
+        public static void HandleActionItem(Dictionary<string,string> Attributes )
+        {
+            if ( !Attributes.ContainsKey( "ActionType" ) || Attributes["ActionType"] == "0" )
+            {
+                return;
+            }
+
+            var resource = "";
+            if ( Attributes.ContainsKey( "Resource" ) )
+            {
+                resource = Attributes["Resource"];
+            }
+
+            var argument = "";
+            if ( Attributes.ContainsKey( "Argument" ) )
+            {
+                argument = Attributes["Argument"];
+            }
+
+            if ( Attributes["ActionType"] == "1" && !string.IsNullOrWhiteSpace( resource ) ) //push new page
+            {
+                AvalancheNavigation.GetPage( Attributes["Resource"], argument );
+            }
+            else if ( Attributes["ActionType"] == "2" && !string.IsNullOrWhiteSpace( resource ) ) //replace
+            {
+                AvalancheNavigation.ReplacePage( Attributes["Resource"], argument );
+            }
+            else if ( Attributes["ActionType"] == "3" ) //pop page
+            {
+                AvalancheNavigation.RemovePage();
+            }
+            else if ( Attributes["ActionType"] == "4" && !string.IsNullOrWhiteSpace( resource ) )
+            {
+                if ( !string.IsNullOrWhiteSpace( argument ) )
+                {
+                    if ( resource.Contains( "?" ) )
+                    {
+                        resource += "&rckipid=" + argument;
+                    }
+                    else
+                    {
+                        resource += "?rckipid=" + argument;
+                    }
+                }
+                Device.OpenUri( new Uri( resource ) );
+            }
+        }
+
     }
 }
