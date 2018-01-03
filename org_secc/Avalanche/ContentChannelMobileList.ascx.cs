@@ -58,7 +58,7 @@ namespace RockWeb.Plugins.Avalanche
     [BooleanField( "Query Parameter Filtering", "Determines if block should evaluate the query string parameters for additional filter criteria.", false, "CustomSetting" )]
     [TextField( "Order", "The specifics of how items should be ordered. This value is set through configuration and should not be modified here.", false, "", "CustomSetting" )]
     [TextField( "Title Lava", "Lava to display the details of each {{Item}}", true, "{{Item.Title}}", "CustomSetting" )]
-    [TextField( "Subtitle Lava", "The attribute key of the subtitle formatted for mobile.", false, "", "CustomSetting" )]
+    [TextField( "Description Lava", "The attribute key of the descriptionch formatted for mobile.", false, "", "CustomSetting" )]
     [TextField( "Image Lava", "The attribute key of the image to show on the list view will hide icon if not blank.", false, "", "CustomSetting" )]
     [TextField( "Icon Lava", "The attribute key of the icon to show on the list view.", false, "", "CustomSetting" )]
 
@@ -431,27 +431,27 @@ $(document).ready(function() {
             content = content.Skip( page * count ).Take( count ).ToList();
 
             var titleLava = GetAttributeValue( "TitleLava" );
-            var subtitleLava = GetAttributeValue( "SubtitleLava" );
+            var descriptionLava = GetAttributeValue( "DescriptionLava" );
             var imageLava = GetAttributeValue( "ImageLava" );
             var iconLava = GetAttributeValue( "IconLava" );
 
 
-            List<MobileListView> listViews = new List<MobileListView>();
+            List<MobileListViewItem> listViews = new List<MobileListViewItem>();
             foreach ( var item in content )
             {
-                var mlv = new MobileListView()
+                var mlv = new MobileListViewItem()
                 {
                     Id = item.Id.ToString(),
-                    Subtitle = "",
+                    Description = "",
                     Image = "",
                     Icon = ""
                 };
 
                 mlv.Title = ProcessLava( titleLava, item );
 
-                if ( !string.IsNullOrWhiteSpace( subtitleLava ) )
+                if ( !string.IsNullOrWhiteSpace( descriptionLava ) )
                 {
-                    mlv.Subtitle = ProcessLava( subtitleLava, item );
+                    mlv.Description = ProcessLava( descriptionLava, item );
                 }
                 if ( !string.IsNullOrWhiteSpace( imageLava ) )
                 {
@@ -1003,7 +1003,7 @@ $(document).ready(function() {
             }
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
             PageCache page = PageCache.Read( pageGuid.AsGuid() );
@@ -1019,14 +1019,14 @@ $(document).ready(function() {
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            var page = resource.AsInteger();
+            var page = request.AsInteger();
 
             var view = ShowView( page );
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = view,
                 TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
             };

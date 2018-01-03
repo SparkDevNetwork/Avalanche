@@ -31,12 +31,12 @@ namespace Avalanche
             }
         }
 
-        public abstract MobileBlock GetMobile( string arg );
-        public virtual MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        public abstract MobileBlock GetMobile( string parameter );
+        public virtual MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = "",
                 TTL = 0
             };
@@ -71,6 +71,10 @@ namespace Avalanche
                 atts
                 );
                 this.Controls.AddAt( 0, div );
+            }
+            else
+            {
+                this.Visible = false;
             }
         }
     }

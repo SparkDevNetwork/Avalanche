@@ -19,13 +19,14 @@ using System.Text;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Group Member Detail" )]
+    [DisplayName( "Person Card" )]
     [Category( "Avalanche" )]
-    [Description( "Group member detail block." )]
+    [Description( "Card to display person's information from guid." )]
 
     [TextField( "Accent Color", "Optional color to accent the member detail.", false )]
-    [CodeEditorField( "Markdown Lava", "Markdown to display as group member details.", CodeEditorMode.Markdown )]
-    public partial class GroupMemberDetail : AvalancheBlock
+    [CustomDropdownListField( "EntityType", "The entity type to get the person from.", "Person^Person,GroupMember^Group Member" )]
+
+    public partial class PersonCard : AvalancheBlock
     {
         /// <summary>
         /// Raises the <see cref="E:System.Web.UI.Control.Load" /> event.
@@ -35,24 +36,38 @@ namespace RockWeb.Plugins.Avalanche
         {
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             RockContext rockContext = new RockContext();
-            GroupMemberService groupMemberService = new GroupMemberService( rockContext );
-            var groupMember = groupMemberService.Get( arg.AsGuid() );
 
-            if ( groupMember != null )
+            Person person = null;
+            if ( GetAttributeValue( "EntityType" ) == "GroupMember" )
             {
-                CustomAttributes["PersonGuid"] = groupMember.Person.Guid.ToString();
-                CustomAttributes["Name"] = groupMember.Person.FullName;
-                CustomAttributes["Image"] = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + groupMember.Person.PhotoUrl;
-                CustomAttributes["Markdown"] = ProcessLava( GetAttributeValue( "MarkdownLava" ), groupMember );
+                GroupMemberService groupMemberService = new GroupMemberService( rockContext );
+                var groupMember = groupMemberService.Get( parameter.AsGuid() );
+                if ( groupMember != null )
+                {
+                    person = groupMember.Person;
+                }
+            }
+            else
+            {
+                PersonService personService = new PersonService( rockContext );
+                person = personService.Get( parameter.AsGuid() );
+            }
+
+
+            if ( person != null )
+            {
+                CustomAttributes["PersonGuid"] = person.Guid.ToString();
+                CustomAttributes["Name"] = person.FullName;
+                CustomAttributes["Image"] = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + person.PhotoUrl;
 
                 CustomAttributes["AccentColor"] = GetAttributeValue( "AccentColor" );
 
                 return new MobileBlock()
                 {
-                    BlockType = "Avalanche.Blocks.GroupMemberDetail",
+                    BlockType = "Avalanche.Blocks.PersonCard",
                     Attributes = CustomAttributes
                 };
             }
@@ -62,7 +77,6 @@ namespace RockWeb.Plugins.Avalanche
                 BlockType = "Avalanche.Blocks.Null",
                 Attributes = CustomAttributes
             };
-
         }
 
         public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )

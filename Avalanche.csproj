@@ -72,7 +72,7 @@
     <Compile Include="IMobileResource.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />
-    <Compile Include="Models\MobileListView.cs" />
+    <Compile Include="Models\MobileListViewItem.cs" />
     <Compile Include="Models\MobilePage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Controllers\AvalancheController.Partial.cs" />

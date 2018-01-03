@@ -30,7 +30,7 @@ namespace RockWeb.Plugins.Avalanche
         {
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             return new MobileBlock()
             {

@@ -31,7 +31,7 @@ namespace RockWeb.Plugins.Avalanche
         {
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             return new MobileBlock()
             {
@@ -40,14 +40,14 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            string response = GenerateCode( resource );
+            string response = GenerateCode( request );
 
 
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = response,
                 TTL = 0
             };

@@ -55,7 +55,7 @@ namespace RockWeb.Plugins.Avalanche
 
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
             PageCache page = PageCache.Read( pageGuid.AsGuid() );
@@ -73,14 +73,14 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            if ( resource != "" )
+            if ( request != "" )
             {
                 return new MobileBlockResponse()
                 {
-                    Arg = resource,
-                    Response = JsonConvert.SerializeObject( new List<MobileListView>() ),
+                    Request = request,
+                    Response = JsonConvert.SerializeObject( new List<MobileListViewItem>() ),
                     TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
                 };
             }
@@ -116,22 +116,22 @@ namespace RockWeb.Plugins.Avalanche
                     ( g, m ) => new { Group = g, Member = m }
                 ).Where( m => m.Member.PersonId == personId && m.Member.GroupRole.IsLeader && m.Member.GroupMemberStatus == GroupMemberStatus.Active )
                 .ToList() // leave sql server
-                .Select( m => new
+                .Select( m => new MobileListViewItem
                 {
                     Id = m.Group.Guid.ToString(),
                     Title = m.Group.Name,
                     Icon = m.Group.GroupType.IconCssClass,
                     Image = "",
-                    Subtitle = ""
+                    Description = ""
                 } )
                 .DistinctBy( g => g.Id )
                 .ToList();
 
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = JsonConvert.SerializeObject( groups ),
-                TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
+                TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger(),
             };
         }
     }

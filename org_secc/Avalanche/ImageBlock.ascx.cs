@@ -20,7 +20,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Image Block" )]
     [Category( "SECC > Avalanche" )]
     [Description( "A button." )]
-    [TextField( "Image", "Image to be displayed", false )]
+    [TextField( "Image", "Image to be displayed. Data is parsed through Lava with the request {{parameter}}", false )]
     [CustomDropdownListField( "Aspect", "Aspect type", "0^AspectFit,1^AspectFill,2^Fit" )]
     [ActionItemField( "Action Item", "Action to take on touch.", false )]
 
@@ -45,7 +45,7 @@ namespace RockWeb.Plugins.Avalanche
             }
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 

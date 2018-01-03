@@ -19,7 +19,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "WebViewBlock" )]
     [Category( "Avalanche" )]
     [Description( "A control to display Markdown." )]
-    [TextField( "Url", "Webpage to display.")]
+    [TextField( "Url", "Webpage to display." )]
     [TextField( "Regex Limit", "If a page is opened that doesn't match this Regex. A request to open in external browser will appear." )]
     public partial class WebViewBlock : AvalancheBlock
     {
@@ -33,14 +33,14 @@ namespace RockWeb.Plugins.Avalanche
             lbHtml.Text = GetAttributeValue( "Url" );
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             CustomAttributes["Url"] = GetAttributeValue( "Url" );
-            CustomAttributes["Domain"] = GetAttributeValue( "RegexLimit");
+            CustomAttributes["Domain"] = GetAttributeValue( "RegexLimit" );
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.WebViewBlock",
-                Attributes =CustomAttributes
+                Attributes = CustomAttributes
             };
         }
     }

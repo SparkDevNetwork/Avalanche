@@ -30,24 +30,29 @@ namespace Avalanche
                 return _customAtributes;
             }
         }
-        public abstract MobileBlock GetMobile( string arg );
-        public virtual MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+
+        public abstract MobileBlock GetMobile( string parameter );
+        public virtual MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = "",
                 TTL = 0
             };
         }
-        protected override void OnInit( EventArgs e )
+        protected override void OnPreRender( EventArgs e )
         {
-            base.OnInit( e );
+            base.OnPreRender( e );
 
             if ( CurrentUser != null && UserCanAdministrate )
             {
                 var mobileBlock = this.GetMobile( "" );
-                var atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+                var atts = "";
+                if ( mobileBlock.Attributes != null )
+                {
+                    atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+                }
                 HtmlGenericControl div = new HtmlGenericControl( "div" );
                 div.InnerHtml = string.Format( @"
 <details style=""margin:0px 0px -18px -18px"">
@@ -65,6 +70,10 @@ namespace Avalanche
                 atts
                 );
                 this.Controls.AddAt( 0, div );
+            }
+            else
+            {
+                this.Visible = false;
             }
         }
     }

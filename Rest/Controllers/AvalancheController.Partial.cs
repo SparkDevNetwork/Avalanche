@@ -35,8 +35,8 @@ namespace Avalanche.Rest.Controllers
         [HttpGet]
         [Authenticate]
         [System.Web.Http.Route( "api/avalanche/page/{id}" )]
-        [System.Web.Http.Route( "api/avalanche/page/{id}/{*arg}" )]
-        public MobilePage GetPage( int id, string arg = "" )
+        [System.Web.Http.Route( "api/avalanche/page/{id}/{*parameter}" )]
+        public MobilePage GetPage( int id, string parameter = "" )
         {
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
@@ -70,7 +70,7 @@ namespace Avalanche.Rest.Controllers
                     {
                         control.SetBlock( pageCache, blockCache );
                         var mobileResource = control as IMobileResource;
-                        var mobileBlock = mobileResource.GetMobile( arg );
+                        var mobileBlock = mobileResource.GetMobile( parameter );
                         mobileBlock.BlockId = blockCache.Id;
                         mobileBlock.Zone = blockCache.Zone;
                         mobilePage.Blocks.Add( mobileBlock );
@@ -84,8 +84,8 @@ namespace Avalanche.Rest.Controllers
         [HttpGet]
         [Authenticate]
         [System.Web.Http.Route( "api/avalanche/block/{id}" )]
-        [System.Web.Http.Route( "api/avalanche/block/{id}/{*arg}" )]
-        public MobileBlockResponse BlockGetRequest( int id, string arg = "" )
+        [System.Web.Http.Route( "api/avalanche/block/{id}/{*request}" )]
+        public MobileBlockResponse BlockGetRequest( int id, string request = "" )
         {
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
@@ -104,7 +104,7 @@ namespace Avalanche.Rest.Controllers
                 {
                     control.SetBlock( pageCache, blockCache );
                     var mobileResource = control as IMobileResource;
-                    var mobileBlockResponse = mobileResource.HandleRequest( arg, new Dictionary<string, string>() );
+                    var mobileBlockResponse = mobileResource.HandleRequest( request, new Dictionary<string, string>() );
                     HttpContext.Current.Response.Headers.Set( "TTL", mobileBlockResponse.TTL.ToString() );
                     return mobileBlockResponse;
                 }

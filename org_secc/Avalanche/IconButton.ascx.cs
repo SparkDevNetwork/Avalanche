@@ -40,24 +40,18 @@ namespace RockWeb.Plugins.Avalanche
 
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 
-            CustomAttributes.Add( "Text", GetAttributeValue( "Text" ) );
-            CustomAttributes.Add( "Icon", GetAttributeValue( "Icon" ) );
+            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter ) );
+            CustomAttributes.Add( "Icon", AvalancheUtilities.ProcessLava( GetAttributeValue( "Icon" ), CurrentPerson, parameter ) );
 
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.IconButton",
                 Attributes = CustomAttributes
             };
-        }
-
-        protected void btnButton_Click( object sender, EventArgs e )
-        {
-            GetMobile( "" );
-            Response.Redirect( "/page/" + CustomAttributes["Resource"] );
         }
     }
 }

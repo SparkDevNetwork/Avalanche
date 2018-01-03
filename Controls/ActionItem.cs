@@ -6,6 +6,7 @@ using System.Text;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
 using System.Web.UI.WebControls;
+using Rock;
 using Rock.Data;
 using Rock.Model;
 using Rock.Web.UI.Controls;
@@ -226,24 +227,46 @@ namespace Avalanche.Controls
         {
             get
             {
-                return string.Format( "{0}|{1}|{2}|{3}", ddlActionList.SelectedValue, tbTarget.Text, tbArgument.Text, ddlRckipid.SelectedValue );
+                if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
+                {
+                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, ppPage.SelectedValue, tbArgument.Text );
+                }
+
+                if ( ddlActionList.SelectedValue == "4" )
+                {
+                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, tbTarget.Text, ddlRckipid.SelectedValue );
+                }
+
+                return ddlActionList.SelectedValue;
             }
             set
             {
                 EnsureChildControls();
                 var values = value.Split( '|' );
                 ddlActionList.SelectedValue = values[0];
-                if ( values.Length > 1 )
+
+                if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
                 {
-                    tbTarget.Text = values[1];
+                    if ( values.Length > 1 )
+                    {
+                        ppPage.SetValue( values[1].AsInteger() );
+                    }
+                    if ( values.Length > 2 )
+                    {
+                        tbArgument.Text = values[2];
+                    }
                 }
-                if ( values.Length > 2 )
+
+                if ( ddlActionList.SelectedValue == "4" )
                 {
-                    tbArgument.Text = values[2];
-                }
-                if ( values.Length > 3 )
-                {
-                    ddlRckipid.SelectedValue = values[3];
+                    if ( values.Length > 1 )
+                    {
+                        tbTarget.Text = values[1];
+                    }
+                    if ( values.Length > 2 )
+                    {
+                        ddlRckipid.SelectedValue = values[2];
+                    }
                 }
             }
         }
@@ -261,12 +284,10 @@ namespace Avalanche.Controls
         }
 
         private RockDropDownList ddlActionList;
+        private PagePicker ppPage;
         private RockTextBox tbTarget;
         private RockTextBox tbArgument;
         private RockDropDownList ddlRckipid;
-
-
-
 
         /// <summary>
         /// Called by the ASP.NET page framework to notify server controls that use composition-based implementation to create any child controls they contain in preparation for posting back or rendering.
@@ -290,17 +311,23 @@ namespace Avalanche.Controls
             ddlActionList.CssClass = "col-md-12";
             ddlActionList.ID = "ddlActionList_" + this.ID;
 
+            ppPage = new PagePicker()
+            {
+                Label = "Page",
+                ID = "ppPage_" + this.ID
+            };
+
             tbTarget = new RockTextBox()
             {
-                Label = "Target"
+                Label = "Target",
+                ID = "tbTarget_" + this.ID
             };
-            tbTarget.ID = "tbTarget_" + this.ID;
 
             tbArgument = new RockTextBox()
             {
-                Label = "Argument"
+                Label = "Argument",
+                ID = "tbArgument_" + this.ID
             };
-            tbArgument.ID = "tbArgument_" + this.ID;
 
             ddlRckipid = new RockDropDownList();
             ddlRckipid.ID = "ddlRckipid_" + this.ID;
@@ -309,6 +336,7 @@ namespace Avalanche.Controls
             ddlRckipid.Items.Add( new ListItem( "Yes", "1" ) );
 
             Controls.Add( ddlActionList );
+            Controls.Add( ppPage );
             Controls.Add( tbTarget );
             Controls.Add( tbArgument );
             Controls.Add( ddlRckipid );
@@ -340,18 +368,18 @@ namespace Avalanche.Controls
             writer.AddAttribute( HtmlTextWriterAttribute.Class, "well" );
             writer.RenderBeginTag( HtmlTextWriterTag.Div );
             ddlActionList.RenderControl( writer );
-            if ( ddlActionList.SelectedValue != "0" && ddlActionList.SelectedValue != "3" )
+
+            if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
+            {
+                ppPage.RenderControl( writer );
+                tbArgument.RenderControl( writer );
+            }
+            else if ( ddlActionList.SelectedValue == "4" )
             {
                 tbTarget.RenderControl( writer );
-                if ( ddlActionList.SelectedValue == "4" )
-                {
-                    ddlRckipid.RenderControl( writer );
-                }
-                else
-                {
-                    tbArgument.RenderControl( writer );
-                }
+                ddlRckipid.RenderControl( writer );
             }
+
             writer.RenderEndTag();
         }
     }

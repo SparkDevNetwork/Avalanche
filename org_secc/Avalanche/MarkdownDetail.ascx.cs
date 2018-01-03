@@ -19,10 +19,9 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Markdown Detail" )]
     [Category( "SECC > Avalanche" )]
     [Description( "A control to display Markdown." )]
-    [CodeEditorField( "Markdown", "Markdown code to be rendered in app.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
+    [CodeEditorField( "Markdown", "Markdown code to be rendered in app using the {{resource}}.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
         Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
-    [TextField( "Margin", "Comma separated margins starting on the left and moving counter clockwise.", false )]
-    public partial class MarkdownDetail : RockBlock, IMobileResource
+    public partial class MarkdownDetail : AvalancheBlock
     {
 
         /// <summary>
@@ -34,23 +33,17 @@ namespace RockWeb.Plugins.Avalanche
             lbMarkdown.Text = GetAttributeValue( "Markdown" );
         }
 
-        public MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.MarkdownDetail",
-                Body = new Dictionary<string, string>
+                Attributes = new Dictionary<string, string>
                 {
-                    { "Content", GetAttributeValue("Markdown") },
-                    {"Margin", GetAttributeValue("Margin") }
+                    { "Content", AvalancheUtilities.ProcessLava( GetAttributeValue("Markdown"), CurrentPerson, parameter )},
 
                 }
             };
-        }
-
-        public MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
-        {
-            throw new NotImplementedException();
         }
     }
 }

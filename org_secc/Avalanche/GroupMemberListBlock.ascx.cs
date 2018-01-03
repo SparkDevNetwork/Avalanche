@@ -14,14 +14,14 @@ using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
 using Newtonsoft.Json;
+using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Group Member List Block" )]
     [Category( "Avalanche" )]
     [Description( "Mobile block to show group members of a group." )]
-
-    [LinkedPage( "Detail Page", "The page to navigate to for details.", false, "", "", 1 )]
+    [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
     public partial class GroupMemberListBlock : AvalancheBlock
     {
 
@@ -36,7 +36,7 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string arg )
         {
-            if ( GetGroupMembers( arg ) == null )
+            if ( GetGroupMembers( arg ) == null ) // send null if no argument
             {
                 return new MobileBlock()
                 {
@@ -45,15 +45,7 @@ namespace RockWeb.Plugins.Avalanche
                 };
             }
 
-            CustomAttributes["Resource"] = arg;
-
-            var pageGuid = GetAttributeValue( "DetailPage" );
-            PageCache page = PageCache.Read( pageGuid.AsGuid() );
-            if ( page != null && page.IsAuthorized( "View", CurrentPerson ) )
-            {
-                CustomAttributes["DetailPage"] = page.Id.ToString();
-            }
-
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ListViewBlock",
@@ -61,32 +53,32 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string resource, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            var groupMembers = GetGroupMembers( resource );
+            var groupMembers = GetGroupMembers( request );
             if ( groupMembers == null )
             {
-                return new MobileBlockResponse()
+                return new MobileBlockResponse() // send nothing if no members
                 {
-                    Arg = resource,
-                    Response = JsonConvert.SerializeObject( new List<MobileListView>() ),
-                    TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
+                    Request = request,
+                    Response = JsonConvert.SerializeObject( new List<MobileListViewItem>() ),
+                    TTL = 0
                 };
             }
 
-            var members = groupMembers.Select( m => new
+            var members = groupMembers.Select( m => new MobileListViewItem
             {
                 Id = m.Guid.ToString(),
                 Title = m.Person.FullName,
                 Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + m.Person.PhotoUrl + "&width=100",
-                Subtitle = m.GroupRole.Name
+                Description = m.GroupRole.Name
             } ).ToList();
 
             return new MobileBlockResponse()
             {
-                Arg = resource,
+                Request = request,
                 Response = JsonConvert.SerializeObject( members ),
-                TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
+                TTL = 0
             };
         }
 
@@ -123,6 +115,5 @@ namespace RockWeb.Plugins.Avalanche
                 .Where( m => m.GroupMemberStatus != GroupMemberStatus.Inactive )
                 .ToList();
         }
-
     }
 }

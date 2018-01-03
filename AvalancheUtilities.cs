@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rock;
 using Rock.Model;
 
 namespace Avalanche
@@ -36,17 +37,6 @@ namespace Avalanche
                     {
                         CustomAttributes.Add( "Argument", actionItems[2] );
                     }
-                    if ( actionType == "4" && actionItems.Length > 3 ) //Webpage
-                    {
-                        if ( actionItems[3] == "1" && CurrentPerson != null )
-                        {
-                            CustomAttributes["Argument"] = CurrentPerson.UrlEncodedKey;
-                        }
-                        else
-                        {
-                            CustomAttributes["Argument"] = "";
-                        }
-                    }
                 }
             }
             else
@@ -55,5 +45,11 @@ namespace Avalanche
             }
         }
 
+        public static string ProcessLava( string lava, Person currentPerson, string parameter = "" )
+        {
+            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
+            mergeObjects["parameter"] = parameter;
+            return lava.ResolveMergeFields( mergeObjects );
+        }
     }
 }

@@ -32,10 +32,10 @@ namespace RockWeb.Plugins.Avalanche
             btnButton.Text = GetAttributeValue( "Text" );
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
 
-            CustomAttributes.Add( "Text", GetAttributeValue( "Text" ) );
+            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter ) );
             CustomAttributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
 
             return new MobileBlock()
