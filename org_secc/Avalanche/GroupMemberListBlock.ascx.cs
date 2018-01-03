@@ -21,6 +21,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Group Member List Block" )]
     [Category( "Avalanche" )]
     [Description( "Mobile block to show group members of a group." )]
+
     [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
     public partial class GroupMemberListBlock : AvalancheBlock
     {

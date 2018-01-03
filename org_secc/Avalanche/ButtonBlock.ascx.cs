@@ -17,10 +17,12 @@ using Rock.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Button" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "A button." )]
+
     [TextField( "Text", "Text which will appear on the button." )]
     [TextField( "Page Number", "Number of the page to navigate to." )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     public partial class ButtonBlock : AvalancheBlock
     {
         /// <summary>
@@ -35,7 +37,11 @@ namespace RockWeb.Plugins.Avalanche
         public override MobileBlock GetMobile( string parameter )
         {
 
-            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter ) );
+            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
+                                                                          CurrentPerson,
+                                                                          parameter,
+                                                                          GetAttributeValue( "EnabledLavaCommands" ) ) );
+
             CustomAttributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
 
             return new MobileBlock()

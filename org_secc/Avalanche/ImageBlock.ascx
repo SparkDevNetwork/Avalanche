@@ -2,6 +2,9 @@
 
 <asp:UpdatePanel runat="server">
     <ContentTemplate>
-        <Rock:ImageUploader runat="server" ID="img" OnImageUploaded="img_ImageUploaded" OnImageRemoved="img_ImageRemoved" />
+        <div class="well">
+        <asp:Image ID="imgImage" runat="server" />
+            <asp:Literal ID="lLava" runat="server" />
+        </div>
     </ContentTemplate>
 </asp:UpdatePanel>

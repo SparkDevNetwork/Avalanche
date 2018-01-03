@@ -19,6 +19,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Phone Number Login" )]
     [Category( "Avalanche" )]
     [Description( "Block to log in with your phone number" )]
+
     [WorkflowTypeField( "Workflow", "Workflow which will send the text message" )]
     public partial class PhoneNumberLogin : AvalancheBlock
     {

@@ -64,7 +64,9 @@ namespace RockWeb.Plugins.Avalanche
             return new MobileBlockResponse()
             {
                 Request = request,
-                Response = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ), CurrentPerson ),
+                Response = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
+                                                           CurrentPerson,
+                                                           enabledLavaCommands: GetAttributeValue( "EnabledLavaCommands" ) ),
                 TTL = 0
             };
         }

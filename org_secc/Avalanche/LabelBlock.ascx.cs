@@ -17,9 +17,10 @@ using Rock.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Label Block" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( " Avalanche" )]
     [Description( "A button." )]
 
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [TextField( "Text", "The text of the label to be displayed.", false )]
     public partial class LabelBlock : AvalancheBlock
     {
@@ -44,7 +45,10 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
-            CustomAttributes["Text"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter );
+            CustomAttributes["Text"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
+                                                                       CurrentPerson,
+                                                                       parameter,
+                                                                       GetAttributeValue( "EnabledLavaCommands" ) );
 
             return new MobileBlock()
             {

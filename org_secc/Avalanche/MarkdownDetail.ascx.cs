@@ -17,10 +17,11 @@ using Rock.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Markdown Detail" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "A control to display Markdown." )]
     [CodeEditorField( "Markdown", "Markdown code to be rendered in app using the {{resource}}.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
         Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     public partial class MarkdownDetail : AvalancheBlock
     {
 
@@ -40,8 +41,10 @@ namespace RockWeb.Plugins.Avalanche
                 BlockType = "Avalanche.Blocks.MarkdownDetail",
                 Attributes = new Dictionary<string, string>
                 {
-                    { "Content", AvalancheUtilities.ProcessLava( GetAttributeValue("Markdown"), CurrentPerson, parameter )},
-
+                    { "Content", AvalancheUtilities.ProcessLava( GetAttributeValue("Markdown"),
+                                                                 CurrentPerson,
+                                                                 parameter,
+                                                                 GetAttributeValue( "EnabledLavaCommands" )  )},
                 }
             };
         }

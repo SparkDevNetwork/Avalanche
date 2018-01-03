@@ -45,11 +45,11 @@ namespace Avalanche
             }
         }
 
-        public static string ProcessLava( string lava, Person currentPerson, string parameter = "" )
+        public static string ProcessLava( string lava, Person currentPerson, string parameter = "", string enabledLavaCommands = "" )
         {
             var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
             mergeObjects["parameter"] = parameter;
-            return lava.ResolveMergeFields( mergeObjects );
+            return lava.ResolveMergeFields(mergeObjects, null, enabledLavaCommands );
         }
     }
 }

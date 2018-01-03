@@ -18,10 +18,12 @@ using Avalanche.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Image Block" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "A button." )]
-    [TextField( "Image", "Image to be displayed. Data is parsed through Lava with the request {{parameter}}", false )]
+
+    [TextField( "Image", "Image to be displayed. Data is parsed through Lava with the request {{parameter}}.", false )]
     [CustomDropdownListField( "Aspect", "Aspect type", "0^AspectFit,1^AspectFill,2^Fit" )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [ActionItemField( "Action Item", "Action to take on touch.", false )]
 
     public partial class ImageBlock : AvalancheBlock
@@ -33,26 +35,22 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            img.BinaryFileTypeGuid = Rock.SystemGuid.BinaryFiletype.MEDIA_FILE.AsGuid();
-            if ( !Page.IsPostBack )
-            {
-                RockContext rockContext = new RockContext();
-                BinaryFile file = new BinaryFileService( rockContext ).Get( GetAttributeValue( "Image" ).AsGuid() );
-                if ( file != null )
-                {
-                    img.BinaryFileId = file.Id;
-                }
-            }
+            imgImage.ImageUrl = AvalancheUtilities.ProcessLava( GetAttributeValue( "Image" ),
+                                                                CurrentPerson,
+                                                                "",
+                                                                GetAttributeValue( "EnabledLavaCommands" ) );
+            lLava.Text = GetAttributeValue( "Image" );
         }
 
         public override MobileBlock GetMobile( string parameter )
         {
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 
-            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Image" ) ) )
-            {
-                CustomAttributes.Add( "Source", string.Format( "{0}/GetImage.ashx?guid={1}", GlobalAttributesCache.Value( "InternalApplicationRoot" ), GetAttributeValue( "Image" ) ) );
-            }
+            CustomAttributes.Add( "Source", AvalancheUtilities.ProcessLava( GetAttributeValue( "Image" ),
+                                                                            CurrentPerson,
+                                                                            parameter,
+                                                                            GetAttributeValue( "EnabledLavaCommands" )
+                                                                            ) );
             CustomAttributes.Add( "Aspect", GetAttributeValue( "Aspect" ) );
 
             return new MobileBlock()
@@ -60,23 +58,6 @@ namespace RockWeb.Plugins.Avalanche
                 BlockType = "Avalanche.Blocks.ImageBlock",
                 Attributes = CustomAttributes
             };
-        }
-
-        protected void img_ImageUploaded( object sender, Rock.Web.UI.Controls.ImageUploaderEventArgs e )
-        {
-            RockContext rockContext = new RockContext();
-            BinaryFile file = new BinaryFileService( rockContext ).Get( img.BinaryFileId ?? 0 );
-            if ( file != null )
-            {
-                file.IsTemporary = false;
-                SetAttributeValue( "Image", file.Guid.ToString() );
-                SaveAttributeValues();
-            }
-        }
-
-        protected void img_ImageRemoved( object sender, Rock.Web.UI.Controls.ImageUploaderEventArgs e )
-        {
-            SetAttributeValue( "Image", "" );
         }
     }
 }

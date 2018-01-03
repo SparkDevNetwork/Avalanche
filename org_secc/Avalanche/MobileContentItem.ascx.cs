@@ -24,6 +24,7 @@ namespace RockWeb.Plugins.Avalanche
     [TextField( "Title Lava", "Lava to dispay {{Item}} title.", false, "{{Item.Title}}" )]
     [TextField( "Markdown Lava", "Lava to display markdown {{Item}} content.", false )]
     [TextField( "Image Lava", "Lava to display image from the {{Item}}", false )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
 
     public partial class MobileContentItem : AvalancheBlock
     {
@@ -66,7 +67,7 @@ namespace RockWeb.Plugins.Avalanche
         {
             var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, CurrentPerson );
             mergeObjects["Item"] = item;
-            return lava.ResolveMergeFields( mergeObjects );
+            return lava.ResolveMergeFields( mergeObjects, null, GetAttributeValue( "EnabledLavaCommands" ) );
         }
     }
 }

@@ -17,7 +17,7 @@ using Rock.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Login App" )]
-    [Category( "SECC > Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "Login Screen" )]
     public partial class Login : AvalancheBlock
     {

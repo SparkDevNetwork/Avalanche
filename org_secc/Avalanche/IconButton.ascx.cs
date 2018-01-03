@@ -23,9 +23,10 @@ namespace RockWeb.Plugins.Avalanche
     [Category( "Avalanche" )]
     [Description( "An icon button" )]
 
-    [TextField( "Text", "The text of the label to be displayed.", false )]
-    [TextField( "Icon", "Icon to use on the button." )]
+    [TextField( "Text", "The text of the label to be displayed. Lava enabled with the {{parameter}} available.", false )]
+    [TextField( "Icon", "Icon to use on the button. Lava enabled with the {{parameter}} available." )]
     [ActionItemField( "Action Item", "", false )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     public partial class IconButton : AvalancheBlock
     {
 
