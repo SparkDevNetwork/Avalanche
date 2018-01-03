@@ -32,7 +32,7 @@ namespace Avalanche.Components.ListView
                 aiLoading.IsRunning = value;
             }
         }
-        public ObservableCollection<MobileListView> ItemsSource { get; set; }
+        public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
         public double FontSize { get; set; }
 
@@ -43,7 +43,7 @@ namespace Avalanche.Components.ListView
         public ColumnListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<MobileListView>();
+            ItemsSource = new ObservableCollection<MobileListViewItem>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
             Columns = 2;
 
@@ -112,7 +112,7 @@ namespace Avalanche.Components.ListView
                 gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
             }
 
-            foreach ( MobileListView item in e.NewItems )
+            foreach ( MobileListViewItem item in e.NewItems )
             {
                 AddCell( item,
                         ( ItemsSource.Count - 1 ) % Columns,
@@ -120,7 +120,7 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private void AddCell( MobileListView item, int x, int y )
+        private void AddCell( MobileListViewItem item, int x, int y )
         {
             StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
@@ -130,8 +130,8 @@ namespace Avalanche.Components.ListView
             }
             else
             {
-                FontAwesomeIcon fai = new FontAwesomeIcon() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
-                sl.Children.Add( fai );
+                IconLabel icon = new IconLabel() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
+                sl.Children.Add( icon );
             }
 
             Label label = new Label() { Text = item.Title, HorizontalOptions = LayoutOptions.Center, FontSize = 20 };
@@ -143,6 +143,7 @@ namespace Avalanche.Components.ListView
             };
             tgr.Tapped += ( s, ee ) =>
             {
+                sl.TranslationY = 1;
                 SelectedItem = item;
                 ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
             };

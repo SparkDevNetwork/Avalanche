@@ -12,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace Avalanche.Blocks
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class GroupMemberDetail : ContentView, IRenderable, IHasBlockMessenger
+    public partial class PersonCard : ContentView, IRenderable, IHasBlockMessenger
     {
         private string personGuid;
         public string Image
@@ -69,7 +69,7 @@ namespace Avalanche.Blocks
             }
         }
 
-        public GroupMemberDetail()
+        public PersonCard()
         {
             InitializeComponent();
 
@@ -100,7 +100,7 @@ namespace Avalanche.Blocks
 
             var file = await CrossMedia.Current.TakePhotoAsync( new Plugin.Media.Abstractions.StoreCameraMediaOptions
             {
-                Directory = "GroupMembers",
+                Directory = "AvalanchePhotos",
                 Name = "person.jpg",
                 MaxWidthHeight = 800,
                 PhotoSize = PhotoSize.MaxWidthHeight,

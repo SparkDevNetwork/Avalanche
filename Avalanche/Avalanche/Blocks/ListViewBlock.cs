@@ -50,15 +50,14 @@ namespace Avalanche.Blocks
             if ( Attributes.ContainsKey( "DetailPage" ) && !string.IsNullOrWhiteSpace( Attributes["DetailPage"] ) )
             {
                 DetailPage = Attributes["DetailPage"];
-                listViewComponent.ItemSelected += ListView_ItemSelected;
             }
+            listViewComponent.ItemSelected += ListView_ItemSelected;
 
             MessageHandler.Response += MessageHandler_Response;
 
             if ( Attributes.ContainsKey( "Resource" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
             {
                 MessageHandler.Get( Attributes["Resource"] );
-
             }
             else
             {
@@ -80,29 +79,36 @@ namespace Avalanche.Blocks
                 listViewComponent.ItemsSource.Clear();
                 _manualRefresh = false;
             }
+            try
+            {
 
-            List<MobileListView> mlv = JsonConvert.DeserializeObject<List<MobileListView>>( response );
-            if ( !mlv.Any() )
+                List<MobileListViewItem> mlv = JsonConvert.DeserializeObject<List<MobileListViewItem>>( response );
+                if ( mlv == null || !mlv.Any() )
+                {
+                    _endOfList = true;
+                    listViewComponent.IsRefreshing = false;
+                    return;
+                }
+                foreach ( var item in mlv )
+                {
+                    item.FontSize = listViewComponent.FontSize;
+                    foreach ( var i in listViewComponent.ItemsSource )
+                    {
+                        if ( !string.IsNullOrEmpty( i.Id ) && i.Id == item.Id )
+                        {
+                            listViewComponent.ItemsSource.Remove( i );
+                            break;
+                        }
+                    }
+                    listViewComponent.ItemsSource.Add( item );
+                }
+                listViewComponent.IsRefreshing = false;
+            }
+            catch
             {
                 _endOfList = true;
                 listViewComponent.IsRefreshing = false;
-                return;
             }
-            foreach ( var item in mlv )
-            {
-                item.FontSize = listViewComponent.FontSize;
-                foreach ( var i in listViewComponent.ItemsSource )
-                {
-                    if ( i.Id != null && i.Id == item.Id )
-                    {
-                        listViewComponent.ItemsSource.Remove( i );
-                        break;
-                    }
-                }
-                listViewComponent.ItemsSource.Add( item );
-            }
-            listViewComponent.IsRefreshing = false;
-
         }
 
         private void ListView_Refreshing( object sender, EventArgs e )
@@ -129,7 +135,7 @@ namespace Avalanche.Blocks
                 return;
 
             //hit bottom!
-            if ( ( ( MobileListView ) e.Item ).Id == listViewComponent.ItemsSource[listViewComponent.ItemsSource.Count - 1].Id )
+            if ( ( ( MobileListViewItem ) e.Item ).Id == listViewComponent.ItemsSource[listViewComponent.ItemsSource.Count - 1].Id )
             {
                 _pageNumber++;
                 listViewComponent.IsRefreshing = true;
@@ -144,10 +150,16 @@ namespace Avalanche.Blocks
                 return;
             }
 
-            var item = listViewComponent.SelectedItem as MobileListView;
+            var item = listViewComponent.SelectedItem as MobileListViewItem;
+            if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
+            {
+                AttributeHelper.HandleActionItem( new Dictionary<string, string> { { "Resource", item.Resource }, { "ActionType", item.ActionType } } );
+            }
+
+
             listViewComponent.SelectedItem = null;
 
-            AvalancheNavigation.GetPage( DetailPage, item.Id );
+            AttributeHelper.HandleActionItem( Attributes );
         }
         #endregion
     }

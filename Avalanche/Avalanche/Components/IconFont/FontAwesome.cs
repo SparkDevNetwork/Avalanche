@@ -1,63 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
-using Xamarin.Forms;
 
-namespace Avalanche.CustomControls
+namespace Avalanche.Components.IconFont
 {
-    class FontAwesomeIcon : Label
+    public class FontAwesome : IIconFont
     {
-        public FontAwesomeIcon()
-        {
-
-            if ( Device.RuntimePlatform == Device.Android )
-            {
-                FontFamily = "fontawesome.ttf#fontawesome";
-            }
-            else if ( Device.RuntimePlatform == Device.iOS )
-            {
-                FontFamily = "fontawesome";
-            }
-        }
-
-        public static readonly new BindableProperty TextProperty = BindableProperty.Create(
-            "Text",
-            typeof( string ),
-            typeof( FontAwesomeIcon ),
-            propertyChanged: TextPropertyChange,
-            defaultValue: ""
-            );
-
-        private static void TextPropertyChange( BindableObject bindable, object oldValue, object newValue )
-        {
-            var icon = ( FontAwesomeIcon ) bindable;
-            icon.Text = ( string ) newValue;
-        }
-
-        public new string Text
+        public string iOSFont { get { return "fontawesome"; } }
+        public string AndroidFont { get { return "fontawesome.ttf#fontawesome"; } }
+        public Dictionary<string, string> LookupTable
         {
             get
             {
-                return base.Text;
-            }
-            set
-            {
-                base.Text = lookupIcon( value );
-            }
-        }
-
-
-        private string lookupIcon( string source )
-        {
-            if ( !string.IsNullOrWhiteSpace( source ) && lookupTable.ContainsKey( source ) )
-            {
-                return lookupTable[source];
-            }
-
-            return "";
-        }
-
-        Dictionary<string, string> lookupTable = new Dictionary<string, string> {
+                return new Dictionary<string, string> {
             {"fa fa-500px", "\uf26e"},
             {"fa fa-address-book", "\uf2b9"},
             {"fa fa-address-book-o", "\uf2ba"},
@@ -845,5 +800,7 @@ namespace Avalanche.CustomControls
             {"fa fa-youtube-play", "\uf16a"},
             {"fa fa-youtube-square", "\uf166"}
         };
+            }
+        }
     }
 }

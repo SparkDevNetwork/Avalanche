@@ -46,6 +46,10 @@
       <string>Icon-Small@2x.png</string>
       <string>Icon-Small@3x.png</string>
     </array>
+	<key>NSCameraUsageDescription</key>
+	<string>This app needs access to the camera to take photos.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to photos to save to change profile picture.</string>
     <key>UILaunchStoryboardName</key>
     <string>LaunchScreen.storyboard</string>
   </dict>

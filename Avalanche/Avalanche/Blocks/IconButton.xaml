@@ -9,7 +9,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
-            <local:FontAwesomeIcon x:Name="iIcon" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center"/>
+            <local:IconLabel x:Name="iIcon" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             <Label x:Name="lbLabel" Grid.Column="1" VerticalOptions="Center"/>
             <Button x:Name="btnButton" Opacity="0" Grid.ColumnSpan="2"/>
         </Grid>

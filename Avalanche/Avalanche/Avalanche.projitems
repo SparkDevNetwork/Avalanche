@@ -14,8 +14,8 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AvalanchePage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\GroupMemberDetail.xaml.cs">
-      <DependentUpon>GroupMemberDetail.xaml</DependentUpon>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\PersonCard.xaml.cs">
+      <DependentUpon>PersonCard.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\IconButton.xaml.cs">
@@ -28,6 +28,9 @@
       <DependentUpon>PhoneNumberLogin.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\SoutheastIcons.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml.cs">
       <DependentUpon>ColumnListView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -42,7 +45,7 @@
       <DependentUpon>MobileContentItem.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)CustomControls\FontAwesomeIcon.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml.cs">
       <DependentUpon>NoScroll.xaml</DependentUpon>
@@ -53,7 +56,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlockResponse.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\MobileListView.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\MobileListViewItem.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
@@ -142,7 +145,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\GroupMemberDetail.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\PersonCard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

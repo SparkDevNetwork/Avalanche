@@ -5,7 +5,7 @@ using System.Text;
 
 namespace Avalanche.Models
 {
-    public class MobileListView : INotifyPropertyChanged
+    public class MobileListViewItem : INotifyPropertyChanged
     {
         public string Id { get; set; }
         private string _title;
@@ -22,17 +22,17 @@ namespace Avalanche.Models
             }
         }
 
-        private string _subtitle;
-        public string Subtitle
+        private string _description;
+        public string Description
         {
             get
             {
-                return _subtitle;
+                return _description;
             }
             set
             {
-                _subtitle = value;
-                OnPropertyChanged( "Subtitle" );
+                _description = value;
+                OnPropertyChanged( "Description" );
             }
         }
 
@@ -62,6 +62,36 @@ namespace Avalanche.Models
                 OnPropertyChanged( "Icon" );
             }
         }
+
+        private string _resource;
+        public string Resource
+        {
+            get
+            {
+                return _resource;
+            }
+            set
+            {
+                _resource = value;
+                OnPropertyChanged( "Resource" );
+            }
+        }
+
+        private string _actionType;
+        public string ActionType
+        {
+            get
+            {
+                return _actionType;
+            }
+            set
+            {
+                _actionType = value;
+                OnPropertyChanged( "ActionType" );
+            }
+        }
+
+
         private double _fontSize = 20;
         public double FontSize
         {

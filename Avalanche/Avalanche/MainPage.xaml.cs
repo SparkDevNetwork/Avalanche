@@ -45,6 +45,11 @@ namespace Avalanche
             this.Title = page.Title;
             NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
+            if (layoutType == null )
+            {
+                AvalancheNavigation.RemovePage();
+                return;
+            }
             var layout = ( ContentView ) Activator.CreateInstance( layoutType );
 
             //Modify the page with attributes

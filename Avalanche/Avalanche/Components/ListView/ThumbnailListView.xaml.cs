@@ -39,7 +39,7 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        public ObservableCollection<MobileListView> ItemsSource { get; set; }
+        public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
 
         private double _fontSize;
         public double FontSize
@@ -60,7 +60,7 @@ namespace Avalanche.Components.ListView
         {
             if ( ItemsSource != null )
             {
-                foreach ( MobileListView item in ItemsSource )
+                foreach ( MobileListViewItem item in ItemsSource )
                 {
                     item.FontSize = _fontSize;
                 }
@@ -87,7 +87,7 @@ namespace Avalanche.Components.ListView
         public ThumbnailListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<MobileListView>();
+            ItemsSource = new ObservableCollection<MobileListViewItem>();
             lvListView.ItemsSource = ItemsSource;
 
             lvListView.Refreshing += LvListView_Refreshing;

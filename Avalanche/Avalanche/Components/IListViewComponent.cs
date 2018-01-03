@@ -10,7 +10,7 @@ namespace Avalanche.Components
     public interface IListViewComponent
     {
         bool IsRefreshing { get; set; }
-        ObservableCollection<MobileListView> ItemsSource { get; set; }
+        ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
         object SelectedItem { get; set; }
         double FontSize { get; set; }
 
