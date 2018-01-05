@@ -16,8 +16,19 @@ namespace Avalanche.Components.ListView
     [XamlCompilation( XamlCompilationOptions.Compile )]
     public partial class ColumnListView : ContentView, IListViewComponent
     {
-
-        public int Columns { get; set; }
+        private double _columns;
+        public double Columns
+        {
+            get
+            {
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+                _resetItems();
+            }
+        }
 
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -45,7 +56,6 @@ namespace Avalanche.Components.ListView
             InitializeComponent();
             ItemsSource = new ObservableCollection<MobileListViewItem>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            Columns = 2;
 
             for ( var i = 0; i < Columns; i++ )
             {
@@ -53,7 +63,6 @@ namespace Avalanche.Components.ListView
             }
 
             svScrollView.Scrolled += SvScrollView_Scrolled;
-
         }
 
         private void SvScrollView_Scrolled( object sender, ScrolledEventArgs e )
@@ -83,25 +92,31 @@ namespace Avalanche.Components.ListView
 
         private void ResetItems( NotifyCollectionChangedEventArgs e )
         {
+            _resetItems();
+        }
+
+        private void _resetItems()
+        {
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
+            gGrid.ColumnDefinitions.Clear();
 
+            for ( var i = 0; i < Columns; i++ )
+            {
+                gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
+            }
             gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
 
-            var rowCounter = 0;
-            var columnCounter = 0;
-
-            foreach ( var item in ItemsSource )
+            while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
             {
-                if ( columnCounter > Columns )
-                {
-                    columnCounter = 0;
-                    rowCounter++;
-                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-                }
+                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+            }
 
-                AddCell( item, rowCounter, columnCounter );
-                columnCounter++;
+            foreach ( MobileListViewItem item in ItemsSource )
+            {
+                AddCell( item,
+                         ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
+                         Convert.ToInt32( Math.Floor( ( ItemsSource.Count - 1 ) / Columns ) ) );
             }
         }
 
@@ -115,8 +130,8 @@ namespace Avalanche.Components.ListView
             foreach ( MobileListViewItem item in e.NewItems )
             {
                 AddCell( item,
-                        ( ItemsSource.Count - 1 ) % Columns,
-                        ( ( ItemsSource.Count + 1 ) / Columns ) - 1 );
+                        ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
+                        Convert.ToInt32( Math.Floor( ( ItemsSource.Count - 1 ) / Columns ) ) );
             }
         }
 
@@ -140,20 +155,20 @@ namespace Avalanche.Components.ListView
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = 20,
                 HorizontalTextAlignment = TextAlignment.Center
-        };
-        sl.Children.Add(label );
+            };
+            sl.Children.Add( label );
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
                 NumberOfTapsRequired = 1
             };
-        tgr.Tapped += (s, ee) =>
-            {
-                SelectedItem = item;
-                ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
-            };
-    sl.GestureRecognizers.Add(tgr );
-            gGrid.Children.Add(sl, x, y);
+            tgr.Tapped += ( s, ee ) =>
+                {
+                    SelectedItem = item;
+                    ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
+                };
+            sl.GestureRecognizers.Add( tgr );
+            gGrid.Children.Add( sl, x, y );
         }
 
     }

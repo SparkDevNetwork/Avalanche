@@ -16,7 +16,18 @@ namespace Avalanche.Components.ListView
     [XamlCompilation( XamlCompilationOptions.Compile )]
     public partial class HorizontalListView : ContentView, IListViewComponent
     {
-        public int Columns { get; set; }
+        private double _columns = 4.5;
+        public double Columns
+        {
+            get
+            {
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+            }
+        }
 
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -43,7 +54,6 @@ namespace Avalanche.Components.ListView
             InitializeComponent();
             ItemsSource = new ObservableCollection<MobileListViewItem>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            Columns = 4;
 
             svScrollView.Scrolled += SvScrollView_Scrolled;
 
@@ -93,10 +103,11 @@ namespace Avalanche.Components.ListView
 
         private void AddCell( MobileListViewItem item )
         {
+            var widthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) );
             StackLayout sl = new StackLayout()
             {
                 HorizontalOptions = LayoutOptions.Center,
-                WidthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) ),
+                WidthRequest = widthRequest,
                 Padding = new Thickness( 4 ),
             };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )

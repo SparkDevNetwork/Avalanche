@@ -6,8 +6,8 @@
     <ContentView.Content>
         <StackLayout Spacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <StackLayout x:Name="Featured" Spacing="0" />
-            <ScrollView>
-                <StackLayout Spacing="0">
+            <ScrollView VerticalOptions="FillAndExpand">
+                <StackLayout Spacing="0"  VerticalOptions="FillAndExpand">
                     <Grid>
                         <StackLayout x:Name="Bottom" Spacing="0" />
                         <StackLayout x:Name="Middle" Spacing="0" />

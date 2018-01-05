@@ -98,6 +98,7 @@ namespace Avalanche
             {
                 layout.Opacity = 0;
                 MainGrid.Children.Clear();
+                AddBackgroundImage();
                 MainGrid.Children.Add( layout );
                 layout.FadeTo( 1, 500, Easing.CubicInOut );
             }

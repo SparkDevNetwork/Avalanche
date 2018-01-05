@@ -64,6 +64,11 @@ namespace Avalanche.Blocks
                 MessageHandler.Get( "" );
             }
 
+            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
+            {
+                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
+            }
+
             var view = ( View ) listViewComponent;
             //view.HeightRequest = App.Current.MainPage.Height;
 
@@ -104,7 +109,7 @@ namespace Avalanche.Blocks
                 }
                 listViewComponent.IsRefreshing = false;
             }
-            catch
+            catch (Exception ex)
             {
                 _endOfList = true;
                 listViewComponent.IsRefreshing = false;

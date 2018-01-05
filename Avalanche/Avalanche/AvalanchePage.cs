@@ -19,18 +19,24 @@ namespace Avalanche
             set
             {
                 _backgroundImage = value;
-                var mainGrid = this.FindByName<Grid>( "MainGrid" );
-                if ( mainGrid != null )
-                {
-                    var image = new FFImageLoading.Forms.CachedImage()
-                    {
-                        Aspect = Aspect.AspectFill,
-                        Source = value
-
-                    };
-                    mainGrid.Children.Add( image );
-                }
+                AddBackgroundImage();
             }
         }
+
+        public void AddBackgroundImage()
+        {
+            var mainGrid = this.FindByName<Grid>( "MainGrid" );
+            if ( mainGrid != null )
+            {
+                var image = new FFImageLoading.Forms.CachedImage()
+                {
+                    Aspect = Aspect.AspectFill,
+                    Source = _backgroundImage
+
+                };
+                mainGrid.Children.Add( image );
+            }
+        }
+
     }
 }

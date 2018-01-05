@@ -16,6 +16,19 @@ namespace Avalanche.Components.ListView
     [XamlCompilation( XamlCompilationOptions.Compile )]
     public partial class ThumbnailListView : ContentView, IListViewComponent
     {
+        private double _columns = 1;
+        public double Columns
+        {
+            get
+            {
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+            }
+        }
+
         public bool IsRefreshing
         {
             get

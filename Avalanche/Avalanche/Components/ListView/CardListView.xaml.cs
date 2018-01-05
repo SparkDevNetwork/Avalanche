@@ -19,8 +19,8 @@ namespace Avalanche.Components.ListView
     public partial class CardListView : ContentView, IListViewComponent
     {
 
-        private int _columns = 1;
-        public int Columns
+        private double _columns = 2;
+        public double Columns
         {
             get
             {
@@ -29,6 +29,7 @@ namespace Avalanche.Components.ListView
             set
             {
                 _columns = value;
+                _resetItems();
             }
         }
 
@@ -58,7 +59,6 @@ namespace Avalanche.Components.ListView
             InitializeComponent();
             ItemsSource = new ObservableCollection<MobileListViewItem>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            Columns = 2;
 
             for ( var i = 0; i < Columns; i++ )
             {
@@ -96,8 +96,19 @@ namespace Avalanche.Components.ListView
 
         private void ResetItems( NotifyCollectionChangedEventArgs e )
         {
+            _resetItems();
+        }
+
+        private void _resetItems()
+        {
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
+            gGrid.ColumnDefinitions.Clear();
+
+            for ( var i = 0; i < Columns; i++ )
+            {
+                gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
+            }
 
             gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
 
@@ -128,8 +139,8 @@ namespace Avalanche.Components.ListView
             foreach ( MobileListViewItem item in e.NewItems )
             {
                 AddCell( item,
-                        ( ItemsSource.Count - 1 ) % Columns,
-                        ( ( ItemsSource.Count + 1 ) / Columns ) - 1 );
+                        ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
+                        ( ( ItemsSource.Count + 1 ) / Convert.ToInt32( Columns ) ) - 1 );
             }
         }
 
@@ -137,7 +148,7 @@ namespace Avalanche.Components.ListView
         {
             var frame = new Frame()
             {
-                Padding = new Thickness( 0,0,0,10),
+                Padding = new Thickness( 0, 0, 0, 10 ),
                 HasShadow = true
             };
 
@@ -156,7 +167,6 @@ namespace Avalanche.Components.ListView
                     Aspect = Aspect.AspectFit,
                     WidthRequest = App.Current.MainPage.Width / Columns,
                 };
-                //img.Transformations = new List<FFImageLoading.Work.ITransformation> { new CircleTransformation() };
                 sl.Children.Add( img );
             }
             else
@@ -165,7 +175,8 @@ namespace Avalanche.Components.ListView
                 {
                     Text = item.Icon,
                     HorizontalOptions = LayoutOptions.Center,
-                    FontSize = 60
+                    FontSize = 60,
+                    Margin = new Thickness(0,15,0,0)
                 };
                 sl.Children.Add( icon );
             }
@@ -175,8 +186,8 @@ namespace Avalanche.Components.ListView
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = 20,
-                Margin = new Thickness(10,0)
-                
+                Margin = new Thickness( 10, 0 )
+
             };
             sl.Children.Add( title );
 
