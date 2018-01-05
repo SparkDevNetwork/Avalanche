@@ -2,6 +2,7 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Avalanche.CustomControls"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Avalanche.Blocks.IconButton">
     <ContentView.Content>
         <Grid>
@@ -9,6 +10,7 @@
                 <ColumnDefinition Width="1*"/>
                 <ColumnDefinition Width="4*"/>
             </Grid.ColumnDefinitions>
+            <ff:CachedImage Aspect="AspectFill" x:Name="iBackgroundImage" Grid.ColumnSpan="2"/>
             <local:IconLabel x:Name="iIcon" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             <Label x:Name="lbLabel" Grid.Column="1" VerticalOptions="Center"/>
             <Button x:Name="btnButton" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Grid.ColumnSpan="2"/>

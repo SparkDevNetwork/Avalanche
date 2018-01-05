@@ -62,6 +62,20 @@ namespace Avalanche.Blocks
             }
         }
 
+        private string _backgroundImage;
+        public string BackgroundImage
+        {
+            get
+            {
+                return _backgroundImage;
+            }
+            set
+            {
+                _backgroundImage = value;
+                iBackgroundImage.Source = value;
+            }
+        }
+
         public FontAttributes FontAttributes
         {
             get
