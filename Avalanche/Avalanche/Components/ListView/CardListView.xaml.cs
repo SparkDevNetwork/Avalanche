@@ -8,16 +8,29 @@ using System.Threading.Tasks;
 using Avalanche.CustomControls;
 using Avalanche.Models;
 using FFImageLoading.Forms;
+using FFImageLoading.Transformations;
+using Xam.Forms.Markdown;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 namespace Avalanche.Components.ListView
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class ColumnListView : ContentView, IListViewComponent
+    public partial class CardListView : ContentView, IListViewComponent
     {
 
-        public int Columns { get; set; }
+        private int _columns = 1;
+        public int Columns
+        {
+            get
+            {
+                return _columns;
+            }
+            set
+            {
+                _columns = value;
+            }
+        }
 
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -40,7 +53,7 @@ namespace Avalanche.Components.ListView
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
         public event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
 
-        public ColumnListView()
+        public CardListView()
         {
             InitializeComponent();
             ItemsSource = new ObservableCollection<MobileListViewItem>();
@@ -122,38 +135,69 @@ namespace Avalanche.Components.ListView
 
         private void AddCell( MobileListViewItem item, int x, int y )
         {
-            StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
+            var frame = new Frame()
+            {
+                Padding = new Thickness( 0,0,0,10),
+                HasShadow = true
+            };
+
+            StackLayout sl = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = ( App.Current.MainPage.Width / Columns ) - 10,
+            };
+            frame.Content = sl;
+
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
-                CachedImage img = new CachedImage() { Source = item.Image, Aspect = Aspect.AspectFit, WidthRequest = App.Current.MainPage.Width / Columns };
+                CachedImage img = new CachedImage()
+                {
+                    Source = item.Image,
+                    Aspect = Aspect.AspectFit,
+                    WidthRequest = App.Current.MainPage.Width / Columns,
+                };
+                //img.Transformations = new List<FFImageLoading.Work.ITransformation> { new CircleTransformation() };
                 sl.Children.Add( img );
             }
             else
             {
-                IconLabel icon = new IconLabel() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
+                IconLabel icon = new IconLabel()
+                {
+                    Text = item.Icon,
+                    HorizontalOptions = LayoutOptions.Center,
+                    FontSize = 60
+                };
                 sl.Children.Add( icon );
             }
 
-            Label label = new Label()
+            Label title = new Label()
             {
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = 20,
-                HorizontalTextAlignment = TextAlignment.Center
-        };
-        sl.Children.Add(label );
+                Margin = new Thickness(10,0)
+                
+            };
+            sl.Children.Add( title );
+
+            MarkdownView description = new MarkdownView()
+            {
+                Markdown = item.Description,
+                Margin = new Thickness( 10, 0 )
+            };
+            sl.Children.Add( description );
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
                 NumberOfTapsRequired = 1
             };
-        tgr.Tapped += (s, ee) =>
+            tgr.Tapped += ( s, ee ) =>
             {
                 SelectedItem = item;
                 ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
             };
-    sl.GestureRecognizers.Add(tgr );
-            gGrid.Children.Add(sl, x, y);
+            sl.GestureRecognizers.Add( tgr );
+            gGrid.Children.Add( frame, x, y );
         }
 
     }

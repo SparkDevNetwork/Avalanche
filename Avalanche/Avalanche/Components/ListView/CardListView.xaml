@@ -1,10 +1,8 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:Avalanche.CustomControls"
-             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             x:Class="Avalanche.Components.ListView.ColumnListView">
-    <ContentView.Content>
+             x:Class="Avalanche.Components.ListView.CardListView">
+  <ContentView.Content>
         <ScrollView x:Name="svScrollView">
             <Grid>
                 <Grid x:Name="gGrid" RowSpacing="15" ColumnSpacing="15" Margin="15,15,15,20">
@@ -12,5 +10,5 @@
                 <ActivityIndicator x:Name="aiLoading" HeightRequest="20" WidthRequest="20" IsRunning="True" />
             </Grid>
         </ScrollView>
-    </ContentView.Content>
+  </ContentView.Content>
 </ContentView>

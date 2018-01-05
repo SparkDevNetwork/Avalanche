@@ -4,7 +4,7 @@
              xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
              x:Class="Avalanche.Layouts.Simple">
     <ContentView.Content>
-        <StackLayout Spacing="0">
+        <StackLayout Spacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <StackLayout x:Name="Featured" Spacing="0" />
             <ScrollView>
                 <StackLayout Spacing="0">
@@ -23,7 +23,7 @@
                     </Grid>
                 </StackLayout>
             </ScrollView>
-            <StackLayout x:Name="Footer" Spacing="0" />
+            <StackLayout VerticalOptions="End" x:Name="Footer" Spacing="0" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

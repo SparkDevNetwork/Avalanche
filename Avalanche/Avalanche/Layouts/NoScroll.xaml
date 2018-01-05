@@ -1,14 +1,13 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Avalanche.Layouts.NoScroll">
+             x:Class="Avalanche.Layouts.NoScroll"
+             VerticalOptions="FillAndExpand">
   <ContentView.Content>
-      <StackLayout>
-            <StackLayout Spacing="0">
+            <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
                 <StackLayout x:Name="Featured" Spacing="0" />
-                <StackLayout x:Name="Main" Spacing="0" />
-                <StackLayout x:Name="Footer" Spacing="0" />
+                <StackLayout x:Name="Main" Spacing="0" VerticalOptions="FillAndExpand" />
+                <StackLayout x:Name="Footer" VerticalOptions="End" Spacing="0" />
             </StackLayout>
-        </StackLayout>
   </ContentView.Content>
 </ContentView>

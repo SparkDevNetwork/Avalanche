@@ -65,7 +65,7 @@ namespace Avalanche.Blocks
             }
 
             var view = ( View ) listViewComponent;
-            view.HeightRequest = App.Current.MainPage.Height;
+            //view.HeightRequest = App.Current.MainPage.Height;
 
             return view;
         }

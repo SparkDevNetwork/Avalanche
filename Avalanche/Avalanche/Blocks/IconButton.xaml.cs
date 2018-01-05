@@ -81,6 +81,10 @@ namespace Avalanche.Blocks
             btnButton.Clicked += BtnButton_Clicked;
             btnButton.Pressed += BtnButton_Pressed;
             btnButton.Released += BtnButton_Released;
+            if ( Device.RuntimePlatform == Device.Android )
+            {
+                btnButton.Opacity = 0;
+            }
         }
 
         private void BtnButton_Released( object sender, EventArgs e )

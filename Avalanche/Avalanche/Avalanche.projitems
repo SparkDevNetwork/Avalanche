@@ -31,11 +31,19 @@
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\SoutheastIcons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml.cs">
+      <DependentUpon>CardListView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ColumnListView.xaml.cs">
       <DependentUpon>ColumnListView.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Components\IListViewComponent.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\HorizontalListView.xaml.cs">
+      <DependentUpon>HorizontalListView.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml.cs">
       <DependentUpon>ThumbnailListView.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -158,6 +166,18 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\HorizontalListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -15,5 +15,7 @@ namespace Avalanche.Utilities
         //public const string serverUrl = "http://192.168.1.47:6229";
 
         public const string tokenEndpoint = "/OAuth/Token";
+
+        public const int timeout = 10; //in seconds
     }
 }

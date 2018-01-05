@@ -22,15 +22,16 @@ namespace Avalanche
             throw new NotImplementedException();
         }
 
-        public MainPage( string resource, string argument = "" )
+        public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
             NavigationPage.SetHasNavigationBar( this, false );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
-            if ( !string.IsNullOrWhiteSpace( argument ) )
+            if ( !string.IsNullOrWhiteSpace( parameter ) )
             {
-                resource += "/" + argument;
+                resource += "/" + parameter;
             }
+            Task.Run( () => { Handle_Timeout(); } );
             RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
         }
 
@@ -43,9 +44,15 @@ namespace Avalanche
         {
             var page = observableResource.Resource as MobilePage;
             this.Title = page.Title;
+
             NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
+            if ( !page.ShowTitle && Device.RuntimePlatform == Device.iOS )
+            {
+                this.Padding = new Thickness( 0, 12, 0, 0 );
+            }
+
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
-            if (layoutType == null )
+            if ( layoutType == null )
             {
                 AvalancheNavigation.RemovePage();
                 return;
@@ -98,6 +105,24 @@ namespace Avalanche
             {
                 MainGrid.Children.Add( layout );
                 ActivityIndicator.IsRunning = false;
+            }
+        }
+
+        private void btnBack_Clicked( object sender, EventArgs e )
+        {
+            Navigation.PopAsync();
+        }
+
+        private async void Handle_Timeout()
+        {
+            await Task.Delay( Constants.timeout * 1000 );
+            if ( ActivityIndicator.IsRunning )
+            {
+                lTimeout.FadeTo( 1 );
+                if ( Navigation.NavigationStack.Count > 1 )
+                {
+                    btnBack.FadeTo( 1 );
+                }
             }
         }
     }

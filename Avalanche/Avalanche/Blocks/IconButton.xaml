@@ -11,7 +11,7 @@
             </Grid.ColumnDefinitions>
             <local:IconLabel x:Name="iIcon" Grid.Column="0" HorizontalOptions="Center" VerticalOptions="Center"/>
             <Label x:Name="lbLabel" Grid.Column="1" VerticalOptions="Center"/>
-            <Button x:Name="btnButton" Opacity="0" Grid.ColumnSpan="2"/>
+            <Button x:Name="btnButton" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand" Grid.ColumnSpan="2"/>
         </Grid>
     </ContentView.Content>
 </ContentView>

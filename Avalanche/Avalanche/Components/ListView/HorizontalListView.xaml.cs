@@ -14,9 +14,8 @@ using Xamarin.Forms.Xaml;
 namespace Avalanche.Components.ListView
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class ColumnListView : ContentView, IListViewComponent
+    public partial class HorizontalListView : ContentView, IListViewComponent
     {
-
         public int Columns { get; set; }
 
         private bool _isRefreshing;
@@ -29,7 +28,6 @@ namespace Avalanche.Components.ListView
             set
             {
                 _isRefreshing = value;
-                aiLoading.IsRunning = value;
             }
         }
         public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
@@ -40,17 +38,12 @@ namespace Avalanche.Components.ListView
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
         public event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
 
-        public ColumnListView()
+        public HorizontalListView()
         {
             InitializeComponent();
             ItemsSource = new ObservableCollection<MobileListViewItem>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
-            Columns = 2;
-
-            for ( var i = 0; i < Columns; i++ )
-            {
-                gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
-            }
+            Columns = 4;
 
             svScrollView.Scrolled += SvScrollView_Scrolled;
 
@@ -58,7 +51,7 @@ namespace Avalanche.Components.ListView
 
         private void SvScrollView_Scrolled( object sender, ScrolledEventArgs e )
         {
-            double scrollingSpace = svScrollView.ContentSize.Height - svScrollView.Height - 20;
+            double scrollingSpace = svScrollView.ContentSize.Width - svScrollView.Width - 20;
 
             if ( scrollingSpace <= e.ScrollY && !IsRefreshing )
             {
@@ -83,49 +76,36 @@ namespace Avalanche.Components.ListView
 
         private void ResetItems( NotifyCollectionChangedEventArgs e )
         {
-            gGrid.Children.Clear();
-            gGrid.RowDefinitions.Clear();
-
-            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-
-            var rowCounter = 0;
-            var columnCounter = 0;
-
+            slStackLayout.Children.Clear();
             foreach ( var item in ItemsSource )
             {
-                if ( columnCounter > Columns )
-                {
-                    columnCounter = 0;
-                    rowCounter++;
-                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-                }
-
-                AddCell( item, rowCounter, columnCounter );
-                columnCounter++;
+                AddCell( item );
             }
         }
 
         private void AddItems( NotifyCollectionChangedEventArgs e )
         {
-            while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
-            {
-                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-            }
-
             foreach ( MobileListViewItem item in e.NewItems )
             {
-                AddCell( item,
-                        ( ItemsSource.Count - 1 ) % Columns,
-                        ( ( ItemsSource.Count + 1 ) / Columns ) - 1 );
+                AddCell( item );
             }
         }
 
-        private void AddCell( MobileListViewItem item, int x, int y )
+        private void AddCell( MobileListViewItem item )
         {
-            StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
+            StackLayout sl = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                WidthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) ),
+                Padding = new Thickness( 4 ),
+            };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
-                CachedImage img = new CachedImage() { Source = item.Image, Aspect = Aspect.AspectFit, WidthRequest = App.Current.MainPage.Width / Columns };
+                CachedImage img = new CachedImage()
+                {
+                    Source = item.Image,
+                    Aspect = Aspect.AspectFit,
+                };
                 sl.Children.Add( img );
             }
             else
@@ -138,23 +118,22 @@ namespace Avalanche.Components.ListView
             {
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
-                FontSize = 20,
+                FontSize = item.FontSize,
                 HorizontalTextAlignment = TextAlignment.Center
-        };
-        sl.Children.Add(label );
+            };
+            sl.Children.Add( label );
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
                 NumberOfTapsRequired = 1
             };
-        tgr.Tapped += (s, ee) =>
+            tgr.Tapped += ( s, ee ) =>
             {
                 SelectedItem = item;
                 ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
             };
-    sl.GestureRecognizers.Add(tgr );
-            gGrid.Children.Add(sl, x, y);
+            sl.GestureRecognizers.Add( tgr );
+            slStackLayout.Children.Add( sl );
         }
-
     }
 }

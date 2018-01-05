@@ -3,7 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Avalanche"
              x:Class="Avalanche.MainPage">
-    <Grid x:Name="MainGrid">
-        <ActivityIndicator Color="Orange" Scale=".5" x:Name="ActivityIndicator" IsRunning="True"/>
+    <Grid x:Name="MainGrid" HorizontalOptions="CenterAndExpand">
+        <StackLayout HorizontalOptions="Center" Margin="0,40">
+            <ActivityIndicator Color="Orange" x:Name="ActivityIndicator" IsRunning="True"/>
+            <Label x:Name="lTimeout" HorizontalTextAlignment="Center" Text="We're having trouble getting the information for this page.&#x0a;Sorry about that." Opacity="0"/>
+            <Button Text="Go Back" x:Name="btnBack" Clicked="btnBack_Clicked" Opacity="0"/>
+        </StackLayout>
     </Grid>
 </local:AvalanchePage>
