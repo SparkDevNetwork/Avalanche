@@ -23,7 +23,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Displays mobile list view from lava" )]
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
-    [DefinedValueField( "657FDF2F-FB7B-44C4-BAB0-A370893FDFB8", "Component", "Different components will display your list in different ways." )]
+    [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
     [CodeEditorField( "Lava", "Lava to display list items.", Rock.Web.UI.Controls.CodeEditorMode.Lava, required: false )]
     public partial class MobileListViewLava : AvalancheBlock
     {
@@ -44,7 +44,7 @@ namespace RockWeb.Plugins.Avalanche
             var value = DefinedValueCache.Read( valueGuid );
             if ( value != null )
             {
-                CustomAttributes["Component"] = value.Value;
+                CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
             return new MobileBlock()

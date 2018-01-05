@@ -70,6 +70,7 @@
     <Compile Include="Controls\ActionItem.cs" />
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
+    <Compile Include="Migrations\Init.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\MobileBlock.cs" />
     <Compile Include="Models\MobileListViewItem.cs" />
@@ -83,6 +84,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\RockForAvalanche\Rock\Rock.Migrations\Rock.Migrations.csproj">
+      <Project>{704740d8-b539-4560-9f8c-681670c9d6ad}</Project>
+      <Name>Rock.Migrations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RockForAvalanche\Rock\Rock.Rest\Rock.Rest.csproj">
       <Project>{add1edd0-a4cb-4e82-b6ad-6ad1d556deae}</Project>
       <Name>Rock.Rest</Name>

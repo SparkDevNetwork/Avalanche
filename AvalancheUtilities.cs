@@ -10,6 +10,11 @@ namespace Avalanche
 {
     public static class AvalancheUtilities
     {
+        //Constansts
+        public const string MobileListViewComponent = "657FDF2F-FB7B-44C4-BAB0-A370893FDFB8";
+
+
+        //Methods
         public static string GetShortAssembly( Type type )
         {
             return string.Format(
@@ -49,7 +54,7 @@ namespace Avalanche
         {
             var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
             mergeObjects["parameter"] = parameter;
-            return lava.ResolveMergeFields(mergeObjects, null, enabledLavaCommands );
+            return lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
         }
     }
 }
