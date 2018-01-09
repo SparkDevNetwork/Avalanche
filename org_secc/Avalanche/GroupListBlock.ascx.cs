@@ -61,7 +61,8 @@ namespace RockWeb.Plugins.Avalanche
             PageCache page = PageCache.Read( pageGuid.AsGuid() );
             if ( page != null && page.IsAuthorized( "View", CurrentPerson ) )
             {
-                CustomAttributes["DetailPage"] = page.Id.ToString();
+                CustomAttributes["ActionType"] = "1";
+                CustomAttributes["Resource"] = page.Id.ToString();
             }
 
             CustomAttributes["Component"] = "Avalanche.Components.ListView.ColumnListView";

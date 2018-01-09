@@ -229,7 +229,7 @@ namespace Avalanche.Controls
             {
                 if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
                 {
-                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, ppPage.SelectedValue, tbArgument.Text );
+                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, ppPage.SelectedValue, tbParameter.Text );
                 }
 
                 if ( ddlActionList.SelectedValue == "4" )
@@ -253,7 +253,7 @@ namespace Avalanche.Controls
                     }
                     if ( values.Length > 2 )
                     {
-                        tbArgument.Text = values[2];
+                        tbParameter.Text = values[2];
                     }
                 }
 
@@ -286,7 +286,7 @@ namespace Avalanche.Controls
         private RockDropDownList ddlActionList;
         private PagePicker ppPage;
         private RockTextBox tbTarget;
-        private RockTextBox tbArgument;
+        private RockTextBox tbParameter;
         private RockDropDownList ddlRckipid;
 
         /// <summary>
@@ -323,10 +323,10 @@ namespace Avalanche.Controls
                 ID = "tbTarget_" + this.ID
             };
 
-            tbArgument = new RockTextBox()
+            tbParameter = new RockTextBox()
             {
-                Label = "Argument",
-                ID = "tbArgument_" + this.ID
+                Label = "Parameter",
+                ID = "tbParameter_" + this.ID
             };
 
             ddlRckipid = new RockDropDownList();
@@ -338,7 +338,7 @@ namespace Avalanche.Controls
             Controls.Add( ddlActionList );
             Controls.Add( ppPage );
             Controls.Add( tbTarget );
-            Controls.Add( tbArgument );
+            Controls.Add( tbParameter );
             Controls.Add( ddlRckipid );
             EnsureChildControls();
         }
@@ -372,7 +372,7 @@ namespace Avalanche.Controls
             if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
             {
                 ppPage.RenderControl( writer );
-                tbArgument.RenderControl( writer );
+                tbParameter.RenderControl( writer );
             }
             else if ( ddlActionList.SelectedValue == "4" )
             {

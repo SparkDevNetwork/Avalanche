@@ -35,9 +35,9 @@ namespace RockWeb.Plugins.Avalanche
 
         }
 
-        public override MobileBlock GetMobile( string arg )
+        public override MobileBlock GetMobile( string parameter )
         {
-            if ( GetGroupMembers( arg ) == null ) // send null if no argument
+            if ( GetGroupMembers( parameter ) == null ) // send null if no parameter
             {
                 return new MobileBlock()
                 {
@@ -46,7 +46,9 @@ namespace RockWeb.Plugins.Avalanche
                 };
             }
 
+
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+            CustomAttributes["Request"] = parameter;        
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ListViewBlock",
@@ -83,14 +85,14 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        private List<GroupMember> GetGroupMembers( string arg )
+        private List<GroupMember> GetGroupMembers( string parameter )
         {
             if ( CurrentPerson == null )
             {
                 return null;
             }
 
-            var groupGuid = arg.AsGuid();
+            var groupGuid = parameter.AsGuid();
             RockContext rockContext = new RockContext();
             GroupService groupService = new GroupService( rockContext );
             var group = groupService.Get( groupGuid );

@@ -40,7 +40,7 @@ namespace Avalanche
                     }
                     if ( actionItems.Length > 2 )
                     {
-                        CustomAttributes.Add( "Argument", actionItems[2] );
+                        CustomAttributes.Add( "Parameter", actionItems[2] );
                     }
                 }
             }

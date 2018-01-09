@@ -1009,7 +1009,8 @@ $(document).ready(function() {
             PageCache page = PageCache.Read( pageGuid.AsGuid() );
             if ( page != null )
             {
-                CustomAttributes["DetailPage"] = page.Id.ToString();
+                CustomAttributes["ActionType"] = "1";
+                CustomAttributes["Resource"] = page.Id.ToString();
             }
 
             return new MobileBlock()

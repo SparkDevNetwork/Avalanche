@@ -19,7 +19,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Markdown Detail" )]
     [Category( "Avalanche" )]
     [Description( "A control to display Markdown." )]
-    [CodeEditorField( "Markdown", "Markdown code to be rendered in app using the {{resource}}.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
+    [CodeEditorField( "Markdown", "Markdown code to be rendered in app using the {{parameter}}.", Rock.Web.UI.Controls.CodeEditorMode.Markdown,
         Rock.Web.UI.Controls.CodeEditorTheme.Rock, 600, false )]
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     public partial class MarkdownDetail : AvalancheBlock
@@ -36,16 +36,16 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
+
+            CustomAttributes["Content"] = AvalancheUtilities.ProcessLava(
+                GetAttributeValue( "Markdown" ),
+                CurrentPerson,
+                parameter,
+                GetAttributeValue( "EnabledLavaCommands" ) );
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.MarkdownDetail",
-                Attributes = new Dictionary<string, string>
-                {
-                    { "Content", AvalancheUtilities.ProcessLava( GetAttributeValue("Markdown"),
-                                                                 CurrentPerson,
-                                                                 parameter,
-                                                                 GetAttributeValue( "EnabledLavaCommands" )  )},
-                }
+                Attributes = CustomAttributes
             };
         }
     }

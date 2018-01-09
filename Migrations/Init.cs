@@ -25,9 +25,10 @@ namespace Avalanche.Migrations
 
             //Horizontal ListView
             RockMigrationHelper.AddDefinedValue( AvalancheUtilities.MobileListViewComponent, "Horizontal ListView", "Horizontal layed out list view. Supports titles, images, icons.", "673B7DB5-2200-41D6-8857-9A7663B56C47" );
-            RockMigrationHelper.UpdateDefinedValueAttributeValue( "673B7DB5-2200-41D6-8857-9A7663B56C47", "ACAE178E-E804-4F32-9BE3-2F020E7314CF", "Avalanche.Components.ListView.CardListView" );
+            RockMigrationHelper.UpdateDefinedValueAttributeValue( "673B7DB5-2200-41D6-8857-9A7663B56C47", "ACAE178E-E804-4F32-9BE3-2F020E7314CF", "Avalanche.Components.ListView.HorizontalListView" );
 
             RockMigrationHelper.AddGlobalAttribute( Rock.SystemGuid.FieldType.TEXT, "", "", "Avalanche Home Page", "Page which starts the Avalanche App", 0, "", "5FEFE20F-742E-4204-8A1C-7E400F802288" );
+
         }
 
         public override void Down()
