@@ -11,7 +11,7 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
-		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
@@ -25,7 +25,7 @@
 	<key>CFBundleDisplayName</key>
 	<string>Avalanche</string>
 	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.Avalanche</string>
+	<string>org.secc.Avalanche</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
@@ -51,10 +51,16 @@
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to photos to save to change profile picture.</string>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen.storyboard</string>
+	<string>LaunchScreen</string>
 	<key>UIAppFonts</key>
 	<array>
-    <string>fontawesome.ttf</string>
+		<string>fontawesome.ttf</string>
 	</array>
+	<key>UIMainStoryboardFile</key>
+	<string>LaunchScreen</string>
+	<key>XSLaunchImageAssets</key>
+	<string>Resources/Media.xcassets/LaunchImages.launchimage</string>
+	<key>XSAppIconAssets</key>
+	<string>Resources/Media.xcassets/AppIcons.appiconset</string>
 </dict>
 </plist>

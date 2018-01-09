@@ -10,9 +10,9 @@ namespace Avalanche
 {
     static class AvalancheNavigation
     {
-        public static void GetPage( string resource, string argument = "" )
+        public static void GetPage( string resource, string parameter = "" )
         {
-            App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
+            App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
         }
 
         public static void RemovePage()

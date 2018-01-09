@@ -12,7 +12,7 @@ using Plugin.Permissions.Abstractions;
 
 namespace Avalanche.Droid
 {
-    [Activity( Label = "Avalanche", Icon = "@drawable/icon", Theme = "@style/MainTheme", MainLauncher = true, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation )]
+    [Activity( Label = "Avalanche", Icon = "@drawable/icon", Theme = "@style/MainTheme", ScreenOrientation = ScreenOrientation.Portrait, ConfigurationChanges = ConfigChanges.ScreenSize | ConfigChanges.Orientation )]
     public class MainActivity : global::Xamarin.Forms.Platform.Android.FormsAppCompatActivity
     {
         protected override void OnCreate( Bundle bundle )
@@ -28,10 +28,7 @@ namespace Avalanche.Droid
             LoadApplication( new Avalanche.App() );
         }
 
-        public override void OnRequestPermissionsResult( int requestCode, string[] permissions, Android.Content.PM.Permission[] grantResults )
-        {
-            PermissionsImplementation.Current.OnRequestPermissionsResult( requestCode, permissions, grantResults );
-        }
+
     }
 }
 

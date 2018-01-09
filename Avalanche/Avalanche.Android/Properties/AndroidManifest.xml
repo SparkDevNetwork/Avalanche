@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:installLocation="auto" package="org.secc.Avalanche">
 	<uses-sdk android:minSdkVersion="15" android:targetSdkVersion="25" />
 	<uses-permission android:name="android.permission.CAMERA" />
-	<application android:label="Avalanche.Android">
-		<provider android:name="android.support.v4.content.FileProvider" android:authorities="Avalanche.Android.fileprovider" android:exported="false" android:grantUriPermissions="true">
+	<application android:label="Avalanche" android:icon="@drawable/Icon">
+		<provider android:name="android.support.v4.content.FileProvider" android:authorities="org.secc.Avalanche.fileprovider" android:exported="false" android:grantUriPermissions="true">
 			<meta-data android:name="android.support.FILE_PROVIDER_PATHS" android:resource="@xml/file_paths"></meta-data>
 		</provider>
 	</application>

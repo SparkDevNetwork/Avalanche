@@ -68,7 +68,6 @@ namespace Avalanche.Components.ListView
                 UpdateFontSize();
             }
         }
-
         private void UpdateFontSize()
         {
             if ( ItemsSource != null )
@@ -77,6 +76,44 @@ namespace Avalanche.Components.ListView
                 {
                     item.FontSize = _fontSize;
                 }
+            }
+        }
+
+        private double? _iconSize;
+        public double IconSize
+        {
+            get
+            {
+                return _iconSize ?? FontSize * 6;
+            }
+            set
+            {
+                _iconSize = value;
+            }
+        }
+
+        private Color _textColor = Color.Black;
+        public Color TextColor
+        {
+            get
+            {
+                return _textColor;
+            }
+            set
+            {
+                _textColor = value;
+            }
+        }
+        private Color? _iconColor;
+        public Color IconColor
+        {
+            get
+            {
+                return _iconColor ?? _textColor;
+            }
+            set
+            {
+                _iconColor = value;
             }
         }
 

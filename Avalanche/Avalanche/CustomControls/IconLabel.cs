@@ -37,7 +37,7 @@ namespace Avalanche.CustomControls
             set
             {
                 IIconFont iconFont = null;
-                if ( value.Trim().Length > 1 )
+                if ( value!=null && value.Trim().Length > 1 )
                 {
                     var prefix = value.Trim().Substring( 0, 2 );
                     if ( prefix == "fa" )

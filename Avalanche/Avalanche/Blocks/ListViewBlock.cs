@@ -42,22 +42,17 @@ namespace Avalanche.Blocks
             {
                 listViewComponent = new ThumbnailListView();
             }
-            //listViewComponent.IsRefreshing = true;
 
             listViewComponent.Refreshing += ListView_Refreshing;
             listViewComponent.ItemAppearing += ListView_ItemAppearing;
 
-            if ( Attributes.ContainsKey( "DetailPage" ) && !string.IsNullOrWhiteSpace( Attributes["DetailPage"] ) )
-            {
-                DetailPage = Attributes["DetailPage"];
-            }
             listViewComponent.ItemSelected += ListView_ItemSelected;
 
             MessageHandler.Response += MessageHandler_Response;
 
-            if ( Attributes.ContainsKey( "Resource" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
+            if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
             {
-                MessageHandler.Get( Attributes["Resource"] );
+                MessageHandler.Get( Attributes["Request"] );
             }
             else
             {
@@ -70,7 +65,6 @@ namespace Avalanche.Blocks
             }
 
             var view = ( View ) listViewComponent;
-            //view.HeightRequest = App.Current.MainPage.Height;
 
             return view;
         }
@@ -109,7 +103,7 @@ namespace Avalanche.Blocks
                 }
                 listViewComponent.IsRefreshing = false;
             }
-            catch (Exception ex)
+            catch ( Exception ex )
             {
                 _endOfList = true;
                 listViewComponent.IsRefreshing = false;
@@ -123,9 +117,9 @@ namespace Avalanche.Blocks
             _useFresh = true;
             listViewComponent.IsRefreshing = true;
             _pageNumber = 1;
-            if ( Attributes.ContainsKey( "Resource" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
+            if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
             {
-                MessageHandler.Get( Attributes["Resource"], true );
+                MessageHandler.Get( Attributes["Request"], true );
 
             }
             else
@@ -163,7 +157,7 @@ namespace Avalanche.Blocks
 
 
             listViewComponent.SelectedItem = null;
-
+            Attributes["Parameter"] = item.Id;
             AttributeHelper.HandleActionItem( Attributes );
         }
         #endregion

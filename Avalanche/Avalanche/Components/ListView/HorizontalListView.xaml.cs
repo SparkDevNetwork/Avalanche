@@ -44,6 +44,44 @@ namespace Avalanche.Components.ListView
         public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
         public double FontSize { get; set; }
+        private double? _iconSize;
+        public double IconSize
+        {
+            get
+            {
+                return _iconSize ?? FontSize * 6;
+            }
+            set
+            {
+                _iconSize = value;
+            }
+        }
+
+        private Color _textColor = Color.Black;
+        public Color TextColor
+        {
+            get
+            {
+                return _textColor;
+            }
+            set
+            {
+                _textColor = value;
+            }
+        }
+        private Color? _iconColor;
+        public Color IconColor
+        {
+            get
+            {
+                return _iconColor ?? _textColor;
+            }
+            set
+            {
+                _iconColor = value;
+            }
+        }
+
 
         public event EventHandler Refreshing;
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
@@ -121,7 +159,13 @@ namespace Avalanche.Components.ListView
             }
             else
             {
-                IconLabel icon = new IconLabel() { Text = item.Icon, HorizontalOptions = LayoutOptions.Center, FontSize = 60 };
+                IconLabel icon = new IconLabel()
+                {
+                    Text = item.Icon,
+                    HorizontalOptions = LayoutOptions.Center,
+                    FontSize = IconSize,
+                    TextColor = IconColor
+                };
                 sl.Children.Add( icon );
             }
 
@@ -130,7 +174,8 @@ namespace Avalanche.Components.ListView
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = item.FontSize,
-                HorizontalTextAlignment = TextAlignment.Center
+                HorizontalTextAlignment = TextAlignment.Center,
+                TextColor = TextColor
             };
             sl.Children.Add( label );
 

@@ -3,11 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Avalanche.Layouts.NoScroll"
              VerticalOptions="FillAndExpand">
-  <ContentView.Content>
-            <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
-                <StackLayout x:Name="Featured" Spacing="0" />
-                <StackLayout x:Name="Main" Spacing="0" VerticalOptions="FillAndExpand" />
-                <StackLayout x:Name="Footer" VerticalOptions="End" Spacing="0" />
-            </StackLayout>
-  </ContentView.Content>
+    <ContentView.Content>
+        <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
+            <StackLayout x:Name="Featured" Spacing="0" />
+            <StackLayout x:Name="Main" Spacing="0" VerticalOptions="FillAndExpand" />
+            <StackLayout x:Name="Footer" VerticalOptions="End" Spacing="0" />
+        </StackLayout>
+    </ContentView.Content>
 </ContentView>

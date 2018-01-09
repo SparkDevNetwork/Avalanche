@@ -10,6 +10,7 @@ using Avalanche;
 using Avalanche.Blocks;
 using Avalanche.Utilities;
 using Avalanche.Models;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace Avalanche
 {
@@ -25,7 +26,8 @@ namespace Avalanche
         public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
-            NavigationPage.SetHasNavigationBar( this, false );
+            On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea( true );
+            Xamarin.Forms.NavigationPage.SetHasNavigationBar( this, false );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             if ( !string.IsNullOrWhiteSpace( parameter ) )
             {
@@ -45,11 +47,8 @@ namespace Avalanche
             var page = observableResource.Resource as MobilePage;
             this.Title = page.Title;
 
-            NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
-            if ( !page.ShowTitle && Device.RuntimePlatform == Device.iOS )
-            {
-                this.Padding = new Thickness( 0, 12, 0, 0 );
-            }
+            Xamarin.Forms.NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
+
 
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
             if ( layoutType == null )
@@ -58,6 +57,10 @@ namespace Avalanche
                 return;
             }
             var layout = ( ContentView ) Activator.CreateInstance( layoutType );
+            if ( page.ShowTitle && Device.RuntimePlatform == Device.iOS )
+            {
+                layout.Margin = new Thickness( 0, 44, 0, 0 );
+            }
 
             //Modify the page with attributes
             AttributeHelper.ApplyTranslation( this, page.Attributes );
@@ -107,6 +110,8 @@ namespace Avalanche
                 MainGrid.Children.Add( layout );
                 ActivityIndicator.IsRunning = false;
             }
+            btnBack.IsVisible = false;
+            lTimeout.IsVisible = false;
         }
 
         private void btnBack_Clicked( object sender, EventArgs e )

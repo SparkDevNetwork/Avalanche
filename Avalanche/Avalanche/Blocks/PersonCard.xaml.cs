@@ -56,19 +56,6 @@ namespace Avalanche.Blocks
             }
         }
 
-
-        public string Markdown
-        {
-            get
-            {
-                return mdContent.Markdown;
-            }
-            set
-            {
-                mdContent.Markdown = value;
-            }
-        }
-
         public PersonCard()
         {
             InitializeComponent();

@@ -13,6 +13,9 @@ namespace Avalanche.Components
         ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
         object SelectedItem { get; set; }
         double FontSize { get; set; }
+        double IconSize { get; set; }
+        Color TextColor { get; set; }
+        Color IconColor { get; set; }
         double Columns { get; set; }
 
         event EventHandler Refreshing;

@@ -2,13 +2,14 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             x:Class="Avalanche.Layouts.Simple">
+             x:Class="Avalanche.Layouts.Simple"
+             HorizontalOptions="FillAndExpand">
     <ContentView.Content>
         <StackLayout Spacing="0" HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
-            <StackLayout x:Name="Featured" Spacing="0" />
-            <ScrollView VerticalOptions="FillAndExpand">
-                <StackLayout Spacing="0"  VerticalOptions="FillAndExpand">
-                    <Grid>
+            <StackLayout x:Name="Featured" Spacing="0" HorizontalOptions="FillAndExpand" />
+            <ScrollView HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+                <StackLayout Spacing="0" HorizontalOptions="FillAndExpand"  VerticalOptions="FillAndExpand">
+                    <Grid HorizontalOptions="FillAndExpand">
                         <StackLayout x:Name="Bottom" Spacing="0" />
                         <StackLayout x:Name="Middle" Spacing="0" />
                         <StackLayout x:Name="Top" Spacing="0" />
@@ -23,7 +24,7 @@
                     </Grid>
                 </StackLayout>
             </ScrollView>
-            <StackLayout VerticalOptions="End" x:Name="Footer" Spacing="0" />
+            <StackLayout HorizontalOptions="FillAndExpand" VerticalOptions="End" x:Name="Footer" Spacing="0" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>
