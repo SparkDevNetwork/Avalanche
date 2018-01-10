@@ -50,6 +50,14 @@ namespace Avalanche.Blocks
 
             MessageHandler.Response += MessageHandler_Response;
 
+
+            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
+            {
+                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
+            }
+
+            var view = ( View ) listViewComponent;
+
             if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
             {
                 MessageHandler.Get( Attributes["Request"] );
@@ -58,13 +66,6 @@ namespace Avalanche.Blocks
             {
                 MessageHandler.Get( "" );
             }
-
-            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
-            {
-                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
-            }
-
-            var view = ( View ) listViewComponent;
 
             return view;
         }

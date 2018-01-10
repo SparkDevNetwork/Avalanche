@@ -40,12 +40,23 @@ namespace Avalanche.Components.ListView
             set
             {
                 _isRefreshing = value;
-               aiLoading.IsRunning = value;
+                aiLoading.IsRunning = value;
             }
         }
         public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
-        public double FontSize { get; set; }
+        private double _fontSize = 15;
+        public double FontSize
+        {
+            get
+            {
+                return _fontSize;
+            }
+            set
+            {
+                _fontSize = value;
+            }
+        }
         private double? _iconSize;
         public double IconSize
         {

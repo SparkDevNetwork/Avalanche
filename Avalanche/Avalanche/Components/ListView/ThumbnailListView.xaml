@@ -33,7 +33,10 @@
                     </ViewCell>
                 </DataTemplate>
             </ListView.ItemTemplate>
-
+            <ListView.Footer>
+                <Label />
+                <!--This is to make listview look better.-->
+            </ListView.Footer>
         </ListView>
   </ContentView.Content>
 </ContentView>

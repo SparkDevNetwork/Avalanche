@@ -11,6 +11,7 @@ using Avalanche.Blocks;
 using Avalanche.Utilities;
 using Avalanche.Models;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
+using Avalanche.CustomControls;
 
 namespace Avalanche
 {
@@ -27,7 +28,6 @@ namespace Avalanche
         {
             InitializeComponent();
             On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea( true );
-            Xamarin.Forms.NavigationPage.SetHasNavigationBar( this, false );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             if ( !string.IsNullOrWhiteSpace( parameter ) )
             {
@@ -46,10 +46,6 @@ namespace Avalanche
         {
             var page = observableResource.Resource as MobilePage;
             this.Title = page.Title;
-
-            Xamarin.Forms.NavigationPage.SetHasNavigationBar( this, page.ShowTitle );
-
-
             var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
             if ( layoutType == null )
             {
@@ -57,9 +53,10 @@ namespace Avalanche
                 return;
             }
             var layout = ( ContentView ) Activator.CreateInstance( layoutType );
-            if ( page.ShowTitle && Device.RuntimePlatform == Device.iOS )
+
+            if ( page.ShowTitle )
             {
-                layout.Margin = new Thickness( 0, 44, 0, 0 );
+                AddTitleBar( layout, page );
             }
 
             //Modify the page with attributes
@@ -112,6 +109,74 @@ namespace Avalanche
             }
             btnBack.IsVisible = false;
             lTimeout.IsVisible = false;
+        }
+
+        private void AddTitleBar( ContentView layout, MobilePage page )
+        {
+            var nav = layout.FindByName<StackLayout>( "NavBar" );
+            if ( nav != null )
+            {
+                nav.IsVisible = true;
+                if ( page.Attributes.ContainsKey( "AccentColor" ) && !string.IsNullOrEmpty( page.Attributes["AccentColor"] ) )
+                {
+                    nav.BackgroundColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( page.Attributes["AccentColor"] );
+                }
+
+                StackLayout stackLayout = new StackLayout
+                {
+                    HeightRequest = 44,
+                    Orientation = StackOrientation.Horizontal,
+                };
+
+                nav.Children.Add( stackLayout );
+
+                if ( App.Current.MainPage.Navigation.NavigationStack.Count > 1 )
+                {
+                    IconLabel icon = new IconLabel
+                    {
+                        Text = "fa fa-chevron-left",
+                        HorizontalOptions = LayoutOptions.Start,
+                        VerticalOptions = LayoutOptions.Center,
+                        FontSize = 30,
+                        Margin = new Thickness( 10, 0, 0, 0 ),
+                        TextColor = Color.Black
+
+                    };
+
+                    TapGestureRecognizer tgr = new TapGestureRecognizer()
+                    {
+                        NumberOfTapsRequired = 1
+                    };
+                    tgr.Tapped += ( s, ee ) =>
+                    {
+                        AvalancheNavigation.RemovePage();
+                    };
+                    nav.GestureRecognizers.Add( tgr );
+
+                    stackLayout.Children.Add( icon );
+                }
+
+                Label label = new Label
+                {
+                    Text = page.Title,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    HorizontalOptions = LayoutOptions.CenterAndExpand,
+                    VerticalOptions = LayoutOptions.Center,
+                    FontSize = 20,
+                    TextColor = Color.Black
+
+                };
+                stackLayout.Children.Add( label );
+
+                BoxView boxview = new BoxView
+                {
+                    HeightRequest = 0.5,
+                    HorizontalOptions = LayoutOptions.FillAndExpand,
+                    BackgroundColor = Color.Black
+                };
+                nav.Children.Add( boxview );
+
+            }
         }
 
         private void btnBack_Clicked( object sender, EventArgs e )

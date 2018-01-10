@@ -5,6 +5,7 @@
              VerticalOptions="FillAndExpand">
     <ContentView.Content>
         <StackLayout Spacing="0" VerticalOptions="FillAndExpand">
+            <StackLayout x:Name="NavBar" IsVisible="False" />
             <StackLayout x:Name="Featured" Spacing="0" />
             <StackLayout x:Name="Main" Spacing="0" VerticalOptions="FillAndExpand" />
             <StackLayout x:Name="Footer" VerticalOptions="End" Spacing="0" />
