@@ -14,6 +14,11 @@ namespace Avalanche
             InitializeComponent();
             RockClient.CreateDatabase();
             MainPage = new NavigationPage( new Avalanche.MainPage( "home" ) );
+            if ( !App.Current.Properties.ContainsKey( "SecondRun" ) )
+            {
+                MainPage.Navigation.PushModalAsync( new LaunchPage() );
+                App.Current.Properties["SecondRun"] = true;
+            }
         }
 
 

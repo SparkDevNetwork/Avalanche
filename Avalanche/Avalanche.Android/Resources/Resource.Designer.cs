@@ -2741,11 +2741,11 @@ namespace Avalanche.Droid
 			// aapt resource value: 0x7f02010a
 			public const int notification_icon_background = 2130837770;
 			
-			// aapt resource value: 0x7f020110
-			public const int notification_template_icon_bg = 2130837776;
+			// aapt resource value: 0x7f020113
+			public const int notification_template_icon_bg = 2130837779;
 			
-			// aapt resource value: 0x7f020111
-			public const int notification_template_icon_low_bg = 2130837777;
+			// aapt resource value: 0x7f020114
+			public const int notification_template_icon_low_bg = 2130837780;
 			
 			// aapt resource value: 0x7f02010b
 			public const int notification_tile_bg = 2130837771;
@@ -2760,7 +2760,16 @@ namespace Avalanche.Droid
 			public const int sermonplaceholder = 2130837774;
 			
 			// aapt resource value: 0x7f02010f
-			public const int splash_centered = 2130837775;
+			public const int Splash1 = 2130837775;
+			
+			// aapt resource value: 0x7f020110
+			public const int Splash2 = 2130837776;
+			
+			// aapt resource value: 0x7f020111
+			public const int Splash3 = 2130837777;
+			
+			// aapt resource value: 0x7f020112
+			public const int splash_centered = 2130837778;
 			
 			static Drawable()
 			{

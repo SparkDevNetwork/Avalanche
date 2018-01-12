@@ -91,7 +91,8 @@ namespace Avalanche.Blocks
                 Name = "person.jpg",
                 MaxWidthHeight = 800,
                 PhotoSize = PhotoSize.MaxWidthHeight,
-                CompressionQuality = 90
+                CompressionQuality = 90,
+                RotateImage = true
             } );
 
             if ( file == null )

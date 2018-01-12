@@ -29,7 +29,12 @@ namespace Avalanche.Components.ListView
             set
             {
                 _columns = value;
-                _resetItems();
+
+                gGrid.ColumnDefinitions.Clear();
+                for ( var i = 0; i < Columns; i++ )
+                {
+                    gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
+                }
             }
         }
 
@@ -158,7 +163,7 @@ namespace Avalanche.Components.ListView
                 gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
             }
 
-            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 0, GridUnitType.Auto ) } );
 
             var rowCounter = 0;
             var columnCounter = 0;
@@ -181,7 +186,7 @@ namespace Avalanche.Components.ListView
         {
             while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
             {
-                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 0, GridUnitType.Auto ) } );
             }
 
             foreach ( MobileListViewItem item in e.NewItems )

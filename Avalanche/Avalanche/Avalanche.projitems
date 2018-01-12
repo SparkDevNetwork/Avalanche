@@ -28,6 +28,7 @@
       <DependentUpon>PhoneNumberLogin.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\SoutheastIcons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
@@ -55,6 +56,10 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)LaunchPage.xaml.cs">
+      <DependentUpon>LaunchPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml.cs">
       <DependentUpon>NoScroll.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -178,6 +183,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\HorizontalListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LaunchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -21,7 +21,6 @@ namespace Avalanche
 
         public MainPage()
         {
-            throw new NotImplementedException();
         }
 
         public MainPage( string resource, string parameter = "" )
@@ -126,6 +125,7 @@ namespace Avalanche
                 {
                     HeightRequest = 44,
                     Orientation = StackOrientation.Horizontal,
+                    VerticalOptions = LayoutOptions.Center
                 };
 
                 nav.Children.Add( stackLayout );
@@ -138,9 +138,8 @@ namespace Avalanche
                         HorizontalOptions = LayoutOptions.Start,
                         VerticalOptions = LayoutOptions.Center,
                         FontSize = 30,
-                        Margin = new Thickness( 10, 0, 0, 0 ),
+                        Margin = new Thickness( 10, 7, 0, 0 ),
                         TextColor = Color.Black
-
                     };
 
                     TapGestureRecognizer tgr = new TapGestureRecognizer()
@@ -163,6 +162,7 @@ namespace Avalanche
                     HorizontalOptions = LayoutOptions.CenterAndExpand,
                     VerticalOptions = LayoutOptions.Center,
                     FontSize = 20,
+                    Margin = new Thickness( 0, 6, 0, 0 ),
                     TextColor = Color.Black
 
                 };

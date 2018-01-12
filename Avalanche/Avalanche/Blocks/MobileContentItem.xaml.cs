@@ -30,16 +30,6 @@ namespace Avalanche.Blocks
                 mdMarkdown.Markdown = Attributes["Markdown"];
             }
 
-            Task.Run( async () =>
-            {
-                await Task.Delay( 200 );
-                if ( Attributes.ContainsKey( "Title" ) )
-                {
-                    App.Current.MainPage.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1].Title = Attributes["Title"];
-                }
-            }
-            );
-
             return this;
         }
     }

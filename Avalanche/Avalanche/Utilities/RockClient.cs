@@ -22,6 +22,7 @@ namespace Avalanche.Utilities
 
         public async static void GetResource<T>( ObservableResource<T> resource, string url, bool refresh = false )
         {
+            url = url.TrimEnd( '/' ); //adds consistency for cacheing values
             var webResource = await GetDBResource( url );
             if ( webResource != null && refresh == false )
             {

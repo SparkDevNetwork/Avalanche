@@ -27,8 +27,6 @@ namespace Avalanche.Droid
             global::Xamarin.Forms.Forms.Init( this, bundle );
             LoadApplication( new Avalanche.App() );
         }
-
-
     }
 }
 

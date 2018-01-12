@@ -43,20 +43,21 @@ namespace Avalanche.Blocks
                 listViewComponent = new ThumbnailListView();
             }
 
+            PreConfigureStyles();
+
             listViewComponent.Refreshing += ListView_Refreshing;
             listViewComponent.ItemAppearing += ListView_ItemAppearing;
-
             listViewComponent.ItemSelected += ListView_ItemSelected;
-
             MessageHandler.Response += MessageHandler_Response;
 
 
-            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
-            {
-                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
-            }
 
-            var view = ( View ) listViewComponent;
+
+            if ( Attributes.ContainsKey( "Content" ) && !string.IsNullOrWhiteSpace( Attributes["Content"] ) )
+            {
+                AddRenderContent();
+
+            }
 
             if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
             {
@@ -67,7 +68,57 @@ namespace Avalanche.Blocks
                 MessageHandler.Get( "" );
             }
 
+
+            var view = ( View ) listViewComponent;
             return view;
+        }
+
+        private void PreConfigureStyles()
+        {
+            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
+            {
+                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
+                Attributes.Remove( "Columns" );
+            }
+
+            if ( Attributes.ContainsKey( "FontSize" ) && !string.IsNullOrWhiteSpace( Attributes["FontSize"] ) )
+            {
+                listViewComponent.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+            }
+
+            if ( Attributes.ContainsKey( "IconSize" ) && !string.IsNullOrWhiteSpace( Attributes["IconSize"] ) )
+            {
+                listViewComponent.IconSize = Convert.ToDouble( Attributes["IconSize"] );
+            }
+
+            if ( Attributes.ContainsKey( "TextColor" ) && !string.IsNullOrWhiteSpace( Attributes["TextColor"] ) )
+            {
+                listViewComponent.TextColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( Attributes["TextColor"] );
+            }
+
+            if ( Attributes.ContainsKey( "IconColor" ) && !string.IsNullOrWhiteSpace( Attributes["IconColor"] ) )
+            {
+                listViewComponent.IconColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( Attributes["IconColor"] );
+            }
+        }
+
+        private void AddRenderContent()
+        {
+            List<MobileListViewItem> mlv = JsonConvert.DeserializeObject<List<MobileListViewItem>>( Attributes["Content"] );
+            foreach ( var item in mlv )
+            {
+                item.FontSize = listViewComponent.FontSize;
+                foreach ( var i in listViewComponent.ItemsSource )
+                {
+                    if ( !string.IsNullOrEmpty( i.Id ) && i.Id == item.Id )
+                    {
+                        listViewComponent.ItemsSource.Remove( i );
+                        break;
+                    }
+                }
+                listViewComponent.ItemsSource.Add( item );
+            }
+            listViewComponent.IsRefreshing = false;
         }
 
         #region Events
