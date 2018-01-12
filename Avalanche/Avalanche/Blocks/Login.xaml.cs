@@ -22,6 +22,14 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
+
+            if ( Attributes.ContainsKey( "FontSize" ) && !string.IsNullOrWhiteSpace( Attributes["FontSize"] ) )
+            {
+                username.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+                password.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+                btnSubmit.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+            }
+
             return this;
         }
 
@@ -30,7 +38,7 @@ namespace Avalanche.Blocks
             slForm.IsVisible = false;
             aiActivity.IsRunning = true;
             var response = await RockClient.LogIn( username.Text, password.Text );
-            
+
             switch ( response )
             {
                 case LoginResponse.Error:
@@ -49,16 +57,6 @@ namespace Avalanche.Blocks
                 default:
                     break;
             }
-        }
-
-        private void btnLogout_Clicked( object sender, EventArgs e )
-        {
-            RockClient.Logout();
-        }
-
-        private void btnForgot_Clicked( object sender, EventArgs e )
-        {
-            Device.OpenUri( new Uri( "http://secc.org/login" ) );
         }
     }
 }

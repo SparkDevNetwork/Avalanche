@@ -28,7 +28,7 @@ namespace Avalanche.Blocks
 
         private void ButtonBlock_Clicked( object sender, EventArgs e )
         {
-            AvalancheNavigation.GetPage( Attributes["PageNumber"] );
+            AttributeHelper.HandleActionItem( Attributes );
         }
     }
 }

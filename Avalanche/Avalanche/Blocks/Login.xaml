@@ -6,11 +6,9 @@
         <Grid>
             <ActivityIndicator x:Name="aiActivity"/>
             <StackLayout x:Name="slForm">
-                <Label Text="Login" FontSize="40" />
                 <Entry x:Name="username" Placeholder="Username" FontSize="20"/>
-                <Entry x:Name="password" IsPassword="True" Placeholder="password" />
+                <Entry x:Name="password" IsPassword="True" Placeholder="Password" />
                 <Button x:Name="btnSubmit" Text="Login" Clicked="btnSubmit_Clicked" />
-                <Button x:Name="btnForgot" Text="Forgot My Password" Clicked="btnForgot_Clicked"/>
             </StackLayout>
         </Grid>
     </ContentView.Content>

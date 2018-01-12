@@ -6,8 +6,8 @@
         <StackLayout Margin="40">
             <StackLayout x:Name="slPhoneNumber">
                 <Label Text="Please enter your ten digit mobile phone number to log in." HorizontalOptions="Center" FontSize="20"/>
-                <Entry x:Name="ePhoneNumber" Keyboard="Telephone" FontSize="40" Placeholder="Phone Number"/>
-                <Button x:Name="btnPhoneNumber" Text="Next" Clicked="btnPhoneNumber_Clicked" FontSize="40"/>
+                <Entry x:Name="ePhoneNumber" Keyboard="Telephone" Placeholder="Phone Number"/>
+                <Button x:Name="btnPhoneNumber" Text="Next" Clicked="btnPhoneNumber_Clicked"/>
             </StackLayout>
             <StackLayout Orientation="Horizontal" HorizontalOptions="Center" x:Name="slLoading" IsVisible="False" MinimumHeightRequest="400">
                 <Label Text="Loading." FontSize="45"/>
@@ -15,8 +15,8 @@
             </StackLayout>
             <StackLayout x:Name="slPin" IsVisible="False">
                 <Label Text="We have texted you a six digit number. It should be arriving shortly. Please enter it here to continue." FontSize="20"/>
-                <Entry x:Name="ePin" Keyboard="Numeric" FontSize="40" Placeholder="Code"/>
-                <Button x:Name="btnPin" Text="Login" Clicked="btnPin_Clicked" FontSize="40"/>
+                <Entry x:Name="ePin" Keyboard="Numeric" Placeholder="Code"/>
+                <Button x:Name="btnPin" Text="Login" Clicked="btnPin_Clicked"/>
             </StackLayout>
         </StackLayout>
     </ContentView.Content>

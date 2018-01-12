@@ -23,11 +23,20 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
+            if ( Attributes.ContainsKey( "FontSize" ) && !string.IsNullOrWhiteSpace( Attributes["FontSize"] ) )
+            {
+                ePhoneNumber.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+                btnPhoneNumber.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+                ePin.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+                btnPin.FontSize = Convert.ToDouble( Attributes["FontSize"] );
+            }
+
+
             MessageHandler.Response += MessageHandler_Response;
             return this;
         }
 
-        private void MessageHandler_Response( object sender, Models.MobileBlockResponse e )
+        private async void MessageHandler_Response( object sender, Models.MobileBlockResponse e )
         {
             var r = e.Response.Split( new char[] { '|' } );
             if ( r[0] == "1" )
@@ -35,17 +44,22 @@ namespace Avalanche.Blocks
                 slLoading.IsVisible = false;
                 slPin.IsVisible = true;
             }
-            if ( r[0] == "0" )
+            else
             {
-                App.Current.MainPage.DisplayAlert( "We're sorry.", r[1], "Ok" );
                 slLoading.IsVisible = false;
+                slPin.IsVisible = false;
                 slPhoneNumber.IsVisible = true;
-            }
-            if ( r[0] == "2" )
-            {
-                App.Current.MainPage.DisplayAlert( "We're sorry.", r[1], "Ok" );
-                slLoading.IsVisible = false;
-                slPhoneNumber.IsVisible = true;
+                if ( Attributes.ContainsKey( "HelpUrl" ) && !string.IsNullOrWhiteSpace( Attributes["HelpUrl"] ) )
+                {
+                    if ( await App.Current.MainPage.DisplayAlert( "We're sorry.", r[1], "Resolve Problem", "Ok" ) )
+                    {
+                        Device.OpenUri( new Uri( Attributes["HelpUrl"] ) );
+                    }
+                }
+                else
+                {
+                    await App.Current.MainPage.DisplayAlert( "We're sorry.", r[1], "Ok" );
+                }
             }
         }
 
