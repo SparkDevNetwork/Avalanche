@@ -19,6 +19,7 @@ namespace RockWeb.Plugins.Avalanche
     [DisplayName( "Login App" )]
     [Category( "Avalanche" )]
     [Description( "Login Screen" )]
+
     public partial class Login : AvalancheBlock
     {
 
@@ -35,7 +36,7 @@ namespace RockWeb.Plugins.Avalanche
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.Login",
-                Attributes = new Dictionary<string, string>()
+                Attributes = CustomAttributes
             };
         }
     }

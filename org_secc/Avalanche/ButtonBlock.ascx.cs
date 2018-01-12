@@ -13,6 +13,7 @@ using Rock;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
+using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -20,8 +21,8 @@ namespace RockWeb.Plugins.Avalanche
     [Category( "Avalanche" )]
     [Description( "A button." )]
 
-    [TextField( "Text", "Text which will appear on the button." )]
-    [TextField( "Page Number", "Number of the page to navigate to." )]
+    [ActionItemField( "Action Item", "", false )]
+    [TextField( "Text", "The text of the label to be displayed. Lava enabled with the {{parameter}} available.", false )]
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     public partial class ButtonBlock : AvalancheBlock
     {
@@ -42,7 +43,7 @@ namespace RockWeb.Plugins.Avalanche
                                                                           parameter,
                                                                           GetAttributeValue( "EnabledLavaCommands" ) ) );
 
-            CustomAttributes.Add( "PageNumber", GetAttributeValue( "PageNumber" ) );
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
 
             return new MobileBlock()
             {
@@ -53,7 +54,6 @@ namespace RockWeb.Plugins.Avalanche
 
         protected void btnButton_Click( object sender, EventArgs e )
         {
-            Response.Redirect( "/page/" + GetAttributeValue( "PageNumber" ) );
         }
     }
 }

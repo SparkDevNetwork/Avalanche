@@ -21,6 +21,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Block to log in with your phone number" )]
 
     [WorkflowTypeField( "Workflow", "Workflow which will send the text message" )]
+    [TextField( "Help Url", "Page to send the user to if their phonenumber could not be resolved.", false )]
     public partial class PhoneNumberLogin : AvalancheBlock
     {
 
@@ -34,6 +35,7 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
+            CustomAttributes["HelpUrl"] = GetAttributeValue( "HelpUrl" );
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.PhoneNumberLogin",
