@@ -47,27 +47,14 @@ namespace RockWeb.Plugins.Avalanche
                 CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
+            CustomAttributes["Content"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
+                                                           CurrentPerson,
+                                                           enabledLavaCommands: GetAttributeValue( "EnabledLavaCommands" ) );
+
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ListViewBlock",
                 Attributes = CustomAttributes
-            };
-        }
-
-        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
-        {
-            if ( request != "" )
-            {
-                return base.HandleRequest( request, Body );
-            }
-
-            return new MobileBlockResponse()
-            {
-                Request = request,
-                Response = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
-                                                           CurrentPerson,
-                                                           enabledLavaCommands: GetAttributeValue( "EnabledLavaCommands" ) ),
-                TTL = 0
             };
         }
     }
