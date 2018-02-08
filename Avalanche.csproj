@@ -84,15 +84,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RockForAvalanche\Rock\Rock.Migrations\Rock.Migrations.csproj">
+    <ProjectReference Include="..\Rock\Rock.Migrations\Rock.Migrations.csproj">
       <Project>{704740d8-b539-4560-9f8c-681670c9d6ad}</Project>
       <Name>Rock.Migrations</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RockForAvalanche\Rock\Rock.Rest\Rock.Rest.csproj">
+    <ProjectReference Include="..\Rock\Rock.Rest\Rock.Rest.csproj">
       <Project>{add1edd0-a4cb-4e82-b6ad-6ad1d556deae}</Project>
       <Name>Rock.Rest</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RockForAvalanche\Rock\Rock\Rock.csproj">
+    <ProjectReference Include="..\Rock\Rock\Rock.csproj">
       <Project>{185a31d7-3037-4dae-8797-0459849a84bd}</Project>
       <Name>Rock</Name>
     </ProjectReference>
