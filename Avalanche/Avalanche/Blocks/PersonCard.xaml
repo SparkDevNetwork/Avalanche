@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             xmlns:markdown="clr-namespace:Xam.Forms.Markdown;assembly=Xam.Forms.MarkdownView"
+             xmlns:fftransformations="clr-namespace:FFImageLoading.Transformations;assembly=FFImageLoading.Transformations"
+             x:Class="Avalanche.Blocks.PersonCard"
+             HorizontalOptions="FillAndExpand">
+    <ContentView.Content>
+        <StackLayout x:Name="slAccent" Padding="20" Spacing="0" HorizontalOptions="FillAndExpand">
+            <ff:CachedImage x:Name="ffImage" HorizontalOptions="Center" WidthRequest="200"
+                                LoadingPlaceholder="profilePlaceholder.png">
+                <ff:CachedImage.Transformations>
+                    <fftransformations:CircleTransformation/>
+                </ff:CachedImage.Transformations>
+            </ff:CachedImage>
+            <Label x:Name="lName" HorizontalOptions="Center" FontSize="45"/>
+        </StackLayout>
+    </ContentView.Content>
+</ContentView>

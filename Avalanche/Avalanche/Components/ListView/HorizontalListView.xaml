@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalanche.Components.ListView.HorizontalListView">
+    <ContentView.Content>
+        <ScrollView x:Name="svScrollView" Orientation="Horizontal" Margin="5,0">
+            <StackLayout x:Name="slStackLayout" Orientation="Horizontal" Spacing="5">
+            </StackLayout>
+        </ScrollView>
+    </ContentView.Content>
+</ContentView>
