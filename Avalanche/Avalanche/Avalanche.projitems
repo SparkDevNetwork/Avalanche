@@ -30,7 +30,6 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\SoutheastIcons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml.cs">
       <DependentUpon>CardListView.xaml</DependentUpon>
