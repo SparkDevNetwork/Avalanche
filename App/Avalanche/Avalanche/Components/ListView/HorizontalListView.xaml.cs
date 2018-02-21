@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,58 +56,9 @@ namespace Avalanche.Components.ListView
                 _isRefreshing = value;
             }
         }
-        public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
+        public ObservableCollection<ListElement> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
-        private double _fontSize = 15;
-        public double FontSize
-        {
-            get
-            {
-                return _fontSize;
-            }
-            set
-            {
-                _fontSize = value;
-            }
-        }
-        private double? _iconSize;
-        public double IconSize
-        {
-            get
-            {
-                return _iconSize ?? FontSize * 6;
-            }
-            set
-            {
-                _iconSize = value;
-            }
-        }
-
-        private Color _textColor = Color.Black;
-        public Color TextColor
-        {
-            get
-            {
-                return _textColor;
-            }
-            set
-            {
-                _textColor = value;
-            }
-        }
-        private Color? _iconColor;
-        public Color IconColor
-        {
-            get
-            {
-                return _iconColor ?? _textColor;
-            }
-            set
-            {
-                _iconColor = value;
-            }
-        }
-
+        public bool CanRefresh { get; set; }
 
         public event EventHandler Refreshing;
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
@@ -115,7 +67,7 @@ namespace Avalanche.Components.ListView
         public HorizontalListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<MobileListViewItem>();
+            ItemsSource = new ObservableCollection<ListElement>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
 
             svScrollView.Scrolled += SvScrollView_Scrolled;
@@ -158,13 +110,13 @@ namespace Avalanche.Components.ListView
 
         private void AddItems( NotifyCollectionChangedEventArgs e )
         {
-            foreach ( MobileListViewItem item in e.NewItems )
+            foreach ( ListElement item in e.NewItems )
             {
                 AddCell( item );
             }
         }
 
-        private void AddCell( MobileListViewItem item )
+        private void AddCell( ListElement item )
         {
             var widthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) );
             StackLayout sl = new StackLayout()
@@ -188,8 +140,8 @@ namespace Avalanche.Components.ListView
                 {
                     Text = item.Icon,
                     HorizontalOptions = LayoutOptions.Center,
-                    FontSize = IconSize,
-                    TextColor = IconColor
+                    FontSize = item.IconFontSize,
+                    TextColor = item.IconTextColor
                 };
                 sl.Children.Add( icon );
             }
@@ -200,7 +152,7 @@ namespace Avalanche.Components.ListView
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = item.FontSize,
                 HorizontalTextAlignment = TextAlignment.Center,
-                TextColor = TextColor
+                TextColor = item.TextColor
             };
             sl.Children.Add( label );
 

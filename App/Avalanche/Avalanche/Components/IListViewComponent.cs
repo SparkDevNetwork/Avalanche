@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,12 +25,9 @@ namespace Avalanche.Components
     public interface IListViewComponent
     {
         bool IsRefreshing { get; set; }
-        ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
+        bool CanRefresh { get; set; }
+        ObservableCollection<ListElement> ItemsSource { get; set; }
         object SelectedItem { get; set; }
-        double FontSize { get; set; }
-        double IconSize { get; set; }
-        Color TextColor { get; set; }
-        Color IconColor { get; set; }
         double Columns { get; set; }
 
         event EventHandler Refreshing;

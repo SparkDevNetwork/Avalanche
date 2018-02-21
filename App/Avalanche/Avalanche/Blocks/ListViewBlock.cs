@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,9 +32,10 @@ namespace Avalanche.Blocks
     {
         private IListViewComponent listViewComponent;
         private bool _manualRefresh = false;
-        private int _pageNumber = 1;
         private bool _useFresh = false;
         private bool _endOfList = false;
+        private string _nextRequest;
+        private string _initialRequest;
         public string DetailPage { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
         public BlockMessenger MessageHandler { get; set; }
@@ -64,24 +66,30 @@ namespace Avalanche.Blocks
             listViewComponent.ItemSelected += ListView_ItemSelected;
             MessageHandler.Response += MessageHandler_Response;
 
-
-
-
+            // An initial request may have Content or a Request target.
             if ( Attributes.ContainsKey( "Content" ) && !string.IsNullOrWhiteSpace( Attributes["Content"] ) )
             {
                 AddRenderContent();
-
             }
-
-            if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
+            else if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
             {
                 MessageHandler.Get( Attributes["Request"] );
             }
-            else
+
+            if ( Attributes.ContainsKey( "NextRequest" ) && !string.IsNullOrWhiteSpace( Attributes["NextRequest"] ) )
             {
-                MessageHandler.Get( "" );
+                _nextRequest = Attributes["NextRequest"];
             }
 
+            if ( Attributes.ContainsKey( "InitialRequest" ) && !string.IsNullOrWhiteSpace( Attributes["InitialRequest"] ) )
+            {
+                listViewComponent.CanRefresh = true;
+                _initialRequest = Attributes["InitialRequest"];
+            }
+            else
+            {
+                listViewComponent.CanRefresh = false;
+            }
 
             var view = ( View ) listViewComponent;
             return view;
@@ -89,50 +97,36 @@ namespace Avalanche.Blocks
 
         private void PreConfigureStyles()
         {
-            if ( Attributes.ContainsKey( "Columns" ) && !string.IsNullOrWhiteSpace( Attributes["Columns"] ) )
+            AttributeHelper.ApplyTranslation( listViewComponent, Attributes );
+
+            if ( Attributes.ContainsKey( "Columns" ) )
             {
-                listViewComponent.Columns = Convert.ToDouble( Attributes["Columns"] );
                 Attributes.Remove( "Columns" );
-            }
-
-            if ( Attributes.ContainsKey( "FontSize" ) && !string.IsNullOrWhiteSpace( Attributes["FontSize"] ) )
-            {
-                listViewComponent.FontSize = Convert.ToDouble( Attributes["FontSize"] );
-            }
-
-            if ( Attributes.ContainsKey( "IconSize" ) && !string.IsNullOrWhiteSpace( Attributes["IconSize"] ) )
-            {
-                listViewComponent.IconSize = Convert.ToDouble( Attributes["IconSize"] );
-            }
-
-            if ( Attributes.ContainsKey( "TextColor" ) && !string.IsNullOrWhiteSpace( Attributes["TextColor"] ) )
-            {
-                listViewComponent.TextColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( Attributes["TextColor"] );
-            }
-
-            if ( Attributes.ContainsKey( "IconColor" ) && !string.IsNullOrWhiteSpace( Attributes["IconColor"] ) )
-            {
-                listViewComponent.IconColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( Attributes["IconColor"] );
             }
         }
 
         private void AddRenderContent()
         {
-            List<MobileListViewItem> mlv = JsonConvert.DeserializeObject<List<MobileListViewItem>>( Attributes["Content"] );
-            foreach ( var item in mlv )
+            List<ListElement> mlv = JsonConvert.DeserializeObject<List<ListElement>>( Attributes["Content"] );
+            foreach ( var element in mlv )
             {
-                item.FontSize = listViewComponent.FontSize;
-                foreach ( var i in listViewComponent.ItemsSource )
-                {
-                    if ( !string.IsNullOrEmpty( i.Id ) && i.Id == item.Id )
-                    {
-                        listViewComponent.ItemsSource.Remove( i );
-                        break;
-                    }
-                }
-                listViewComponent.ItemsSource.Add( item );
+                AddElement( element );
             }
             listViewComponent.IsRefreshing = false;
+        }
+
+        private void AddElement( ListElement element )
+        {
+            AttributeHelper.ApplyTranslation( element, Attributes );
+            foreach ( var i in listViewComponent.ItemsSource )
+            {
+                if ( !string.IsNullOrEmpty( i.Id ) && i.Id == element.Id )
+                {
+                    listViewComponent.ItemsSource.Remove( i );
+                    break;
+                }
+            }
+            listViewComponent.ItemsSource.Add( element );
         }
 
         #region Events
@@ -146,26 +140,26 @@ namespace Avalanche.Blocks
             }
             try
             {
-
-                List<MobileListViewItem> mlv = JsonConvert.DeserializeObject<List<MobileListViewItem>>( response );
-                if ( mlv == null || !mlv.Any() )
+                ListViewResponse listViewResponse = JsonConvert.DeserializeObject<ListViewResponse>( response );
+                if ( listViewResponse?.Content == null || !listViewResponse.Content.Any() )
                 {
                     _endOfList = true;
                     listViewComponent.IsRefreshing = false;
                     return;
                 }
-                foreach ( var item in mlv )
+
+                if ( !string.IsNullOrWhiteSpace( listViewResponse.NextRequest ) )
                 {
-                    item.FontSize = listViewComponent.FontSize;
-                    foreach ( var i in listViewComponent.ItemsSource )
-                    {
-                        if ( !string.IsNullOrEmpty( i.Id ) && i.Id == item.Id )
-                        {
-                            listViewComponent.ItemsSource.Remove( i );
-                            break;
-                        }
-                    }
-                    listViewComponent.ItemsSource.Add( item );
+                    _nextRequest = Attributes["NextRequest"];
+                }
+                else
+                {
+                    _nextRequest = null;
+                }
+
+                foreach ( var listElement in listViewResponse.Content )
+                {
+                    AddElement( listElement );
                 }
                 listViewComponent.IsRefreshing = false;
             }
@@ -182,15 +176,13 @@ namespace Avalanche.Blocks
             _manualRefresh = true;
             _useFresh = true;
             listViewComponent.IsRefreshing = true;
-            _pageNumber = 1;
-            if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Resource"] ) )
+            if ( !string.IsNullOrWhiteSpace( _initialRequest ) )
             {
-                MessageHandler.Get( Attributes["Request"], true );
-
+                MessageHandler.Get( _initialRequest );
             }
             else
             {
-                MessageHandler.Get( "", true );
+                listViewComponent.IsRefreshing = false;
             }
         }
 
@@ -200,11 +192,13 @@ namespace Avalanche.Blocks
                 return;
 
             //hit bottom!
-            if ( ( ( MobileListViewItem ) e.Item ).Id == listViewComponent.ItemsSource[listViewComponent.ItemsSource.Count - 1].Id )
+            if ( ( ( ListElement ) e.Item ).Id == listViewComponent.ItemsSource[listViewComponent.ItemsSource.Count - 1].Id )
             {
-                _pageNumber++;
-                listViewComponent.IsRefreshing = true;
-                MessageHandler.Get( _pageNumber.ToString(), _useFresh );
+                if ( !string.IsNullOrWhiteSpace( _nextRequest ) )
+                {
+                    listViewComponent.IsRefreshing = true;
+                }
+                MessageHandler.Get( _nextRequest );
             }
         }
 
@@ -215,12 +209,11 @@ namespace Avalanche.Blocks
                 return;
             }
 
-            var item = listViewComponent.SelectedItem as MobileListViewItem;
+            var item = listViewComponent.SelectedItem as ListElement;
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
                 AttributeHelper.HandleActionItem( new Dictionary<string, string> { { "Resource", item.Resource }, { "ActionType", item.ActionType } } );
             }
-
 
             listViewComponent.SelectedItem = null;
             Attributes["Parameter"] = item.Id;
