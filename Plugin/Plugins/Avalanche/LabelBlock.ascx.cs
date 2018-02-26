@@ -31,7 +31,7 @@ using Rock.Attribute;
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Label Block" )]
-    [Category( " Avalanche" )]
+    [Category( "Avalanche" )]
     [Description( "A button." )]
 
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
