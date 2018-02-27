@@ -26,9 +26,9 @@
 
                             <ff:CachedImage Source="{Binding Image}" Aspect="AspectFit" Grid.RowSpan="2" /> 
                             <local:IconLabel Text="{Binding Icon}" Grid.RowSpan="2" FontSize="{Binding IconFontSize}"
-                                HorizontalOptions="Center" VerticalOptions="Center" />
-                            <Label Text="{Binding Title}" Grid.Column="1" TextColor="Black" LineBreakMode="TailTruncation" FontSize="{Binding FontSize}" />
-                            <Label Text="{Binding Description}" Grid.Column="1" Grid.Row="1"  LineBreakMode="TailTruncation" Margin="0,-8,0,0" FontSize="{Binding SubtitleFontSize}" />
+                                HorizontalOptions="Center" VerticalOptions="Center" TextColor="{Binding IconTextColor}" />
+                            <Label Text="{Binding Title}" Grid.Column="1" TextColor="{Binding TextColor}" LineBreakMode="TailTruncation" FontSize="{Binding FontSize}" />
+                            <Label Text="{Binding Description}" Grid.Column="1" Grid.Row="1" TextColor="{Binding DescriptionTextColor}"  LineBreakMode="TailTruncation" Margin="0,-8,0,0" FontSize="{Binding DescriptionFontSize}" />
                         </Grid>
                     </ViewCell>
                 </DataTemplate>

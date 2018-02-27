@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,20 +15,20 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Avalanche.Utilities
+namespace Avalanche.Models
 {
-    public static class Constants
+    public class ListElement
     {
-        public const string client_id = "abf391da-27de-495d-b8be-7ed6dde5cbdd";
-
-        public const string client_secret = "9fe03185-03a7-4a1b-aa64-4adc64a0492f";
-
-        public const string serverUrl = "http://192.168.1.117:6229";
-
-        public const string tokenEndpoint = "/OAuth/Token";
-
-        public const int timeout = 10; //in seconds
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string Icon { get; set; }
+        public string Image { get; set; }
+        public string ActionType { get; set; }
+        public string Resource { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,6 +38,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Mobile block to show group members of a group." )]
 
     [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
+    [IntegerField( "Members Per Request", "The number of members to get per request. All group members will be loaded, but in multiple requests.", true, 20 )]
     public partial class GroupMemberListBlock : AvalancheBlock
     {
 
@@ -51,7 +53,9 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
-            if ( GetGroupMembers( parameter ) == null ) // send null if no parameter
+            var groupMembers = GetGroupMembers( parameter, 0 );
+
+            if ( groupMembers == null || !groupMembers.Any() )
             {
                 return new MobileBlock()
                 {
@@ -60,9 +64,12 @@ namespace RockWeb.Plugins.Avalanche
                 };
             }
 
-
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
-            CustomAttributes["Request"] = parameter;        
+
+            CustomAttributes["InitialRequest"] = parameter + "|0";
+            CustomAttributes["NextRequest"] = parameter + "|1";
+            CustomAttributes["Content"] = JsonConvert.SerializeObject( groupMembers );
+
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.ListViewBlock",
@@ -72,34 +79,46 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            var groupMembers = GetGroupMembers( request );
+            var splitRequest = request.Split( new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries );
+            if ( splitRequest.Length < 2 )
+            {
+                return new MobileBlockResponse() // send nothing if bad request
+                {
+                    Request = request,
+                    Response = JsonConvert.SerializeObject( new List<ListViewResponse>() ),
+                    TTL = 0
+                };
+            }
+
+            var parameter = splitRequest[0];
+            var page = splitRequest[1].AsInteger();
+
+            var groupMembers = GetGroupMembers( parameter, page );
             if ( groupMembers == null )
             {
                 return new MobileBlockResponse() // send nothing if no members
                 {
                     Request = request,
-                    Response = JsonConvert.SerializeObject( new List<MobileListViewItem>() ),
+                    Response = JsonConvert.SerializeObject( new List<ListViewResponse>() ),
                     TTL = 0
                 };
             }
 
-            var members = groupMembers.Select( m => new MobileListViewItem
+            var response = new ListViewResponse
             {
-                Id = m.Guid.ToString(),
-                Title = m.Person.FullName,
-                Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + m.Person.PhotoUrl + "&width=100",
-                Description = m.GroupRole.Name
-            } ).ToList();
+                Content = groupMembers,
+                NextRequest = string.Format( "{0}|{1}", parameter, ( page + 1 ) )
+            };
 
             return new MobileBlockResponse()
             {
                 Request = request,
-                Response = JsonConvert.SerializeObject( members ),
+                Response = JsonConvert.SerializeObject( response ),
                 TTL = 0
             };
         }
 
-        private List<GroupMember> GetGroupMembers( string parameter )
+        private List<ListElement> GetGroupMembers( string parameter, int page )
         {
             if ( CurrentPerson == null )
             {
@@ -123,13 +142,27 @@ namespace RockWeb.Plugins.Avalanche
             {
                 return null;
             }
+            var count = GetAttributeValue( "MembersPerRequest" ).AsInteger();
+            if ( count < 1 )
+            {
+                count = 20;
+            }
 
             return members
                 .OrderByDescending( m => m.GroupRole.IsLeader )
                 .ThenBy( m => m.Person.FirstName )
                 .ThenBy( m => m.Person.LastName )
+                .Skip( page * count )
+                .Take( count )
                 .ToList()
                 .Where( m => m.GroupMemberStatus != GroupMemberStatus.Inactive )
+                .Select( m => new ListElement
+                {
+                    Id = m.Guid.ToString(),
+                    Title = m.Person.FullName,
+                    Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + m.Person.PhotoUrl + "&width=100",
+                    Description = m.GroupRole.Name
+                } )
                 .ToList();
         }
     }

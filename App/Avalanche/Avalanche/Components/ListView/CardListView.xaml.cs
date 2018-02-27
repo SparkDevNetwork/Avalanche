@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -65,57 +66,11 @@ namespace Avalanche.Components.ListView
                 aiLoading.IsRunning = value;
             }
         }
-        public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
+        public ObservableCollection<ListElement> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
-        private double _fontSize = 15;
-        public double FontSize
-        {
-            get
-            {
-                return _fontSize;
-            }
-            set
-            {
-                _fontSize = value;
-            }
-        }
-        private double? _iconSize;
-        public double IconSize
-        {
-            get
-            {
-                return _iconSize ?? FontSize * 6;
-            }
-            set
-            {
-                _iconSize = value;
-            }
-        }
 
-        private Color _textColor = Color.Black;
-        public Color TextColor
-        {
-            get
-            {
-                return _textColor;
-            }
-            set
-            {
-                _textColor = value;
-            }
-        }
-        private Color? _iconColor;
-        public Color IconColor
-        {
-            get
-            {
-                return _iconColor ?? _textColor;
-            }
-            set
-            {
-                _iconColor = value;
-            }
-        }
+        public bool CanRefresh { get; set; }
+        ObservableCollection<ListElement> IListViewComponent.ItemsSource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event EventHandler Refreshing;
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
@@ -124,7 +79,7 @@ namespace Avalanche.Components.ListView
         public CardListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<MobileListViewItem>();
+            ItemsSource = new ObservableCollection<ListElement>();
             ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
 
             for ( var i = 0; i < Columns; i++ )
@@ -203,7 +158,7 @@ namespace Avalanche.Components.ListView
                 gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 0, GridUnitType.Auto ) } );
             }
 
-            foreach ( MobileListViewItem item in e.NewItems )
+            foreach ( ListElement item in e.NewItems )
             {
                 AddCell( item,
                         ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
@@ -211,7 +166,7 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private void AddCell( MobileListViewItem item, int x, int y )
+        private void AddCell( ListElement item, int x, int y )
         {
             var frame = new Frame()
             {
@@ -242,9 +197,9 @@ namespace Avalanche.Components.ListView
                 {
                     Text = item.Icon,
                     HorizontalOptions = LayoutOptions.Center,
-                    FontSize = IconSize,
+                    FontSize = item.IconFontSize,
                     Margin = new Thickness( 0, 15, 0, 0 ),
-                    TextColor = TextColor
+                    TextColor = item.IconTextColor
                 };
                 sl.Children.Add( icon );
             }
@@ -278,6 +233,5 @@ namespace Avalanche.Components.ListView
             sl.GestureRecognizers.Add( tgr );
             gGrid.Children.Add( frame, x, y );
         }
-
     }
 }

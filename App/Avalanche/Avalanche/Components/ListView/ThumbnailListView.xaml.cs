@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -66,68 +67,17 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        public ObservableCollection<MobileListViewItem> ItemsSource { get; set; }
+        public ObservableCollection<ListElement> ItemsSource { get; set; }
 
-        private double _fontSize;
-        public double FontSize
+        public bool CanRefresh
         {
             get
             {
-                return _fontSize;
+                return lvListView.IsPullToRefreshEnabled;
             }
             set
             {
-                _fontSize = value;
-
-                UpdateFontSize();
-            }
-        }
-        private void UpdateFontSize()
-        {
-            if ( ItemsSource != null )
-            {
-                foreach ( MobileListViewItem item in ItemsSource )
-                {
-                    item.FontSize = _fontSize;
-                }
-            }
-        }
-
-        private double? _iconSize;
-        public double IconSize
-        {
-            get
-            {
-                return _iconSize ?? FontSize * 6;
-            }
-            set
-            {
-                _iconSize = value;
-            }
-        }
-
-        private Color _textColor = Color.Black;
-        public Color TextColor
-        {
-            get
-            {
-                return _textColor;
-            }
-            set
-            {
-                _textColor = value;
-            }
-        }
-        private Color? _iconColor;
-        public Color IconColor
-        {
-            get
-            {
-                return _iconColor ?? _textColor;
-            }
-            set
-            {
-                _iconColor = value;
+                lvListView.IsPullToRefreshEnabled = value;
             }
         }
 
@@ -151,7 +101,7 @@ namespace Avalanche.Components.ListView
         public ThumbnailListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<MobileListViewItem>();
+            ItemsSource = new ObservableCollection<ListElement>();
             lvListView.ItemsSource = ItemsSource;
 
             lvListView.Refreshing += LvListView_Refreshing;

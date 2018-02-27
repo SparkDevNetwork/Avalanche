@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -397,7 +398,7 @@ $(document).ready(function() {
             upnlContent.Update();
         }
 
-        private string ShowView( int page )
+        private List<ListElement> ShowView( int page )
         {
             Dictionary<string, object> linkedPages = new Dictionary<string, object>();
             linkedPages.Add( "DetailPage", LinkedPageRoute( "DetailPage" ) );
@@ -434,10 +435,10 @@ $(document).ready(function() {
             var iconLava = GetAttributeValue( "IconLava" );
 
 
-            List<MobileListViewItem> listViews = new List<MobileListViewItem>();
+            List<ListElement> listViews = new List<ListElement>();
             foreach ( var item in content )
             {
-                var mlv = new MobileListViewItem()
+                var mlv = new ListElement()
                 {
                     Id = item.Id.ToString(),
                     Description = "",
@@ -462,7 +463,7 @@ $(document).ready(function() {
                 listViews.Add( mlv );
             }
 
-            return JsonConvert.SerializeObject( listViews );
+            return listViews;
         }
 
         private List<ContentChannelItem> GetContent( List<string> errorMessages )
@@ -1004,12 +1005,9 @@ $(document).ready(function() {
         public override MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
-            PageCache page = PageCache.Read( pageGuid.AsGuid() );
-            if ( page != null )
-            {
-                CustomAttributes["ActionType"] = "1";
-                CustomAttributes["Resource"] = page.Id.ToString();
-            }
+            CustomAttributes["ActionType"] = "1";
+            CustomAttributes["Request"] = "0";
+            CustomAttributes["InitialRequest"] = "0";
 
             return new MobileBlock()
             {
@@ -1022,11 +1020,18 @@ $(document).ready(function() {
         {
             var page = request.AsInteger();
 
-            var view = ShowView( page );
+            var listElements = ShowView( page );
+
+            var response = new ListViewResponse
+            {
+                Content = listElements,
+                NextRequest = ( page + 1 ).ToString()
+            };
+
             return new MobileBlockResponse()
             {
                 Request = request,
-                Response = view,
+                Response = JsonConvert.SerializeObject( response ),
                 TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
             };
         }
