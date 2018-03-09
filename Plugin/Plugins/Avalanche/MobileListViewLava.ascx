@@ -7,8 +7,10 @@
             <div class="col-sm-6">
                 <pre><asp:Literal runat="server" ID="lLava" /></pre>
             </div>
-            <div class="col-sm-6 well">
-                <asp:Literal runat="server" ID="lLavaRendered" />
+            <div class="col-sm-6">
+                <div class="well">
+                    <asp:Literal runat="server" ID="lLavaRendered" />
+                </div>
             </div>
         </div>
     </ContentTemplate>

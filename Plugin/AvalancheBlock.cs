@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,17 +17,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
+using System.Web.UI;
 using System.Web.UI.HtmlControls;
+using System.Web.UI.WebControls;
 using Avalanche.Models;
 using Rock;
 using Rock.Attribute;
 using Rock.Web.UI;
+using Rock.Web.UI.Controls;
 
 namespace Avalanche
 {
     [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
     public abstract class AvalancheBlock : RockBlock, IMobileResource
     {
+        private UpdatePanel updatePanel;
         private Dictionary<string, string> _customAtributes;
         public Dictionary<string, string> CustomAttributes
         {
@@ -62,34 +67,157 @@ namespace Avalanche
 
             if ( CurrentUser != null && UserCanAdministrate )
             {
-                var mobileBlock = this.GetMobile( "" );
-                var atts = "";
-                if ( mobileBlock.Attributes != null )
+                updatePanel = new UpdatePanel();
+                this.Controls.AddAt( 0, updatePanel );
+
+                Panel panel = new Panel
                 {
-                    atts = string.Join( "<br>", mobileBlock.Attributes.Select( x => x.Key + ": " + x.Value ) );
+                    CssClass = "avalanche-header"
+                };
+                updatePanel.ContentTemplateContainer.Controls.Add( panel );
+
+                Literal literal = new Literal
+                {
+                    Text = BlockCache.Name
+                };
+                panel.Controls.Add( literal );
+
+                BootstrapButton btnDetails = new BootstrapButton
+                {
+                    Text = "Show Details",
+                    CssClass = "btn btn-default btn-xs pull-right"
+                };
+
+                panel.Controls.Add( btnDetails );
+
+                var target = Page.Request.Params["__EVENTTARGET"];
+                if ( target != null && target == btnDetails.UniqueID
+                    && ( ViewState["ShowDetails"] != null && ( bool ) ViewState["ShowDetails"] == true ) )
+                {
+                    ViewState["ShowDetails"] = false;
                 }
-                HtmlGenericControl div = new HtmlGenericControl( "div" );
-                div.InnerHtml = string.Format( @"
-<details style=""margin:0px 0px -18px -18px"">
-    <summary><i class='fa fa-info-circle'></i></summary>
-    <div class=""mobileBlockInformation"">
-        <div class=""mobileBlockInformationHeader"">
-            <b>{0}</b>
-        </div>
-        <div style=""padding:3px 20px"">
-            {1}
-        </div>
-    </div>
-</details>",
-                mobileBlock.BlockType,
-                atts
-                );
-                this.Controls.AddAt( 0, div );
+                else if ( ( target != null && target == btnDetails.UniqueID && ( ViewState["ShowDetails"] == null || ( bool ) ViewState["ShowDetails"] == false ) )
+                    || ViewState["ShowDetails"] != null && ( bool ) ViewState["ShowDetails"] == true )
+                {
+                    ShowDetails();
+                    btnDetails.Text = "Hide Details";
+                }
+
             }
             else
             {
                 this.Visible = false;
             }
+        }
+
+        private void ShowDetails()
+        {
+            ViewState["ShowDetails"] = true;
+            Panel details = new Panel()
+            {
+                CssClass = "avalanche-details form-inline",
+            };
+            updatePanel.ContentTemplateContainer.Controls.Add( details );
+
+            TextBox tbParameter = new TextBox
+            {
+                CssClass = "form-control",
+            };
+            tbParameter.Attributes.Add( "placeholder", "Parameter" );
+            details.Controls.Add( tbParameter );
+            var parameterValue = Request.Form.GetValues( tbParameter.UniqueID );
+
+            if ( parameterValue != null && parameterValue.Length > 0 )
+            {
+                tbParameter.Text = parameterValue[0];
+            }
+
+            BootstrapButton btnParameter = new BootstrapButton
+            {
+                Text = "Change Parameter",
+                CssClass = "btn btn-default"
+            };
+            details.Controls.Add( btnParameter );
+
+
+            BootstrapButton btnRequest = new BootstrapButton
+            {
+                Text = "Do Postback",
+                CssClass = "btn btn-default pull-right"
+            };
+            details.Controls.Add( btnRequest );
+
+            TextBox tbRequest = new TextBox
+            {
+                CssClass = "form-control pull-right",
+            };
+            tbRequest.Attributes.Add( "placeholder", "Request" );
+            details.Controls.Add( tbRequest );
+            var requestValue = Request.Form.GetValues( tbRequest.UniqueID );
+
+            if ( requestValue != null && requestValue.Length > 0 )
+            {
+                tbRequest.Text = requestValue[0];
+            }
+
+
+            var target = Page.Request.Params["__EVENTTARGET"];
+            if ( target == btnRequest.UniqueID )
+            {
+                GetPostbackResponse( tbRequest.Text );
+            }
+            else
+            {
+                GetMobileBlockData( tbParameter.Text );
+            }
+        }
+
+        private void GetMobileBlockData( string parameter )
+        {
+            var mobileBlock = this.GetMobile( parameter );
+
+            Panel pnlMobileBlock = new Panel()
+            {
+                CssClass = "avalanche-block-details"
+            };
+            updatePanel.ContentTemplateContainer.Controls.Add( pnlMobileBlock );
+
+            Literal ltBlockType = new Literal()
+            {
+                Text = "<h4>" + mobileBlock.BlockType + "</h4>"
+            };
+            pnlMobileBlock.Controls.Add( ltBlockType );
+
+            foreach ( var att in mobileBlock.Attributes )
+            {
+                Literal ltAttribute = new Literal()
+                {
+                    Text = string.Format( "<hr><b>{0}:</b><br>{1}", att.Key, att.Value.ScrubHtmlAndConvertCrLfToBr() )
+                };
+                pnlMobileBlock.Controls.Add( ltAttribute );
+            }
+        }
+
+        private void GetPostbackResponse( string request )
+        {
+            var response = HandleRequest( request, new Dictionary<string, string>() );
+            Panel pnlMobileBlock = new Panel()
+            {
+                CssClass = "avalanche-block-details"
+            };
+            updatePanel.ContentTemplateContainer.Controls.Add( pnlMobileBlock );
+
+            Literal ltRequest = new Literal()
+            {
+                Text = "<h4> Request: " + response.Request + "</h4><hr>"
+            };
+            pnlMobileBlock.Controls.Add( ltRequest );
+
+            Literal ltResponse = new Literal()
+            {
+                Text = response.Response.ScrubHtmlAndConvertCrLfToBr()
+            };
+            pnlMobileBlock.Controls.Add( ltResponse );
         }
     }
 }
