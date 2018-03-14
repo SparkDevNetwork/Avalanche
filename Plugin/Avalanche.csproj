@@ -44,7 +44,9 @@
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Extensions" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
     </Reference>
@@ -70,6 +72,7 @@
     <Compile Include="Controls\ActionItem.cs" />
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
+    <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
     <Compile Include="MobileBlockResponse.cs" />
     <Compile Include="Models\ListViewResponse.cs" />
@@ -79,6 +82,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Controllers\AvalancheController.Partial.cs" />
     <Compile Include="Security\Authentication\PhoneNumber.cs" />
+    <Compile Include="Transactions\AppViewTransaction.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

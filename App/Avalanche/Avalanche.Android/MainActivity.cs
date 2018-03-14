@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,6 +37,7 @@ namespace Avalanche.Droid
 
             base.OnCreate( bundle );
 
+            Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
             CachedImageRenderer.Init();
 
             global::Xamarin.Forms.Forms.Init( this, bundle );

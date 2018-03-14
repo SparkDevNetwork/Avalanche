@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +18,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.ServiceModel.Channels;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web;
@@ -25,12 +27,14 @@ using System.Web.Http;
 using System.Xml;
 using System.Xml.Serialization;
 using Avalanche.Models;
+using Avalanche.Transactions;
 using Newtonsoft.Json;
 using Rock;
 using Rock.Model;
 using Rock.Rest;
 using Rock.Rest.Filters;
 using Rock.Security;
+using Rock.Transactions;
 using Rock.Web.Cache;
 using Rock.Web.UI;
 
@@ -60,6 +64,9 @@ namespace Avalanche.Rest.Controllers
             {
                 return new MobilePage();
             }
+
+            SaveInteraction( pageCache, person );
+
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
             string layoutPath = PageCache.FormatPath( theme, layout );
@@ -160,7 +167,40 @@ namespace Avalanche.Rest.Controllers
                 }
             }
             return new MobileBlockResponse();
+        }
 
+
+        private void SaveInteraction( PageCache Page, Person CurrentPerson )
+        {
+            AppViewTransaction transaction = new AppViewTransaction()
+            {
+                PageId = Page.Id,
+                SiteId = Page.SiteId,
+                DateViewed = Rock.RockDateTime.Now,
+                PageTitle = Page.PageTitle,
+                PersonAliasId = CurrentPerson?.PrimaryAliasId,
+                Url = Request.RequestUri.ToString(),
+                IPAddress = GetClientIp( Request ),
+                UserAgent = Request.Headers.UserAgent.ToString()
+            };
+            RockQueue.TransactionQueue.Enqueue( transaction );
+        }
+
+        private string GetClientIp( HttpRequestMessage request )
+        {
+            if ( request.Properties.ContainsKey( "MS_HttpContext" ) )
+            {
+                return ( ( HttpContextWrapper ) request.Properties["MS_HttpContext"] ).Request.UserHostAddress;
+            }
+
+            if ( request.Properties.ContainsKey( RemoteEndpointMessageProperty.Name ) )
+            {
+                RemoteEndpointMessageProperty prop;
+                prop = ( RemoteEndpointMessageProperty ) request.Properties[RemoteEndpointMessageProperty.Name];
+                return prop.Address;
+            }
+
+            return null;
         }
     }
 }
