@@ -1,5 +1,5 @@
 ﻿// <copyright>
-// Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,17 +12,20 @@
 // limitations under the License.
 // </copyright>
 //
-namespace Avalanche
+using Rock.Plugin;
+
+namespace Avalanche.Migrations
 {
-    public class MobileBlockResponse
+    [MigrationNumber( 2, "1.7.0" )]
+    class Interactions : Migration
     {
-        public MobileBlockResponse()
+        public override void Up()
         {
-            Response = "";
-            TTL = 0;
+            RockMigrationHelper.UpdateDefinedValue( Rock.SystemGuid.DefinedType.INTERACTION_CHANNEL_MEDIUM, "Avalanche App", "Used for tracking requests from an Avalanche app.", AvalancheUtilities.AppMediumValue );
         }
-        public string Request { get; set; }
-        public string Response { get; set; }
-        public int TTL { get; set; }
+
+        public override void Down()
+        {
+        }
     }
 }

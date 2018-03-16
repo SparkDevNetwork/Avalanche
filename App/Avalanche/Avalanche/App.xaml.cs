@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Avalanche.Models;
 using Avalanche.Utilities;
 using Xamarin.Forms;
 
@@ -38,7 +39,11 @@ namespace Avalanche
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            var interaction = new Interaction
+            {
+                Operation="AppLaunch"
+            };
+            interaction.Send();
         }
 
         protected override void OnSleep()

@@ -67,6 +67,7 @@
       <DependentUpon>Simple.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Interaction.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ListViewResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlockResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ListElement.cs" />

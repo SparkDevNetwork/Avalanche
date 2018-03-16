@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,7 +27,7 @@ namespace Avalanche
     {
         //Constansts
         public const string MobileListViewComponent = "657FDF2F-FB7B-44C4-BAB0-A370893FDFB8";
-
+        public const string AppMediumValue = "52A640E9-CB8B-4EA3-B3AA-12E1A31C6E42";
 
         //Methods
         public static string GetShortAssembly( Type type )

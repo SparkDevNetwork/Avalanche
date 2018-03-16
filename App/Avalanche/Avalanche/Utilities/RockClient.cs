@@ -25,6 +25,8 @@ using Newtonsoft.Json;
 using RestSharp;
 using RestSharp.Authenticators;
 using SQLite;
+using Xamarin.Forms;
+using Plugin.DeviceInfo;
 
 namespace Avalanche.Utilities
 {
@@ -69,6 +71,7 @@ namespace Avalanche.Utilities
                 using ( var client = new HttpClient() )
                 {
                     client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+                    client.DefaultRequestHeaders.Add( "User-Agent", GetUserAgent() );
 
                     string token = await GetAccessToken();
                     if ( !string.IsNullOrWhiteSpace( token ) )
@@ -95,6 +98,19 @@ namespace Avalanche.Utilities
             } //Eat network issues
         }
 
+        private static string GetUserAgent()
+        {
+            var userAgent = string.Format( "Avalanche/{0} ({1}; {2} {3} {4} - {5})",
+                CrossDeviceInfo.Current.AppVersion,
+                CrossDeviceInfo.Current.Model,
+                CrossDeviceInfo.Current.Platform.ToString(),
+                CrossDeviceInfo.Current.Version,
+                CrossDeviceInfo.Current.IsDevice ? "" : "Simulated",
+                CrossDeviceInfo.Current.Id
+                );
+            return userAgent;
+        }
+
         private static T Deserialize<T>( string response )
         {
             if ( typeof( T ) == typeof( string ) )
@@ -111,6 +127,8 @@ namespace Avalanche.Utilities
                 using ( var client = new HttpClient() )
                 {
                     client.DefaultRequestHeaders.Accept.Add( new MediaTypeWithQualityHeaderValue( "application/json" ) );
+                    var userAgent = GetUserAgent();
+                    client.DefaultRequestHeaders.Add( "User-Agent", userAgent );
 
                     string token = await GetAccessToken();
                     if ( !string.IsNullOrWhiteSpace( token ) )
@@ -159,7 +177,7 @@ namespace Avalanche.Utilities
                     }
                 }
             }
-            catch
+            catch ( Exception ex )
             {
                 return null;
             } //Eat network issues
