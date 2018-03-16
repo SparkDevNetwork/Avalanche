@@ -12,7 +12,7 @@
 // limitations under the License.
 // </copyright>
 //
-namespace Avalanche
+namespace Avalanche.Models
 {
     public class MobileBlockResponse
     {

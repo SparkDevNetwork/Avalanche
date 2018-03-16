@@ -65,7 +65,7 @@ namespace Avalanche.Rest.Controllers
                 return new MobilePage();
             }
 
-            SaveInteraction( pageCache, person );
+            SavePageViewInteraction( pageCache, person );
 
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
@@ -169,17 +169,50 @@ namespace Avalanche.Rest.Controllers
             return new MobileBlockResponse();
         }
 
-
-        private void SaveInteraction( PageCache Page, Person CurrentPerson )
+        [HttpPost]
+        [Authenticate]
+        [System.Web.Http.Route( "api/avalanche/interaction" )]
+        public Dictionary<string, string> PostInteraction()
         {
-            AppViewTransaction transaction = new AppViewTransaction()
+            HttpContent requestContent = Request.Content;
+            string content = requestContent.ReadAsStringAsync().Result;
+            InteractionInformation interactionInformation = JsonConvert.DeserializeObject<InteractionInformation>( content );
+
+            var homePageId = GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger();
+            var pageCache = PageCache.Read( homePageId );
+            var siteId = pageCache.SiteId;
+            var person = GetPerson();
+
+            AppInteractionTransaction transaction = new AppInteractionTransaction()
+            {
+                ComponentName = "Mobile App",
+                SiteId = siteId,
+                PageId = interactionInformation.PageId.AsIntegerOrNull(),
+                PageTitle = interactionInformation.PageTitle,
+                DateViewed = Rock.RockDateTime.Now,
+                Operation = interactionInformation.Operation,
+                PersonAliasId = person?.PrimaryAliasId,
+                InteractionData = interactionInformation.InteractionData,
+                InteractionSummary = interactionInformation.InteractionSummary,
+                IPAddress = GetClientIp( Request ),
+                UserAgent = Request.Headers.UserAgent.ToString()
+            };
+            RockQueue.TransactionQueue.Enqueue( transaction );
+            return new Dictionary<string, string> { { "Status", "Ok" } };
+        }
+
+
+        private void SavePageViewInteraction( PageCache Page, Person CurrentPerson )
+        {
+            AppInteractionTransaction transaction = new AppInteractionTransaction()
             {
                 PageId = Page.Id,
                 SiteId = Page.SiteId,
                 DateViewed = Rock.RockDateTime.Now,
                 PageTitle = Page.PageTitle,
+                Operation = "View",
                 PersonAliasId = CurrentPerson?.PrimaryAliasId,
-                Url = Request.RequestUri.ToString(),
+                InteractionData = Request.RequestUri.ToString(),
                 IPAddress = GetClientIp( Request ),
                 UserAgent = Request.Headers.UserAgent.ToString()
             };

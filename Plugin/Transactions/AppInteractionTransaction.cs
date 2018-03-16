@@ -28,10 +28,12 @@ using Rock.Web.Cache;
 
 namespace Avalanche.Transactions
 {
-    public class AppViewTransaction : ITransaction
+    public class AppInteractionTransaction : ITransaction
     {
 
         public int? PageId { get; set; }
+
+        public string ComponentName { get; set; }
 
         public int? SiteId { get; set; }
 
@@ -45,11 +47,15 @@ namespace Avalanche.Transactions
 
         public string UserAgent { get; set; }
 
-        public string Url { get; set; }
+        public string InteractionData { get; set; }
+
+        public string InteractionSummary { get; set; }
+
+        public string Operation { get; set; }
 
         public void Execute()
         {
-            if ( PageId.HasValue )
+            if ( PageId.HasValue || !string.IsNullOrWhiteSpace( ComponentName ) )
             {
                 using ( var rockContext = new RockContext() )
                 {
@@ -72,14 +78,24 @@ namespace Avalanche.Transactions
                         rockContext.SaveChanges();
                     }
 
-                    var interactionComponent = new InteractionComponentService( rockContext ).GetComponentByEntityId( interactionChannel.Id, PageId.Value, PageTitle );
+                    InteractionComponent interactionComponent = null;
+                    var interactionComponentService = new InteractionComponentService( rockContext );
+
+                    if ( PageId.HasValue )
+                    {
+                        interactionComponent = interactionComponentService.GetComponentByEntityId( interactionChannel.Id, PageId.Value, PageTitle );
+                    }
+                    else
+                    {
+                        interactionComponent = interactionComponentService.GetComponentByComponentName( interactionChannel.Id, ComponentName );
+                    }
                     rockContext.SaveChanges();
 
                     // Add the interaction
                     if ( interactionComponent != null )
                     {
-                        var deviceApplication = Regex.Match( UserAgent, "^[\\S]{0,}" ).Value.Trim();
-                        deviceApplication += " " + Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim();
+                        var deviceId = Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim();
+                        var deviceApplication = Regex.Match( UserAgent, "^[\\S]{0,}" ).Value.Trim() + " " + deviceId;
                         var clientOs = Regex.Match( UserAgent, "(?<=;).+(?=-)" ).Value.Trim();
                         var clientType = Regex.Match( UserAgent, "(?<=\\().+(?=;)" ).Value.Trim();
 
@@ -98,13 +114,51 @@ namespace Avalanche.Transactions
                             rockContext.SaveChanges();
                         }
 
-                        var interaction = new InteractionService( rockContext ).AddInteraction( interactionComponent.Id, null, "View", Url, PersonAliasId, DateViewed,
+                        var interaction = new InteractionService( rockContext ).AddInteraction( interactionComponent.Id, null, Operation, InteractionData, PersonAliasId, DateViewed,
                             deviceApplication, clientOs, clientType, UserAgent, IPAddress, interactionSession.Guid );
+
+                        interaction.InteractionSummary = InteractionSummary;
+
+                        PersonalDevice personalDevice = GetPersonalDevice( deviceId, rockContext );
+                        if ( personalDevice != null )
+                        {
+                            interaction.PersonalDeviceId = personalDevice.Id;
+                        }
 
                         rockContext.SaveChanges();
                     }
                 }
             }
+        }
+
+        private PersonalDevice GetPersonalDevice( string deviceId, RockContext rockContext )
+        {
+            if ( string.IsNullOrWhiteSpace( deviceId ) )
+            {
+                return null;
+            }
+
+            PersonalDeviceService personalDeviceService = new PersonalDeviceService( rockContext );
+            var device = personalDeviceService.Queryable().Where( d => d.DeviceUniqueIdentifier == deviceId ).FirstOrDefault();
+            if ( device != null )
+            {
+                if ( device.PersonAliasId == PersonAliasId )
+                {
+                    return device;
+                }
+                device.PersonAliasId = PersonAliasId;
+                rockContext.SaveChanges();
+                return device;
+            }
+
+            device = new PersonalDevice()
+            {
+                PersonAliasId = PersonAliasId,
+                DeviceUniqueIdentifier = deviceId
+            };
+            personalDeviceService.Add( device );
+            rockContext.SaveChanges();
+            return device;
         }
     }
 }
