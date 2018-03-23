@@ -26,12 +26,16 @@ using Avalanche.Utilities;
 using Avalanche.Models;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Avalanche.CustomControls;
+using Avalanche.Interfaces;
 
 namespace Avalanche
 {
     public partial class MainPage : AvalanchePage
     {
         ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
+        private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
+        private List<IRenderable> nonMediaBlocks = new List<IRenderable>();
+        private StackLayout nav;
 
         public MainPage()
         {
@@ -91,6 +95,18 @@ namespace Avalanche
                         hasPostbackBlock.MessageHandler = new BlockMessenger( block.BlockId );
                     }
 
+                    //Setup media if needed
+                    if ( mobileBlock is IHasMedia )
+                    {
+                        var mediaBlock = ( IHasMedia ) mobileBlock;
+                        mediaBlocks.Add( mediaBlock );
+                        mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
+                    }
+                    else
+                    {
+                        nonMediaBlocks.Add( mobileBlock );
+                    }
+
                     var zone = layout.FindByName<Layout<View>>( block.Zone );
                     if ( zone != null )
                     {
@@ -124,9 +140,36 @@ namespace Avalanche
             lTimeout.IsVisible = false;
         }
 
+        private void MediaBlock_FullScreenChanged( object sender, bool isFullScreen )
+        {
+            foreach ( var block in nonMediaBlocks )
+            {
+                ( ( View ) block ).IsVisible = !isFullScreen;
+            }
+
+            if ( nav != null )
+            {
+                nav.IsVisible = !isFullScreen;
+            }
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            bool back = false;
+            foreach ( var mediaBlock in mediaBlocks )
+            {
+                if ( mediaBlock.IsFullScreen )
+                {
+                    mediaBlock.BackButtonPressed();
+                    back = true;
+                }
+            }
+            return back;
+        }
+
         private void AddTitleBar( ContentView layout, MobilePage page )
         {
-            var nav = layout.FindByName<StackLayout>( "NavBar" );
+            nav = layout.FindByName<StackLayout>( "NavBar" );
             if ( nav != null )
             {
                 nav.IsVisible = true;

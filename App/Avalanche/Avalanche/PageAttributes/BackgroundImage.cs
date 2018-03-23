@@ -12,6 +12,7 @@
 // limitations under the License.
 // </copyright>
 //
+using Avalanche.Interfaces;
 using Xamarin.Forms;
 
 namespace Avalanche.PageAttributes

@@ -21,6 +21,7 @@ using Avalanche.Utilities;
 using Avalanche;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Avalanche.Interfaces;
 
 namespace Avalanche.Blocks
 {

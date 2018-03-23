@@ -16,30 +16,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using Android.App;
-using Android.Content;
-using Android.Content.PM;
-using Android.OS;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
-using Avalanche.Services;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Avalanche.Droid.Services
+namespace Avalanche.Interfaces
 {
-      public class OrientationHandler : IOrientationHandler
+    public interface IRenderable
     {
-        public void ForceLandscape()
-        {
-            ( ( Activity ) Forms.Context ).RequestedOrientation = ScreenOrientation.Landscape;
-        }
-
-        public void ForcePortrait()
-        {
-            ( ( Activity ) Forms.Context ).RequestedOrientation = ScreenOrientation.Portrait;
-            ( ( Activity ) Forms.Context ).Window.ClearFlags( WindowManagerFlags.Fullscreen );
-        }
+        Dictionary<string, string> Attributes { get; set; }
+        View Render();
     }
 }

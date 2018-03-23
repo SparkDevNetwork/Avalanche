@@ -41,6 +41,13 @@ namespace Avalanche.CustomControls
             set { SetValue( AutoPlayProperty, value ); }
         }
 
+        public static readonly BindableProperty AspectRatioProperty = BindableProperty.Create( "AspectRatio", typeof( double ), typeof( VideoPlayer ), 0.5625 );
+        public double AspectRatio
+        {
+            get { return ( double ) GetValue( AspectRatioProperty ); }
+            set { SetValue( AspectRatioProperty, value ); }
+        }
+
         #endregion
 
         #region Events
@@ -53,7 +60,6 @@ namespace Avalanche.CustomControls
         #region Public Methods
         public VideoPlayer()
         {
-
         }
 
         #endregion
@@ -80,20 +86,17 @@ namespace Avalanche.CustomControls
         {
             Prepared?.Invoke( this, EventArgs.Empty );
         }
-
-
-
         #endregion
 
         #region INativePlayer
 
-        //public bool IsFullScreen
-        //{
-        //    get
-        //    {
-        //        return nativePlayer?.IsFullScreen ?? false;
-        //    }
-        //}
+        public bool IsFullScreen
+        {
+            get
+            {
+                return nativePlayer?.IsFullScreen ?? false;
+            }
+        }
 
         public int Duration
         {
@@ -119,7 +122,6 @@ namespace Avalanche.CustomControls
             }
         }
 
-
         public void Play()
         {
             nativePlayer?.Play();
@@ -140,30 +142,12 @@ namespace Avalanche.CustomControls
             nativePlayer?.Seek( seconds );
         }
 
-
-        /// <summary>
-        /// Change screen orientation to Landscape and set video player in full screen mode.
-        /// </summary>
-        /// <param name="resizeLayout">set it True if you are using video player inside a scroo view</param>
-        //public void FullScreen(bool resizeLayout = false)
-        //{
-        //    if (nativePlayer == null)
-        //        return;
-        //    nativePlayer.FullScreen(resizeLayout);
-        //}
-
-        //public void ExitFullScreen()
-        //{
-        //    if (nativePlayer == null)
-        //        return;
-        //    nativePlayer.ExitFullScreen();
-        //}
-
-        //public void HideSeekbar()
-        //{
-        //    nativePlayer?.HideSeekbar();
-        //}
+        public void ExitFullScreen()
+        {
+            if ( nativePlayer == null )
+                return;
+            nativePlayer.ExitFullScreen();
+        }
         #endregion
-
     }
 }

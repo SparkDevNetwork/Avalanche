@@ -20,6 +20,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
+using Android.Graphics;
 using Android.Media;
 using Android.OS;
 using Android.Runtime;
@@ -57,8 +58,9 @@ namespace Avalanche.Droid.CustomRenderers
     public class VideoPlayerRenderer : ViewRenderer<VideoPlayer, RelativeLayout>, INativePlayer
     {
 
-        public VideoPlayerRenderer(Context context) : base( context )
+        public VideoPlayerRenderer( Context context ) : base( context )
         {
+            _context = ( Activity ) context;
         }
 
         VideoView _videoView;
@@ -89,10 +91,9 @@ namespace Avalanche.Droid.CustomRenderers
             base.OnElementChanged( e );
             if ( e.OldElement != null )
                 return;
-            var context = Xamarin.Forms.Forms.Context;
 
             // Set Native Control
-            var relativeLayout = new RelativeLayout( context );
+            var relativeLayout = new RelativeLayout( _context );
             relativeLayout.LayoutParameters = new LayoutParams( LayoutParams.MatchParent, LayoutParams.MatchParent );
             relativeLayout.SetPadding( 0, 0, 0, 0 );
             relativeLayout.SetBackgroundColor( Android.Graphics.Color.Black );
@@ -126,7 +127,6 @@ namespace Avalanche.Droid.CustomRenderers
                     break;
                 }
             }
-            _context = ( Activity ) Xamarin.Forms.Forms.Context;
 
             imageView = new ImageView( _context ) { };
             imageView.SetImageResource( Resource.Drawable.portrait_mode );
@@ -221,19 +221,11 @@ namespace Avalanche.Droid.CustomRenderers
         bool isFullScreen = false;
 
 
-        private bool IsFullScreen
+        public bool IsFullScreen
         {
             get
             {
                 return isFullScreen;
-            }
-        }
-
-        public bool IsSeekbarVisible
-        {
-            get
-            {
-                return mediaController?.IsShown ?? false;
             }
         }
 
@@ -289,7 +281,7 @@ namespace Avalanche.Droid.CustomRenderers
         /// Change screen orientation to Landscape and set video player in full screen mode.
         /// </summary>
         /// <param name="resizeLayout">set it True if you are using video player inside a scroo view</param>
-        private void FullScreen( bool resizeLayout = false )
+        public void FullScreen( bool resizeLayout = false )
         {
             if ( isFullScreen )
                 return;
@@ -314,13 +306,13 @@ namespace Avalanche.Droid.CustomRenderers
             FullScreenStatusChanged?.Invoke( this, true );
         }
 
-        private void ExitFullScreen()
+        public void ExitFullScreen()
         {
             if ( !isFullScreen )
                 return;
 
             imageView.SetImageResource( Resource.Drawable.portrait_mode );
-            _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Portrait;
+            _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
             var window = ( _context as Activity ).Window;
             window.ClearFlags( WindowManagerFlags.Fullscreen );
             isFullScreen = false;
@@ -369,23 +361,5 @@ namespace Avalanche.Droid.CustomRenderers
         }
 
         #endregion
-
-        public override bool OnTouchEvent( MotionEvent e )
-        {
-            if ( !IsFullScreen )
-            {
-                return base.OnTouchEvent( e );
-            }
-            if ( e.Action == MotionEventActions.Down )
-            {
-                Parent.RequestDisallowInterceptTouchEvent( true );
-            }
-            if ( e.Action == MotionEventActions.Up )
-            {
-                Parent.RequestDisallowInterceptTouchEvent( false );
-            }
-            return true;
-        }
-
     }
 }

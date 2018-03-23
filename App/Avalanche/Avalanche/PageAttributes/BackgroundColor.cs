@@ -14,6 +14,7 @@
 //
 using Xamarin.Forms;
 using System.Text.RegularExpressions;
+using Avalanche.Interfaces;
 
 namespace Avalanche.PageAttributes
 {

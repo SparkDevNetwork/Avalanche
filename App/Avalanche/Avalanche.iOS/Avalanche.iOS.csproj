@@ -96,12 +96,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="CustomRenderers\VideoPlayerRenderer.cs" />
-    <Compile Include="Effects\OrientationHandlerImplementation.cs" />
     <Compile Include="Main.cs" />
     <Compile Include="AppDelegate.cs" />
     <None Include="Entitlements.plist" />
     <None Include="Info.plist">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </None>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <ITunesArtwork Include="iTunesArtwork" />

@@ -42,12 +42,12 @@ namespace Avalanche.iOS.CustomRenderers
             set
             {
                 _prepared = value;
-                DidVideoPrepared();
+                if ( value )
+                {
+                    Element.OnPrepare();
+                }
             }
         }
-
-        public event EventHandler<bool> FullScreenStatusChanged;
-        public event EventHandler<bool> PreparedStatusChanged;
 
         public static new void Init() { }
 
@@ -101,7 +101,6 @@ namespace Avalanche.iOS.CustomRenderers
                 NSNotificationCenter.DefaultCenter.AddObserver( AVPlayerItem.DidPlayToEndTimeNotification, DidVideoFinishPlaying, playerItem );
                 NSNotificationCenter.DefaultCenter.AddObserver( AVPlayerItem.ItemFailedToPlayToEndTimeNotification, DidVideoErrorOcurred, playerItem );
                 NSNotificationCenter.DefaultCenter.AddObserver( AVPlayerItem.NewErrorLogEntryNotification, DidVideoErrorOcurred, playerItem );
-                //NSNotificationCenter.DefaultCenter.AddObserver(AVPlayerItem.no, DidVideoPrepared, playerItem);
 
                 _player = new AVPlayer( playerItem );
                 _player.ActionAtItemEnd = AVPlayerActionAtItemEnd.None;
@@ -126,6 +125,18 @@ namespace Avalanche.iOS.CustomRenderers
 
         #region INativePlayer
 
+        public event EventHandler<bool> FullScreenStatusChanged;
+
+        public bool IsFullScreen
+        {
+            get
+            {
+                //iOS does not have a way to tell if AVPlayer is full screen
+                //The design decision was to allow AVPlayer to manage it's own fullscreen
+                //The alternative was to develop a custom player for iOS
+                return false;
+            }
+        }
         public int Duration
         {
             get
@@ -185,35 +196,15 @@ namespace Avalanche.iOS.CustomRenderers
             _player.Seek( CoreMedia.CMTime.FromSeconds( seconds, 1 ) );
         }
 
-        public void SetScreen( bool isPortrait )
+        public void ExitFullScreen()
         {
-
-            //AVPlayerViewController provide by default this feature
+            // iOS's AVPlayer does not have a full screen hook
         }
-
-        //public void FullScreen()
-        //{
-        //    if (!Prepared) return;
-        //    //_player.Frame = NativeView.Frame;
-        //    //NativeView.Layer.AddSublayer(_player);
-        //}
-
-        //public void ExitFullScreen()
-        //{
-        //    if (!Prepared) return;
-        //    //_player.Frame = NativeView.Frame;
-        //    //NativeView.Layer.AddSublayer(_player);
-
-        //}
 
         #endregion
 
         #region Events
 
-        private void DidVideoPrepared()
-        {
-            Element.OnPrepare();
-        }
 
         private void DidVideoFinishPlaying( NSNotification obj )
         {
@@ -224,8 +215,6 @@ namespace Avalanche.iOS.CustomRenderers
         {
             Element.OnError( _player.Error?.Description ?? "Unable to play video." );
         }
-
-
         #endregion
     }
 }

@@ -21,6 +21,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalanche.Components;
 using Avalanche.Components.ListView;
+using Avalanche.Interfaces;
 using Avalanche.Models;
 using Avalanche.Utilities;
 using Newtonsoft.Json;

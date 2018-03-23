@@ -16,21 +16,58 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Avalanche.CustomControls;
-using Xamarians.MediaPlayer;
+using Avalanche.Interfaces;
 using Xamarin.Forms;
 
 namespace Avalanche.Blocks
 {
-    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable
+    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable, IHasMedia
     {
         public Dictionary<string, string> Attributes { get; set; }
         public VideoPlayerBlock()
         {
         }
 
+        public event EventHandler<bool> FullScreenChanged;
+
+        private bool allocated = false;
+        protected override void OnSizeAllocated( double width, double height )
+        {
+            base.OnSizeAllocated( width, height );
+            if ( !allocated )
+            {
+                allocated = true;
+                HeightRequest = Math.Min( width * this.AspectRatio, App.Current.MainPage.Height );
+            }
+        }
+
         public View Render()
         {
+            this.Prepared += VideoPlayerBlock_Prepared;
+            this.FullScreenStatusChanged += VideoPlayerBlock_FullScreenStatusChanged;
             return this;
+        }
+
+        private void VideoPlayerBlock_FullScreenStatusChanged( object sender, bool e )
+        {
+            allocated = false;
+            FullScreenChanged?.Invoke( this, e );
+        }
+
+        private void VideoPlayerBlock_Prepared( object sender, EventArgs e )
+        {
+            if ( AutoPlay )
+            {
+                this.Play();
+            }
+        }
+
+        public void BackButtonPressed()
+        {
+            if ( IsFullScreen )
+            {
+                ExitFullScreen();
+            }
         }
     }
 }
