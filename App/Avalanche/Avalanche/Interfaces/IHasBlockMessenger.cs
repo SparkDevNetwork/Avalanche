@@ -14,16 +14,14 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Xamarin.Forms;
+using Avalanche.Models;
+using Avalanche.Utilities;
 
-namespace Avalanche
+namespace Avalanche.Interfaces
 {
-    public interface IRenderable
+    public interface IHasBlockMessenger
     {
-        Dictionary<string, string> Attributes { get; set; }
-        View Render();
+        BlockMessenger MessageHandler { get; set; }
     }
 }

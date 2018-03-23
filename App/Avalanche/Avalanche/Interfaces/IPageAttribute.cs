@@ -15,13 +15,12 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Avalanche.Models;
-using Avalanche.Utilities;
+using Xamarin.Forms;
 
-namespace Avalanche
+namespace Avalanche.Interfaces
 {
-    public interface IHasBlockMessenger
+    public interface IPageAttribute
     {
-        BlockMessenger MessageHandler { get; set; }
+        void Modify(ContentPage contentPage, string value);
     }
 }

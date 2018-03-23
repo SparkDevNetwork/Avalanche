@@ -14,29 +14,20 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Avalanche.Interfaces;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
-namespace Avalanche.Blocks
+namespace Avalanche.Services
 {
-    [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class MarkdownDetail : ContentView, IRenderable
+    internal interface INativePlayer
     {
-        public MarkdownDetail()
-        {
-            InitializeComponent();
-        }
-
-        public Dictionary<string, string> Attributes { get; set; }
-
-        public View Render()
-        {
-            mvMarkdownView.Markdown = Attributes["Content"];
-            return this;
-        }
+        event EventHandler<bool> FullScreenStatusChanged;
+        int Duration { get; }
+        int CurrentPosition { get; }
+        bool IsFullScreen { get; }
+        void Play();
+        void Pause();
+        void Stop();
+        void Seek( int seconds );
+        void ExitFullScreen();
     }
 }

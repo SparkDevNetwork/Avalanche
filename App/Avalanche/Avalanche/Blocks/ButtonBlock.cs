@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Text;
+using Avalanche.Interfaces;
 using Avalanche.Models;
 using Avalanche.Utilities;
 using Xamarin.Forms;

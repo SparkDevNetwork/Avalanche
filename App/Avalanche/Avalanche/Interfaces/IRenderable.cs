@@ -14,13 +14,16 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
-namespace Avalanche
+namespace Avalanche.Interfaces
 {
-    public interface IPageAttribute
+    public interface IRenderable
     {
-        void Modify(ContentPage contentPage, string value);
+        Dictionary<string, string> Attributes { get; set; }
+        View Render();
     }
 }

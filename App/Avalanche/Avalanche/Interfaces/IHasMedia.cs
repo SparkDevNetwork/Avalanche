@@ -14,29 +14,17 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Avalanche.Interfaces;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
 
-namespace Avalanche.Blocks
+namespace Avalanche.Interfaces
 {
-    [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class MarkdownDetail : ContentView, IRenderable
+    interface IHasMedia
     {
-        public MarkdownDetail()
-        {
-            InitializeComponent();
-        }
+        bool IsFullScreen { get; }
 
-        public Dictionary<string, string> Attributes { get; set; }
+        event EventHandler<bool> FullScreenChanged;
 
-        public View Render()
-        {
-            mvMarkdownView.Markdown = Attributes["Content"];
-            return this;
-        }
+        void BackButtonPressed();
+
     }
 }

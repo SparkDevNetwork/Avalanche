@@ -29,6 +29,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml.cs">
@@ -54,7 +55,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IHasBlockMessenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasMedia.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)CustomControls\VideoPlayer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasBlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LaunchPage.xaml.cs">
       <DependentUpon>LaunchPage.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -74,10 +78,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\WebViewBlock.xaml.cs">
-      <DependentUpon>WebViewBlock.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Login.xaml.cs">
       <DependentUpon>Login.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -86,8 +86,8 @@
       <DependentUpon>MarkdownDetail.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)IPageAttribute.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)IRenderable.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPageAttribute.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRenderable.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
@@ -118,12 +118,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\MarkdownDetail.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\WebViewBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

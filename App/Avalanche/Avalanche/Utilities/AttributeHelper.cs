@@ -14,6 +14,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Xamarin.Forms;
 
@@ -21,6 +22,8 @@ namespace Avalanche.Utilities
 {
     public static class AttributeHelper
     {
+        private static string[] trueStrings = new string[] { "true", "yes", "t", "y", "1" };
+
         private static Dictionary<string, TypeConverter> typeConverters = new Dictionary<string, TypeConverter>
         {
             {typeof(Accelerator).Name, new AcceleratorTypeConverter() },
@@ -78,6 +81,17 @@ namespace Avalanche.Utilities
                     else
                     {
                         property.SetValue( obj, new ImageSourceConverter().ConvertFromInvariantString( attribute.Value ) );
+                    }
+                }
+                else if ( property.PropertyType == typeof( bool ) )
+                {
+                    if ( trueStrings.Contains( attribute.Value.ToLower() ) )
+                    {
+                        property.SetValue( obj, true );
+                    }
+                    else
+                    {
+                        property.SetValue( obj, false );
                     }
                 }
                 else if ( typeConverters.ContainsKey( property.PropertyType.Name ) )
