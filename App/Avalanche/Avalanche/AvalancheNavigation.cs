@@ -17,7 +17,6 @@ using System.Collections.Generic;
 using System.Text;
 using Avalanche;
 using Avalanche.Models;
-using RestSharp;
 using Xamarin.Forms;
 
 namespace Avalanche

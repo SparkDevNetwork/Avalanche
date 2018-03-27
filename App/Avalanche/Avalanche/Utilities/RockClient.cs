@@ -22,8 +22,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalanche.Models;
 using Newtonsoft.Json;
-using RestSharp;
-using RestSharp.Authenticators;
 using SQLite;
 using Xamarin.Forms;
 using Plugin.DeviceInfo;
