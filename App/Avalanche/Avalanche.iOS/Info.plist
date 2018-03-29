@@ -63,5 +63,9 @@
 	<string>Resources/Media.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
 	<string>1.0</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+	</array>
 </dict>
 </plist>

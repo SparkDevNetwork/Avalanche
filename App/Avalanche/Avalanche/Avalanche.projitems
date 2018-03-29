@@ -13,6 +13,10 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AvalanchePage.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\AudioPlayerBlock.xaml.cs">
+      <DependentUpon>AudioPlayerBlock.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\PersonCard.xaml.cs">
       <DependentUpon>PersonCard.xaml</DependentUpon>
@@ -75,6 +79,8 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\ListViewResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlockResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ListElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\MediaFile.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\MediaFileMetaData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\BlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\AttributeHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)AvalancheNavigation.cs" />
@@ -184,6 +190,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)LaunchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\AudioPlayerBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
