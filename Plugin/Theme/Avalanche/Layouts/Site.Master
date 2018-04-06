@@ -73,30 +73,6 @@
 
     <form id="form1" runat="server">
 
-        <!-- Page Header -->
-        <header>
-
-            <!-- Brand Bar -->
-            <nav class="navbar navbar-inverse navbar-static-top">
-                <div class="container">
-                    <div class="navbar-header">
-                        <button class="navbar-toggle" type="button" data-toggle="collapse" data-target=".navbar-collapse">
-                            <i class="fa fa-bars"></i>
-                        </button>
-                        <Rock:Zone Name="Header" runat="server" />
-                    </div>
-                    <div class="navbar-collapse collapse">
-                        <!-- Main Navigation -->
-                        <div class="pull-right">
-                            <Rock:Zone Name="Login" runat="server" />
-                        </div>
-                        <Rock:Zone Name="Navigation" runat="server" />
-                    </div>
-                </div>
-            </nav>
-
-        </header>
-
         <asp:ContentPlaceHolder ID="feature" runat="server"></asp:ContentPlaceHolder>
 
         <asp:ContentPlaceHolder ID="main" runat="server"></asp:ContentPlaceHolder>
@@ -105,13 +81,6 @@
             <div class="container">
 
                 <hr />
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <Rock:Zone Name="Footer" runat="server" />
-                    </div>
-                </div>
-
             </div>
         </footer>
 

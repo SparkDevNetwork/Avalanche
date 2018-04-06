@@ -44,7 +44,7 @@ namespace Avalanche.Utilities
             {typeof(Thickness).Name, new ThicknessTypeConverter() },
             {typeof(Type).Name, new TypeTypeConverter() },
             {typeof(Uri).Name, new Xamarin.Forms.UriTypeConverter() },
-            {typeof(WebViewSource).Name, new  WebViewSourceTypeConverter()}
+            {typeof(WebViewSource).Name, new  WebViewSourceTypeConverter() },
         };
 
 

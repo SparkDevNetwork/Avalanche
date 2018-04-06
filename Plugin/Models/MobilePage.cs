@@ -26,7 +26,7 @@ namespace Avalanche.Models
         public string Title { get; set; }
         public bool ShowTitle { get; set; }
         public int CacheDuration { get; set; }
-        public string LayoutType { get; set; }
+        public string Layout { get; set; }
         public List<MobileBlock> Blocks { get; set; }
         public Dictionary<string,string> Attributes { get; set; }
         public MobilePage()

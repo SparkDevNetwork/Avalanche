@@ -23,25 +23,12 @@
                 <Rock:Zone Name="Featured" runat="server" />
             </div>
         </div>
-
+               
         <div class="row">
             <div class="col-md-12">
-                <Rock:Zone Name="Bottom" runat="server" />
+                <Rock:Zone Name="Main" runat="server" />
             </div>
         </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <Rock:Zone Name="Middle" runat="server" />
-            </div>
-        </div>
-
-        <div class="row">
-            <div class="col-md-12">
-                <Rock:Zone Name="Top" runat="server" />
-            </div>
-        </div>
-
 
         <div class="row">
             <div class="col-md-4">
@@ -55,6 +42,11 @@
             </div>
         </div>
 
+        <div class="row">
+            <div class="col-md-12">
+                <Rock:Zone Name="Footer" runat="server" />
+            </div>
+        </div>
         <!-- End Content Area -->
 
 	</main>

@@ -73,7 +73,7 @@ namespace Avalanche.Rest.Controllers
             Rock.Web.UI.RockPage cmsPage = ( Rock.Web.UI.RockPage ) BuildManager.CreateInstanceFromVirtualPath( layoutPath, typeof( Rock.Web.UI.RockPage ) );
 
             MobilePage mobilePage = new MobilePage();
-            mobilePage.LayoutType = pageCache.Layout.Name;
+            mobilePage.Layout = AvalancheUtilities.GetLayout( pageCache.Layout.Name );
             mobilePage.Title = pageCache.PageTitle;
             mobilePage.ShowTitle = pageCache.PageDisplayTitle;
             foreach ( var attribute in pageCache.AttributeValues )
@@ -85,16 +85,22 @@ namespace Avalanche.Rest.Controllers
                 if ( block.IsAuthorized( Authorization.VIEW, person ) )
                 {
                     var blockCache = BlockCache.Read( block.Id );
-                    var control = ( RockBlock ) cmsPage.TemplateControl.LoadControl( blockCache.BlockType.Path );
-
-                    if ( control is RockBlock && control is IMobileResource )
+                    try
                     {
-                        control.SetBlock( pageCache, blockCache );
-                        var mobileResource = control as IMobileResource;
-                        var mobileBlock = mobileResource.GetMobile( parameter );
-                        mobileBlock.BlockId = blockCache.Id;
-                        mobileBlock.Zone = blockCache.Zone;
-                        mobilePage.Blocks.Add( mobileBlock );
+                        var control = ( RockBlock ) cmsPage.TemplateControl.LoadControl( blockCache.BlockType.Path );
+                        if ( control is RockBlock && control is IMobileResource )
+                        {
+                            control.SetBlock( pageCache, blockCache );
+                            var mobileResource = control as IMobileResource;
+                            var mobileBlock = mobileResource.GetMobile( parameter );
+                            mobileBlock.BlockId = blockCache.Id;
+                            mobileBlock.Zone = blockCache.Zone;
+                            mobilePage.Blocks.Add( mobileBlock );
+                        }
+                    }
+                    catch ( Exception e )
+                    {
+                        ExceptionLogService.LogException( e, HttpContext.Current );
                     }
                 }
             }

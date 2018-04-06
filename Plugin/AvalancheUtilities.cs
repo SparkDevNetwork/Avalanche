@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Rock;
 using Rock.Model;
+using Rock.Web.Cache;
 
 namespace Avalanche
 {
@@ -28,6 +29,7 @@ namespace Avalanche
         //Constansts
         public const string MobileListViewComponent = "657FDF2F-FB7B-44C4-BAB0-A370893FDFB8";
         public const string AppMediumValue = "52A640E9-CB8B-4EA3-B3AA-12E1A31C6E42";
+        public const string LayoutsDefinedType = "9E4EF7E8-AE7A-4920-BA59-14C24D6F24D9";
 
         //Methods
         public static string GetShortAssembly( Type type )
@@ -70,6 +72,14 @@ namespace Avalanche
             var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
             mergeObjects["parameter"] = parameter;
             return lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
+        }
+
+        public static string GetLayout( string layoutName )
+        {
+            var definedType = DefinedTypeCache.Read( LayoutsDefinedType.AsGuid() );
+            var value = definedType.DefinedValues.Where( d => d.Value.Replace( " ", "" ).ToLower() == layoutName.Replace( " ", "" ).ToLower() ).FirstOrDefault();
+            var content = value.GetAttributeValue( "Content" );
+            return content;
         }
     }
 }

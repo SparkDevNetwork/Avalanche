@@ -56,19 +56,12 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasMedia.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\LayoutTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\VideoPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasBlockMessenger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)LaunchPage.xaml.cs">
       <DependentUpon>LaunchPage.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml.cs">
-      <DependentUpon>NoScroll.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Layouts\Simple.xaml.cs">
-      <DependentUpon>Simple.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\Interaction.cs" />
@@ -98,6 +91,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)PageAttributes\BackgroundColor.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PageAttributes\BackgroundImage.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\LayoutManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\RockClient.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -129,12 +123,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\Simple.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -160,12 +148,6 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\PhoneNumberLogin.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Layouts\NoScroll.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

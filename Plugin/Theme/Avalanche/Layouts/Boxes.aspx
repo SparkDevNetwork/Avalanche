@@ -20,21 +20,27 @@
 
         <div class="row">
             <div class="col-md-12">
-                <Rock:Zone Name="Featured" runat="server" />
+                <Rock:Zone Name="ZoneA" runat="server" />
             </div>
         </div>
 
         <div class="row">
-            <div class="col-md-12">
-                <Rock:Zone Name="Main" runat="server" />
+            <div class="col-md-8">
+                <Rock:Zone Name="ZoneB" runat="server" />
+            </div>
+             <div class="col-md-4">
+                <Rock:Zone Name="ZoneC" runat="server" />
             </div>
         </div>
 
         <div class="row">
-                    <div class="col-md-12">
-                        <Rock:Zone Name="Footer" runat="server" />
-                    </div>
-                </div>
+            <div class="col-md-6">
+                <Rock:Zone Name="ZoneD" runat="server" />
+            </div>
+             <div class="col-md-6">
+                <Rock:Zone Name="ZoneE" runat="server" />
+            </div>
+        </div>
         <!-- End Content Area -->
 
 	</main>

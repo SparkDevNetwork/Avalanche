@@ -26,6 +26,7 @@ using Avalanche.Models;
 using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 using Avalanche.CustomControls;
 using Avalanche.Interfaces;
+using Newtonsoft.Json;
 
 namespace Avalanche
 {
@@ -35,6 +36,7 @@ namespace Avalanche
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
         private List<IRenderable> nonMediaBlocks = new List<IRenderable>();
         private StackLayout nav;
+        private LayoutManager layoutManager;
 
         public MainPage()
         {
@@ -58,17 +60,14 @@ namespace Avalanche
             HandleResponse();
         }
 
+
         private void HandleResponse()
         {
             var page = observableResource.Resource as MobilePage;
             this.Title = page.Title;
-            var layoutType = Type.GetType( "Avalanche.Layouts." + page.LayoutType.Replace( " ", "" ) );
-            if ( layoutType == null )
-            {
-                AvalancheNavigation.RemovePage();
-                return;
-            }
-            var layout = ( ContentView ) Activator.CreateInstance( layoutType );
+
+            layoutManager = new Utilities.LayoutManager( page.Layout );
+            var layout = layoutManager.Content;
 
             if ( page.ShowTitle )
             {
@@ -106,7 +105,9 @@ namespace Avalanche
                         nonMediaBlocks.Add( mobileBlock );
                     }
 
-                    var zone = layout.FindByName<Layout<View>>( block.Zone );
+                    //var zone = layout.FindByName<Layout<View>>( block.Zone );
+                    var zone = layoutManager.GetElement( block.Zone );
+
                     if ( zone != null )
                     {
                         try
@@ -168,7 +169,7 @@ namespace Avalanche
 
         private void AddTitleBar( ContentView layout, MobilePage page )
         {
-            nav = layout.FindByName<StackLayout>( "NavBar" );
+            nav = ( StackLayout ) layoutManager.GetElement( "NavBar" );
             if ( nav != null )
             {
                 nav.IsVisible = true;

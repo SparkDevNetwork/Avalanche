@@ -74,6 +74,7 @@
     <Compile Include="IMobileResource.cs" />
     <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
+    <Compile Include="Migrations\Layouts.cs" />
     <Compile Include="Models\InteractionInformation.cs" />
     <Compile Include="Models\MobileBlockResponse.cs" />
     <Compile Include="Models\ListViewResponse.cs" />
