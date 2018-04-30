@@ -118,7 +118,25 @@ namespace Avalanche.Blocks
 
         private void AddElement( ListElement element )
         {
-            AttributeHelper.ApplyTranslation( element, Attributes );
+            //Each element can have it's own ActionType and Resource
+            //Or it can get it from the block
+            //So we need to use the element's info and fall back on the block
+            var keys = new List<string> { "Resource", "ActionType" };
+            var clonedAttributes = Attributes
+                .Where( a => !keys.Contains( a.Key ) )
+                .ToDictionary(a=> a.Key, a=> a.Value);
+            if ( string.IsNullOrWhiteSpace( element.ActionType )
+                && Attributes.ContainsKey("ActionType"))
+            {
+                clonedAttributes.Add( "ActionType", Attributes["ActionType"] );
+            }
+            if ( string.IsNullOrWhiteSpace( element.Resource )
+                && Attributes.ContainsKey( "Resource" ) )
+            {
+                clonedAttributes.Add( "Resource", Attributes["Resource"] );
+            }
+
+            AttributeHelper.ApplyTranslation( element, clonedAttributes );
             foreach ( var i in listViewComponent.ItemsSource )
             {
                 if ( !string.IsNullOrEmpty( i.Id ) && i.Id == element.Id )
@@ -214,6 +232,7 @@ namespace Avalanche.Blocks
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
                 AttributeHelper.HandleActionItem( new Dictionary<string, string> { { "Resource", item.Resource }, { "ActionType", item.ActionType } } );
+                return;
             }
 
             listViewComponent.SelectedItem = null;
