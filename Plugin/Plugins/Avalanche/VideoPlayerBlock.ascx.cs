@@ -36,6 +36,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Mobile video player." )]
 
     [TextField( "Source", "Video to be displayed. Data is parsed through Lava with the request {{parameter}}.", false )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [BooleanField( "AutoPlay", "Start playing video on load" )]
     [TextField( "Aspect Ratio", "The aspect ratio to display the video. Common ratios: 0.5625 = HD Video, 1.7778 = Vertical Video, 0.75 = SD Video", true, "0.5625" )]
     public partial class VideoPlayerBlock : AvalancheBlock
