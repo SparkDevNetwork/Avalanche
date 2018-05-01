@@ -71,6 +71,7 @@ namespace Avalanche.Utilities
             if ( layoutTemplate.ScrollX || layoutTemplate.ScrollY )
             {
                 scrollView = new ScrollView();
+                AttributeHelper.ApplyTranslation( scrollView, layoutTemplate.Attributes );
                 if ( layoutTemplate.ScrollX && layoutTemplate.ScrollY )
                 {
                     scrollView.Orientation = ScrollOrientation.Both;

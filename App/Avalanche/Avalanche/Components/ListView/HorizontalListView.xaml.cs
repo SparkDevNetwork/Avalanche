@@ -116,6 +116,16 @@ namespace Avalanche.Components.ListView
             }
         }
 
+        protected override void OnSizeAllocated( double width, double height )
+        {
+            base.OnSizeAllocated( width, height );
+            foreach (var child in slStackLayout.Children )
+            {
+                child.WidthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) );
+            }
+
+        }
+
         private void AddCell( ListElement item )
         {
             var widthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) );

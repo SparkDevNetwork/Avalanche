@@ -224,6 +224,10 @@ namespace Avalanche.Blocks
             return false;
         }
 
+        public void PageDisappeared()
+        {
+            //Do nothing.
+        }
         private void GetMediaFile()
         {
             if ( Attributes.ContainsKey( "Source" ) && !string.IsNullOrWhiteSpace( Attributes["Source"] ) )

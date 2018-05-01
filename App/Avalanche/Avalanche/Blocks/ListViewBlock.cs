@@ -33,7 +33,6 @@ namespace Avalanche.Blocks
     {
         private IListViewComponent listViewComponent;
         private bool _manualRefresh = false;
-        private bool _useFresh = false;
         private bool _endOfList = false;
         private string _nextRequest;
         private string _initialRequest;
@@ -180,7 +179,6 @@ namespace Avalanche.Blocks
         {
             _endOfList = false;
             _manualRefresh = true;
-            _useFresh = true;
             listViewComponent.IsRefreshing = true;
             if ( !string.IsNullOrWhiteSpace( _initialRequest ) )
             {

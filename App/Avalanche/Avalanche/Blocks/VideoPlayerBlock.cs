@@ -69,5 +69,10 @@ namespace Avalanche.Blocks
                 ExitFullScreen();
             }
         }
+
+        public void PageDisappeared()
+        {
+            this.Stop();
+        }
     }
 }

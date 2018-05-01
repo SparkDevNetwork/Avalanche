@@ -25,6 +25,6 @@ namespace Avalanche.Interfaces
         event EventHandler<bool> FullScreenChanged;
 
         void BackButtonPressed();
-
+        void PageDisappeared();
     }
 }

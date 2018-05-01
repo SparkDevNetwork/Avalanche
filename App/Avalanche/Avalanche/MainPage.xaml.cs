@@ -34,7 +34,7 @@ namespace Avalanche
     {
         ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
-        private List<IRenderable> nonMediaBlocks = new List<IRenderable>();
+        private List<View> nonMediaBlocks = new List<View>();
         private StackLayout nav;
         private LayoutManager layoutManager;
 
@@ -93,17 +93,7 @@ namespace Avalanche
                         hasPostbackBlock.MessageHandler = new BlockMessenger( block.BlockId );
                     }
 
-                    //Setup media if needed
-                    if ( mobileBlock is IHasMedia )
-                    {
-                        var mediaBlock = ( IHasMedia ) mobileBlock;
-                        mediaBlocks.Add( mediaBlock );
-                        mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
-                    }
-                    else
-                    {
-                        nonMediaBlocks.Add( mobileBlock );
-                    }
+
 
                     //var zone = layout.FindByName<Layout<View>>( block.Zone );
                     var zone = layoutManager.GetElement( block.Zone );
@@ -115,6 +105,18 @@ namespace Avalanche
                             var renderedBlock = mobileBlock.Render();
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
+
+                            //Setup media if needed
+                            if ( mobileBlock is IHasMedia )
+                            {
+                                var mediaBlock = ( IHasMedia ) mobileBlock;
+                                mediaBlocks.Add( mediaBlock );
+                                mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
+                            }
+                            else
+                            {
+                                nonMediaBlocks.Add( renderedBlock );
+                            }
                         }
                         catch ( Exception e )
                         {
@@ -165,6 +167,15 @@ namespace Avalanche
                 }
             }
             return back;
+        }
+
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            foreach ( var mediaBlock in mediaBlocks )
+            {
+                mediaBlock.PageDisappeared();
+            }
         }
 
         private void AddTitleBar( ContentView layout, MobilePage page )

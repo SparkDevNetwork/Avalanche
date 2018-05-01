@@ -214,20 +214,7 @@ namespace Avalanche.Droid.CustomRenderers
             }
         }
 
-        #endregion
-
-        #region INativePlayer
-
-        bool isFullScreen = false;
-
-
-        public bool IsFullScreen
-        {
-            get
-            {
-                return isFullScreen;
-            }
-        }
+        public bool IsFullScreen { get; private set; } = false;
 
         public int Duration
         {
@@ -283,14 +270,14 @@ namespace Avalanche.Droid.CustomRenderers
         /// <param name="resizeLayout">set it True if you are using video player inside a scroo view</param>
         public void FullScreen( bool resizeLayout = false )
         {
-            if ( isFullScreen )
+            if ( IsFullScreen )
                 return;
 
             _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Landscape;
             var window = ( _context as Activity ).Window;
             window.AddFlags( WindowManagerFlags.Fullscreen );
             imageView.SetImageResource( Resource.Drawable.landscape_mode );
-            isFullScreen = true;
+            IsFullScreen = true;
             if ( resizeLayout )
             {
                 if ( Element.HeightRequest == -1 )
@@ -308,14 +295,14 @@ namespace Avalanche.Droid.CustomRenderers
 
         public void ExitFullScreen()
         {
-            if ( !isFullScreen )
+            if ( !IsFullScreen )
                 return;
 
             imageView.SetImageResource( Resource.Drawable.portrait_mode );
             _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
             var window = ( _context as Activity ).Window;
             window.ClearFlags( WindowManagerFlags.Fullscreen );
-            isFullScreen = false;
+            IsFullScreen = false;
             if ( playerHeight > 0 )
             {
                 Element.HeightRequest = playerHeight;
