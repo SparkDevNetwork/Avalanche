@@ -34,6 +34,7 @@ namespace Avalanche
     {
         ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
+        private List<INotify> notifyBlock = new List<INotify>();
         private List<View> nonMediaBlocks = new List<View>();
         private StackLayout nav;
         private LayoutManager layoutManager;
@@ -106,6 +107,12 @@ namespace Avalanche
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
 
+                            //Get blocks that need notfication of appearing and disappearing
+                            if ( mobileBlock is INotify )
+                            {
+                                notifyBlock.Add( ( INotify ) mobileBlock );
+                            }
+
                             //Setup media if needed
                             if ( mobileBlock is IHasMedia )
                             {
@@ -172,9 +179,18 @@ namespace Avalanche
         protected override void OnDisappearing()
         {
             base.OnDisappearing();
-            foreach ( var mediaBlock in mediaBlocks )
+            foreach ( var block in notifyBlock )
             {
-                mediaBlock.PageDisappeared();
+                block.OnDisappearing();
+            }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            foreach ( var block in notifyBlock )
+            {
+                block.OnAppearing();
             }
         }
 

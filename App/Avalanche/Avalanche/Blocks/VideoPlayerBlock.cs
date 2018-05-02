@@ -21,7 +21,7 @@ using Xamarin.Forms;
 
 namespace Avalanche.Blocks
 {
-    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable, IHasMedia
+    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable, IHasMedia, INotify
     {
         public Dictionary<string, string> Attributes { get; set; }
         public VideoPlayerBlock()
@@ -72,7 +72,18 @@ namespace Avalanche.Blocks
 
         public void PageDisappeared()
         {
+
+        }
+
+        public void OnAppearing()
+        {
+           
+        }
+
+        public void OnDisappearing()
+        {
             this.Stop();
+            ( ( Layout<View> ) this.Parent ).Children.Remove( this );
         }
     }
 }

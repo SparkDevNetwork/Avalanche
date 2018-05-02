@@ -21,10 +21,7 @@ namespace Avalanche.Interfaces
     interface IHasMedia
     {
         bool IsFullScreen { get; }
-
         event EventHandler<bool> FullScreenChanged;
-
         void BackButtonPressed();
-        void PageDisappeared();
     }
 }
