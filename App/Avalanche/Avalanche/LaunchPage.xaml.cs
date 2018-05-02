@@ -34,22 +34,22 @@ namespace Avalanche
                 new CarouselItem
                 {
                     Image = "Splash1.png",
-                    Title = "Welcome To Avalanche",
-                    Description = "This is the demonstration app for Avalanche. Avalanche is a framework for building apps coupled to your instance of Rock.",
+                    Title = "Southeast Christian",
+                    Description = "Southeast Christian Church is a multi-campus located throughout the Louisville area.",
                     Next = true
                 },
                 new CarouselItem
                 {
                     Image = "Splash2.png",
                     Title = "Your Church, Your App",
-                    Description = "Avalanche allows churches to build high quality apps without the need for special development or generic templates.",
+                    Description = "This app is here to help you get the most out of your church.",
                     Next = true
                 },
                 new CarouselItem
                 {
                     Image = "Splash3.png",
-                    Title = "Bit of a Trick.",
-                    Description = "This into carousel is actually here to give the app time to preload. Once you click lets go, the app should already be loaded.",
+                    Title = "Always Welcome",
+                    Description = "If you have never attended a service at Southeast Christian Church, know you are welcome here.",
                     End = true
                 },
             };

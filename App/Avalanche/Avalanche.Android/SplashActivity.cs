@@ -26,7 +26,7 @@ using Plugin.Permissions.Abstractions;
 
 namespace Avalanche.Droid
 {
-        [Activity( Label = "Avalanche", Icon = "@drawable/icon", Theme = "@style/Theme.Splash", //Indicates the theme to use for this activity
+        [Activity( Label = "Southeast Christian", Icon = "@drawable/icon", Theme = "@style/Theme.Splash", //Indicates the theme to use for this activity
              MainLauncher = true, //Set it as boot activity
              NoHistory = true )] //Doesn't place it in back stack
     class SplashActivity : Activity

@@ -1,3 +1,11 @@
-﻿<bitmap xmlns:android="http://schemas.android.com/apk/res/android"
+﻿<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+  <item>
+    <color android:color="#000000"/>
+  </item>
+  <item>
+    <bitmap xmlns:android="http://schemas.android.com/apk/res/android"
     android:src="@drawable/avalancheSplash"
-    android:gravity="center"/>
+    android:gravity="center" />
+  </item>
+</layer-list>
