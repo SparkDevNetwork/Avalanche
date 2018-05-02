@@ -289,7 +289,11 @@ namespace Avalanche.Blocks
         {
             if ( CrossMediaManager.Current.Status != Plugin.MediaManager.Abstractions.Enums.MediaPlayerStatus.Playing )
             {
-                CrossMediaManager.Current.MediaNotificationManager.StopNotifications();
+                try
+                {
+                    CrossMediaManager.Current.MediaNotificationManager.StopNotifications();
+                }
+                catch { }
             }
         }
     }
