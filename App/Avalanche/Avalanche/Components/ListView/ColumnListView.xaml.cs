@@ -128,11 +128,13 @@ namespace Avalanche.Components.ListView
                 gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
             }
 
+            int itemNumber = 0;
             foreach ( ListElement item in ItemsSource )
             {
                 AddCell( item,
-                         ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
-                         Convert.ToInt32( Math.Floor( ( ItemsSource.Count - 1 ) / Columns ) ) );
+                         ( itemNumber ) % Convert.ToInt32( Columns ),
+                         Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
+                itemNumber++;
             }
         }
 
@@ -203,7 +205,7 @@ namespace Avalanche.Components.ListView
             {
                 Label description = new Label()
                 {
-                    Margin = new Thickness(0,-2,0,2),
+                    Margin = new Thickness( 0, -2, 0, 2 ),
                     Text = item.Description,
                     HorizontalOptions = LayoutOptions.Center,
                     FontSize = item.FontSize,

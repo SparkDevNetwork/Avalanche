@@ -74,6 +74,8 @@
             </Rock:ModalDialog>
 
         </asp:Panel>
-
+        <div class="avalanche-header">
+            Mobile Content Channel
+        </div>
     </ContentTemplate>
 </asp:UpdatePanel>

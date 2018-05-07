@@ -60,8 +60,9 @@ namespace RockWeb.Plugins.Avalanche
     [TextField( "Description Lava", "The attribute key of the descriptionch formatted for mobile.", false, "", "CustomSetting" )]
     [TextField( "Image Lava", "The attribute key of the image to show on the list view will hide icon if not blank.", false, "", "CustomSetting" )]
     [TextField( "Icon Lava", "The attribute key of the icon to show on the list view.", false, "", "CustomSetting" )]
-
-    public partial class ContentChannelMobileList : AvalancheBlockCustomSettings
+    [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
+    [KeyValueListField( "Custom Attributes", "Custom attributes to set on block.", false, keyPrompt: "Attribute", valuePrompt: "Value" )]
+    public partial class ContentChannelMobileList : RockBlockCustomSettings, IMobileResource
     {
         #region Fields
 
@@ -400,9 +401,6 @@ $(document).ready(function() {
 
         private List<ListElement> ShowView( int page )
         {
-            Dictionary<string, object> linkedPages = new Dictionary<string, object>();
-            linkedPages.Add( "DetailPage", LinkedPageRoute( "DetailPage" ) );
-
             var errorMessages = new List<string>();
             List<ContentChannelItem> content;
             try
@@ -422,10 +420,6 @@ $(document).ready(function() {
                 content = new List<ContentChannelItem>();
             }
             var count = GetAttributeValue( "Count" ).AsInteger();
-            if ( page > 0 )
-            {
-                page--;
-            }
 
             content = content.Skip( page * count ).Take( count ).ToList();
 
@@ -1002,12 +996,35 @@ $(document).ready(function() {
             }
         }
 
-        public override MobileBlock GetMobile( string parameter )
+        private Dictionary<string, string> _customAtributes;
+        public Dictionary<string, string> CustomAttributes
+        {
+            get
+            {
+                if ( _customAtributes == null )
+                {
+                    _customAtributes = new Dictionary<string, string>();
+                    var customs = GetAttributeValue( "CustomAttributes" ).ToKeyValuePairList();
+                    foreach ( var item in customs )
+                    {
+                        _customAtributes[item.Key] = HttpUtility.UrlDecode( ( string ) item.Value );
+                    }
+                }
+                return _customAtributes;
+            }
+        }
+        public MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
             CustomAttributes["ActionType"] = "1";
             CustomAttributes["Request"] = "0";
             CustomAttributes["InitialRequest"] = "0";
+            var valueGuid = GetAttributeValue( "Component" );
+            var value = DefinedValueCache.Read( valueGuid );
+            if ( value != null )
+            {
+                CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
+            }
 
             return new MobileBlock()
             {
@@ -1016,7 +1033,7 @@ $(document).ready(function() {
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
+        public MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
             var page = request.AsInteger();
 
