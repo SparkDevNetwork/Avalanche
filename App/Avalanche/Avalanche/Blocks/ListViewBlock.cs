@@ -91,6 +91,11 @@ namespace Avalanche.Blocks
                 listViewComponent.CanRefresh = false;
             }
 
+            if ( !Attributes.ContainsKey( "Content" ) )
+            {
+                MessageHandler.Get( _initialRequest );
+            }
+
             var view = ( View ) listViewComponent;
             return view;
         }
@@ -155,7 +160,7 @@ namespace Avalanche.Blocks
 
                 if ( !string.IsNullOrWhiteSpace( listViewResponse.NextRequest ) )
                 {
-                    _nextRequest = Attributes["NextRequest"];
+                    _nextRequest = listViewResponse.NextRequest;
                 }
                 else
                 {
@@ -216,7 +221,12 @@ namespace Avalanche.Blocks
             var item = listViewComponent.SelectedItem as ListElement;
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
-                AttributeHelper.HandleActionItem( new Dictionary<string, string> { { "Resource", item.Resource }, { "ActionType", item.ActionType } } );
+                var actionDictionary = new Dictionary<string, string> {
+                    { "Resource", item.Resource },
+                    { "ActionType", item.ActionType },
+                    { "Parameter", item.Id }
+                };
+                AttributeHelper.HandleActionItem( actionDictionary );
                 return;
             }
 

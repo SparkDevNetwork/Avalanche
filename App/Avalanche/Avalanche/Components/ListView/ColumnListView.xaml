@@ -6,9 +6,11 @@
              x:Class="Avalanche.Components.ListView.ColumnListView">
     <ContentView.Content>
         <ScrollView x:Name="svScrollView">
-            <ActivityIndicator x:Name="aiLoading" HeightRequest="20" WidthRequest="20" IsRunning="True" />
-            <Grid x:Name="gGrid" RowSpacing="15" ColumnSpacing="15" Margin="15,15,15,20">
-            </Grid>
+            <StackLayout>
+                <Grid x:Name="gGrid" RowSpacing="15" ColumnSpacing="15" Margin="15,15,15,20">
+                </Grid>
+                <ActivityIndicator x:Name="aiLoading" HeightRequest="20" WidthRequest="20" IsRunning="True" />
+            </StackLayout>
         </ScrollView>
     </ContentView.Content>
 </ContentView>
