@@ -70,20 +70,19 @@ namespace Avalanche.Blocks
             }
         }
 
-        public void PageDisappeared()
-        {
-
-        }
-
         public void OnAppearing()
         {
-           
+
         }
 
         public void OnDisappearing()
         {
             this.Stop();
-            ( ( Layout<View> ) this.Parent ).Children.Remove( this );
+            var parent = ( Layout<View> ) this.Parent;
+            if ( parent != null && parent.Children.Contains( this ) )
+            {
+                parent.Children.Remove( this );
+            }
         }
     }
 }

@@ -1016,6 +1016,7 @@ $(document).ready(function() {
         public MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
+            CustomAttributes["Resource"] = PageCache.Read( pageGuid.AsGuid() ).Id.ToString();
             CustomAttributes["ActionType"] = "1";
             CustomAttributes["Request"] = "0";
             CustomAttributes["InitialRequest"] = "0";
