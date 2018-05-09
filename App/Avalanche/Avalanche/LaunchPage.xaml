@@ -15,9 +15,9 @@
                         </Grid.RowDefinitions>
                         <Image Aspect="AspectFit" Source="{Binding Image}"/>
                         <StackLayout Grid.Row="1" Padding="12">
-                            <Label TextColor="Wheat" Text="{Binding Title}" FontSize="16"
+                            <Label TextColor="White" Text="{Binding Title}" FontSize="16"
                                    HorizontalOptions="Center" VerticalOptions="CenterAndExpand"/>
-                            <Label TextColor="Wheat" Text="{Binding Description}" FontSize="12"
+                            <Label TextColor="White" Text="{Binding Description}" FontSize="12"
                                    HorizontalOptions="Center" VerticalOptions="CenterAndExpand"/>
                             <Button Text="Next >" x:Name="btnNext" Clicked="btnNext_Clicked" IsVisible="{Binding Next}"></Button>
                             <Button Text="Let's Go! >" x:Name="btnGo" Clicked="btnGo_Clicked" IsVisible="{Binding End}"></Button>
