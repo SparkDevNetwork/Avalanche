@@ -2,7 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Avalanche.Views.MenuPage">
-    <Grid x:Name="MainGrid" HorizontalOptions="FillAndExpand" BackgroundColor="Orange" >
+    <Grid x:Name="MainGrid" HorizontalOptions="FillAndExpand">
         <StackLayout x:Name="MainStackLayout" Spacing="0"></StackLayout>
     </Grid>
 </ContentPage>

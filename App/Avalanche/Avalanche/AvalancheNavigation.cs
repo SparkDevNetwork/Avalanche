@@ -39,7 +39,7 @@ namespace Avalanche
 
         public async static void ReplacePage( string resource, string argument = "" )
         {
-            var page = App.Navigation.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1];
+            var page = App.Navigation.Navigation.NavigationStack[App.Navigation.Navigation.NavigationStack.Count - 1];
             await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
             App.Navigation.Navigation.RemovePage( page );
         }
