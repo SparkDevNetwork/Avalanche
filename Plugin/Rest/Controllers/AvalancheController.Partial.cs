@@ -45,9 +45,24 @@ namespace Avalanche.Rest.Controllers
         [HttpGet]
         [Authenticate]
         [System.Web.Http.Route( "api/avalanche/home" )]
-        public MobilePage GetHome()
+        public HomeRequest GetHome()
         {
-            return GetPage( GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger() );
+            var homeRequest = new HomeRequest();
+
+            var footer = GlobalAttributesCache.Value( "AvalancheFooterPage" ).AsIntegerOrNull();
+            if ( footer != null )
+            {
+                homeRequest.Footer = GetPage( footer.Value );
+            }
+
+            var header = GlobalAttributesCache.Value( "AvalancheHeaderPage" ).AsIntegerOrNull();
+            if ( header != null )
+            {
+                homeRequest.Header = GetPage( header.Value );
+            }
+
+            homeRequest.Page = GetPage( GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger() );
+            return homeRequest;
         }
 
         [HttpGet]
@@ -57,7 +72,10 @@ namespace Avalanche.Rest.Controllers
         public MobilePage GetPage( int id, string parameter = "" )
         {
             var person = GetPerson();
-            HttpContext.Current.Items.Add( "CurrentPerson", person );
+            if ( !HttpContext.Current.Items.Contains( "CurrentPerson" ) )
+            {
+                HttpContext.Current.Items.Add( "CurrentPerson", person );
+            }
 
             var pageCache = PageCache.Read( id );
             if ( !pageCache.IsAuthorized( Authorization.VIEW, person ) )

@@ -16,41 +16,78 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Avalanche.Models;
+using Avalanche.Utilities;
+using Avalanche.Views;
 using Xamarin.Forms;
 
 namespace Avalanche
 {
-    public class AvalanchePage : ContentPage
+    public class AvalanchePage : MultiPage<Page>
     {
-        private string _backgroundImage;
+        ObservableResource<HomeRequest> observableResource = new ObservableResource<HomeRequest>();
+        MainPage mainPage;
+        private bool resize = false;
+        private bool isPortrait = true;
 
-        public new string BackgroundImage
+        public AvalanchePage()
         {
-            get
-            {
-                return _backgroundImage;
-            }
-            set
-            {
-                _backgroundImage = value;
-                AddBackgroundImage();
-            }
+            observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            RockClient.GetResource( observableResource, "/api/avalanche/home" );
+            mainPage = new MainPage();
+            App.Navigation = new NavigationPage( mainPage );
+            Children.Add( App.Navigation );
         }
 
-        public void AddBackgroundImage()
+        private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
         {
-            var mainGrid = this.FindByName<Grid>( "MainGrid" );
-            if ( mainGrid != null )
+            HandleResponse();
+        }
+
+        private void HandleResponse()
+        {
+            if ( observableResource.Resource.Page != null )
             {
-                var image = new FFImageLoading.Forms.CachedImage()
+                mainPage.observableResource.Resource = observableResource.Resource.Page;
+            }
+            bool addFooter = AvalancheNavigation.Footer == null;
+            if ( observableResource.Resource.Footer != null )
+            {
+                AvalancheNavigation.Footer = new MenuPage( observableResource.Resource.Footer );
+                if ( addFooter )
                 {
-                    Aspect = Aspect.AspectFill,
-                    Source = _backgroundImage
-
-                };
-                mainGrid.Children.Add( image );
+                    Children.Insert( 0, AvalancheNavigation.Footer );
+                }
             }
+            resize = true;
         }
 
+
+
+        protected override void OnSizeAllocated( double width, double height )
+        {
+            bool localPortrait = true;
+
+            localPortrait = height > width;
+
+            base.OnSizeAllocated( width, height );
+            if ( resize || localPortrait != isPortrait )
+            {
+                isPortrait = localPortrait;
+                if ( AvalancheNavigation.Footer != null )
+                {
+                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height;
+                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( 0, App.Current.MainPage.Height - AvalancheNavigation.YOffSet, 0, 0 );
+                }
+
+                mainPage.Content.Margin = new Thickness( 0, AvalancheNavigation.YOffSet, 0, 0 );
+                mainPage.TranslationY = AvalancheNavigation.YOffSet * -1;
+            }
+            resize = false;
+        }
+
+        protected override Page CreateDefault( object item )
+        {
+            return new Page();
+        }
     }
 }

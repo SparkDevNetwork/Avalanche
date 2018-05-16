@@ -24,7 +24,7 @@ namespace Avalanche.Utilities
 
         public const string client_secret = "9fe03185-03a7-4a1b-aa64-4adc64a0492f";
 
-        public const string serverUrl = "http://10.100.81.84:6229";
+        public const string serverUrl = "http://10.100.81.99:6229";
 
         public const string tokenEndpoint = "/OAuth/Token";
 
