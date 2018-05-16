@@ -129,7 +129,7 @@ namespace Avalanche.Droid.CustomRenderers
             }
 
             imageView = new ImageView( _context ) { };
-            imageView.SetImageResource( Resource.Drawable.portrait_mode );
+            //imageView.SetImageResource( Resource.Drawable.portrait_mode );
             var lv = new RelativeLayout.LayoutParams( 60, 60 );
             lv.SetMargins( 0, 30, 30, 0 );
             lv.AddRule( LayoutRules.AlignParentRight );
@@ -276,7 +276,7 @@ namespace Avalanche.Droid.CustomRenderers
             _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Landscape;
             var window = ( _context as Activity ).Window;
             window.AddFlags( WindowManagerFlags.Fullscreen );
-            imageView.SetImageResource( Resource.Drawable.landscape_mode );
+            //imageView.SetImageResource( Resource.Drawable.landscape_mode );
             IsFullScreen = true;
             if ( resizeLayout )
             {
@@ -298,7 +298,7 @@ namespace Avalanche.Droid.CustomRenderers
             if ( !IsFullScreen )
                 return;
 
-            imageView.SetImageResource( Resource.Drawable.portrait_mode );
+            //imageView.SetImageResource( Resource.Drawable.portrait_mode);
             _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
             var window = ( _context as Activity ).Window;
             window.ClearFlags( WindowManagerFlags.Fullscreen );

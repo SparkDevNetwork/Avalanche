@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<local:AvalanchePage xmlns="http://xamarin.com/schemas/2014/forms"
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Avalanche"
-             x:Class="Avalanche.MainPage"
+             x:Class="Avalanche.Views.MainPage"
              NavigationPage.HasNavigationBar="False">
     <Grid x:Name="MainGrid" HorizontalOptions="FillAndExpand">
         <StackLayout HorizontalOptions="Center" Margin="0,40">
@@ -11,4 +11,4 @@
             <Button Text="Go Back" x:Name="btnBack" Clicked="btnBack_Clicked" Opacity="0"/>
         </StackLayout>
     </Grid>
-</local:AvalanchePage>
+</ContentPage>

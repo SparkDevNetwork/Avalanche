@@ -21,7 +21,7 @@ using Avalanche.Models;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace Avalanche
+namespace Avalanche.Views
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
     public partial class LaunchPage : ContentPage
