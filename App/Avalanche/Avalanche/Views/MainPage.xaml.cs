@@ -56,17 +56,13 @@ namespace Avalanche.Views
         public MainPage()
         {
             InitializeComponent();
-            On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea( true );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             Task.Run( () => { Handle_Timeout(); } );
-            Content.Margin = new Thickness( 0, AvalancheNavigation.YOffSet, 0, 0 );
-            TranslationY = AvalancheNavigation.YOffSet * -1;
         }
 
         public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
-            On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea( true );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             Task.Run( () => { Handle_Timeout(); } );
             if ( !string.IsNullOrWhiteSpace( parameter ) )
@@ -74,8 +70,11 @@ namespace Avalanche.Views
                 resource += "/" + parameter;
             }
             RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
-            Content.Margin = new Thickness( 0, AvalancheNavigation.YOffSet, 0, 0 );
-            TranslationY = AvalancheNavigation.YOffSet * -1;
+            Content.Margin = new Thickness(
+                AvalancheNavigation.SafeInset.Left,
+                AvalancheNavigation.SafeInset.Top + AvalancheNavigation.YOffSet,
+                AvalancheNavigation.SafeInset.Right,
+                AvalancheNavigation.SafeInset.Bottom );
         }
 
         private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )

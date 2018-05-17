@@ -75,6 +75,7 @@
     <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
     <Compile Include="Migrations\Layouts.cs" />
+    <Compile Include="Models\HomeRequest.cs" />
     <Compile Include="Models\InteractionInformation.cs" />
     <Compile Include="Models\MobileBlockResponse.cs" />
     <Compile Include="Models\ListViewResponse.cs" />
