@@ -62,5 +62,11 @@ namespace Avalanche.Views
             MainStackLayout.Children.Add( layout );
             Menu = layout;
         }
+
+        protected override void OnSizeAllocated( double width, double height )
+        {
+            base.OnSizeAllocated( width, height );
+            AvalancheNavigation.AllowResize = true;
+        }
     }
 }

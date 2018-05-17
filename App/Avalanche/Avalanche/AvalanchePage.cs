@@ -19,14 +19,15 @@ using Avalanche.Models;
 using Avalanche.Utilities;
 using Avalanche.Views;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace Avalanche
 {
-    public class AvalanchePage : MultiPage<Page>
+    public class AvalanchePage : MultiPage<Xamarin.Forms.Page>
     {
         ObservableResource<HomeRequest> observableResource = new ObservableResource<HomeRequest>();
         MainPage mainPage;
-        private bool resize = false;
+
         private bool isPortrait = true;
 
         public AvalanchePage()
@@ -34,8 +35,13 @@ namespace Avalanche
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             RockClient.GetResource( observableResource, "/api/avalanche/home" );
             mainPage = new MainPage();
-            App.Navigation = new NavigationPage( mainPage );
+            App.Navigation = new Xamarin.Forms.NavigationPage( mainPage );
             Children.Add( App.Navigation );
+            if ( !App.Current.Properties.ContainsKey( "SecondRun" ) )
+            {
+                App.Navigation.Navigation.PushModalAsync( new LaunchPage() );
+                App.Current.Properties["SecondRun"] = true;
+            }
         }
 
         private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -58,7 +64,7 @@ namespace Avalanche
                     Children.Insert( 0, AvalancheNavigation.Footer );
                 }
             }
-            resize = true;
+            AvalancheNavigation.AllowResize = true;
         }
 
 
@@ -70,24 +76,33 @@ namespace Avalanche
             localPortrait = height > width;
 
             base.OnSizeAllocated( width, height );
-            if ( resize || localPortrait != isPortrait )
+            if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
             {
+                AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
+
                 isPortrait = localPortrait;
                 if ( AvalancheNavigation.Footer != null )
                 {
-                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height;
-                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( 0, App.Current.MainPage.Height - AvalancheNavigation.YOffSet, 0, 0 );
+                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
+                    AvalancheNavigation.Footer.TranslationY = App.Current.MainPage.Height - AvalancheNavigation.YOffSet;
+                    AvalancheNavigation.SafeInset.Bottom = 0;
                 }
 
-                mainPage.Content.Margin = new Thickness( 0, AvalancheNavigation.YOffSet, 0, 0 );
-                mainPage.TranslationY = AvalancheNavigation.YOffSet * -1;
+                mainPage.Content.Margin = new Thickness(
+                    AvalancheNavigation.SafeInset.Left,
+                    AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
+                    AvalancheNavigation.SafeInset.Right,
+                    AvalancheNavigation.SafeInset.Bottom );
+
+                App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
             }
-            resize = false;
+            AvalancheNavigation.AllowResize = false;
         }
 
-        protected override Page CreateDefault( object item )
+        protected override Xamarin.Forms.Page CreateDefault( object item )
         {
-            return new Page();
+            return new Xamarin.Forms.Page();
         }
     }
 }

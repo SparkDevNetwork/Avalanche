@@ -26,6 +26,8 @@ namespace Avalanche
     {
         public static double YOffSet = 0;
         public static MenuPage Footer = null;
+        public static bool AllowResize = false;
+        public static Thickness SafeInset = new Thickness(0);
 
         public static void GetPage( string resource, string parameter = "" )
         {
