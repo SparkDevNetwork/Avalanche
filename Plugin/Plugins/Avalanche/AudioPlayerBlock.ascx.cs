@@ -38,6 +38,7 @@ namespace RockWeb.Plugins.Avalanche
     [TextField( "Source", "Audio file to be presented. Data is parsed through Lava with the request {{parameter}}.", false )]
     [TextField( "Artist", "Artist or speaker's name. Data is parsed through Lava with the request {{parameter}}.", false )]
     [TextField( "Title", "Title of the audio file. Data is parsed through Lava with the request {{parameter}}.", false )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [BooleanField( "AutoPlay", "Start playing audio on load" )]
     public partial class AudioPlayerBlock : AvalancheBlock
     {

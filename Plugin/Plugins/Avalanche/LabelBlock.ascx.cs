@@ -27,6 +27,7 @@ using Rock;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
+using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -35,6 +36,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "A button." )]
 
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
+    [ActionItemField( "Action Item", "", false )]
     [TextField( "Text", "The text of the label to be displayed.", false )]
     public partial class LabelBlock : AvalancheBlock
     {
@@ -59,6 +61,8 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+
             CustomAttributes["Text"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
                                                                        CurrentPerson,
                                                                        parameter,

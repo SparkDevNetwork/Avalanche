@@ -24,16 +24,12 @@ namespace Avalanche
 {
     public partial class App : Application
     {
+        public static NavigationPage Navigation = null;
         public App()
         {
             InitializeComponent();
             RockClient.CreateDatabase();
-            MainPage = new NavigationPage( new Avalanche.MainPage( "home" ) );
-            if ( !App.Current.Properties.ContainsKey( "SecondRun" ) )
-            {
-                MainPage.Navigation.PushModalAsync( new LaunchPage() );
-                App.Current.Properties["SecondRun"] = true;
-            }
+            MainPage = new AvalanchePage();
         }
 
 
@@ -41,7 +37,7 @@ namespace Avalanche
         {
             var interaction = new Interaction
             {
-                Operation="AppLaunch"
+                Operation = "AppLaunch"
             };
             interaction.Send();
         }

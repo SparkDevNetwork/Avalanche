@@ -16,41 +16,93 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Avalanche.Models;
+using Avalanche.Utilities;
+using Avalanche.Views;
 using Xamarin.Forms;
+using Xamarin.Forms.PlatformConfiguration.iOSSpecific;
 
 namespace Avalanche
 {
-    public class AvalanchePage : ContentPage
+    public class AvalanchePage : MultiPage<Xamarin.Forms.Page>
     {
-        private string _backgroundImage;
+        ObservableResource<HomeRequest> observableResource = new ObservableResource<HomeRequest>();
+        MainPage mainPage;
 
-        public new string BackgroundImage
+        private bool isPortrait = true;
+
+        public AvalanchePage()
         {
-            get
+            observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            RockClient.GetResource( observableResource, "/api/avalanche/home" );
+            mainPage = new MainPage();
+            App.Navigation = new Xamarin.Forms.NavigationPage( mainPage );
+            Children.Add( App.Navigation );
+            if ( !App.Current.Properties.ContainsKey( "SecondRun" ) )
             {
-                return _backgroundImage;
-            }
-            set
-            {
-                _backgroundImage = value;
-                AddBackgroundImage();
+                App.Navigation.Navigation.PushModalAsync( new LaunchPage() );
+                App.Current.Properties["SecondRun"] = true;
             }
         }
 
-        public void AddBackgroundImage()
+        private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
         {
-            var mainGrid = this.FindByName<Grid>( "MainGrid" );
-            if ( mainGrid != null )
+            HandleResponse();
+        }
+
+        private void HandleResponse()
+        {
+            if ( observableResource.Resource.Page != null )
             {
-                var image = new FFImageLoading.Forms.CachedImage()
+                mainPage.observableResource.Resource = observableResource.Resource.Page;
+            }
+            bool addFooter = AvalancheNavigation.Footer == null;
+            if ( observableResource.Resource.Footer != null )
+            {
+                AvalancheNavigation.Footer = new MenuPage( observableResource.Resource.Footer );
+                if ( addFooter )
                 {
-                    Aspect = Aspect.AspectFill,
-                    Source = _backgroundImage
-
-                };
-                mainGrid.Children.Add( image );
+                    Children.Insert( 0, AvalancheNavigation.Footer );
+                }
             }
+            AvalancheNavigation.AllowResize = true;
         }
 
+
+
+        protected override void OnSizeAllocated( double width, double height )
+        {
+            bool localPortrait = true;
+
+            localPortrait = height > width;
+
+            base.OnSizeAllocated( width, height );
+            if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
+            {
+                AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
+
+                isPortrait = localPortrait;
+                if ( AvalancheNavigation.Footer != null )
+                {
+                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
+                    AvalancheNavigation.Footer.TranslationY = App.Current.MainPage.Height - AvalancheNavigation.YOffSet;
+                    AvalancheNavigation.SafeInset.Bottom = 0;
+                }
+
+                mainPage.Content.Margin = new Thickness(
+                    AvalancheNavigation.SafeInset.Left,
+                    AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
+                    AvalancheNavigation.SafeInset.Right,
+                    AvalancheNavigation.SafeInset.Bottom );
+
+                App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
+            }
+            AvalancheNavigation.AllowResize = false;
+        }
+
+        protected override Xamarin.Forms.Page CreateDefault( object item )
+        {
+            return new Xamarin.Forms.Page();
+        }
     }
 }

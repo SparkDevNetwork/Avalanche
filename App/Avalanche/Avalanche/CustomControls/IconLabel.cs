@@ -21,7 +21,7 @@ using Xamarin.Forms;
 
 namespace Avalanche.CustomControls
 {
-    class IconLabel : Label
+    public class IconLabel : Label
     {
         public IconLabel()
         {

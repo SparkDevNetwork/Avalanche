@@ -15,16 +15,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Avalanche.CustomControls;
 using Avalanche.Interfaces;
 using Avalanche.Utilities;
 using Xamarin.Forms;
 
 namespace Avalanche.Blocks
 {
-    public class LabelBlock : Label, IRenderable
+    public class IconBlock : IconLabel, IRenderable
     {
         public Dictionary<string, string> Attributes { get; set; }
-
         public View Render()
         {
             TapGestureRecognizer tgr = new TapGestureRecognizer()
@@ -33,8 +33,15 @@ namespace Avalanche.Blocks
             };
             tgr.Tapped += Tgr_Tapped;
             this.GestureRecognizers.Add( tgr );
+
+            if ( Attributes.ContainsKey( "Text" ) )
+            {
+                base.Text = Attributes["Text"];
+            }
+
             return this;
         }
+
         private void Tgr_Tapped( object sender, EventArgs e )
         {
             AttributeHelper.HandleActionItem( Attributes );

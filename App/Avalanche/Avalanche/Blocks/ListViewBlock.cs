@@ -33,7 +33,6 @@ namespace Avalanche.Blocks
     {
         private IListViewComponent listViewComponent;
         private bool _manualRefresh = false;
-        private bool _useFresh = false;
         private bool _endOfList = false;
         private string _nextRequest;
         private string _initialRequest;
@@ -92,6 +91,11 @@ namespace Avalanche.Blocks
                 listViewComponent.CanRefresh = false;
             }
 
+            if ( !Attributes.ContainsKey( "Content" ) )
+            {
+                MessageHandler.Get( _initialRequest );
+            }
+
             var view = ( View ) listViewComponent;
             return view;
         }
@@ -118,7 +122,12 @@ namespace Avalanche.Blocks
 
         private void AddElement( ListElement element )
         {
-            AttributeHelper.ApplyTranslation( element, Attributes );
+            var keys = new List<string> { "Resource", "ActionType" };
+            var clonedAttributes = Attributes
+                .Where( a => !keys.Contains( a.Key ) )
+                .ToDictionary( a => a.Key, a => a.Value );
+
+            AttributeHelper.ApplyTranslation( element, clonedAttributes );
             foreach ( var i in listViewComponent.ItemsSource )
             {
                 if ( !string.IsNullOrEmpty( i.Id ) && i.Id == element.Id )
@@ -151,7 +160,7 @@ namespace Avalanche.Blocks
 
                 if ( !string.IsNullOrWhiteSpace( listViewResponse.NextRequest ) )
                 {
-                    _nextRequest = Attributes["NextRequest"];
+                    _nextRequest = listViewResponse.NextRequest;
                 }
                 else
                 {
@@ -175,7 +184,6 @@ namespace Avalanche.Blocks
         {
             _endOfList = false;
             _manualRefresh = true;
-            _useFresh = true;
             listViewComponent.IsRefreshing = true;
             if ( !string.IsNullOrWhiteSpace( _initialRequest ) )
             {
@@ -213,7 +221,13 @@ namespace Avalanche.Blocks
             var item = listViewComponent.SelectedItem as ListElement;
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
-                AttributeHelper.HandleActionItem( new Dictionary<string, string> { { "Resource", item.Resource }, { "ActionType", item.ActionType } } );
+                var actionDictionary = new Dictionary<string, string> {
+                    { "Resource", item.Resource },
+                    { "ActionType", item.ActionType },
+                    { "Parameter", item.Id }
+                };
+                AttributeHelper.HandleActionItem( actionDictionary );
+                return;
             }
 
             listViewComponent.SelectedItem = null;

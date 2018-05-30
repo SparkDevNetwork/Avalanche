@@ -17,27 +17,33 @@ using System.Collections.Generic;
 using System.Text;
 using Avalanche;
 using Avalanche.Models;
+using Avalanche.Views;
 using Xamarin.Forms;
 
 namespace Avalanche
 {
     static class AvalancheNavigation
     {
+        public static double YOffSet = 0;
+        public static MenuPage Footer = null;
+        public static bool AllowResize = false;
+        public static Thickness SafeInset = new Thickness(0);
+
         public static void GetPage( string resource, string parameter = "" )
         {
-            App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
+            App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
         }
 
         public static void RemovePage()
         {
-            App.Current.MainPage.Navigation.PopAsync();
+            App.Navigation.Navigation.PopAsync();
         }
 
         public async static void ReplacePage( string resource, string argument = "" )
         {
-            var page = App.Current.MainPage.Navigation.NavigationStack[App.Current.MainPage.Navigation.NavigationStack.Count - 1];
-            await App.Current.MainPage.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
-            App.Current.MainPage.Navigation.RemovePage( page );
+            var page = App.Navigation.Navigation.NavigationStack[App.Navigation.Navigation.NavigationStack.Count - 1];
+            await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
+            App.Navigation.Navigation.RemovePage( page );
         }
     }
 }

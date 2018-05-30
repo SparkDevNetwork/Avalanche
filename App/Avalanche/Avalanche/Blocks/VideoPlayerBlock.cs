@@ -21,7 +21,7 @@ using Xamarin.Forms;
 
 namespace Avalanche.Blocks
 {
-    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable, IHasMedia
+    public class VideoPlayerBlock : Avalanche.CustomControls.VideoPlayer, IRenderable, IHasMedia, INotify
     {
         public Dictionary<string, string> Attributes { get; set; }
         public VideoPlayerBlock()
@@ -67,6 +67,21 @@ namespace Avalanche.Blocks
             if ( IsFullScreen )
             {
                 ExitFullScreen();
+            }
+        }
+
+        public void OnAppearing()
+        {
+
+        }
+
+        public void OnDisappearing()
+        {
+            this.Stop();
+            var parent = ( Layout<View> ) this.Parent;
+            if ( parent != null && parent.Children.Contains( this ) )
+            {
+                parent.Children.Remove( this );
             }
         }
     }

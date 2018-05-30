@@ -56,7 +56,7 @@ namespace RockWeb.Plugins.Avalanche
                                                    .ConvertMarkdownToHtml();
         }
 
-        public override MobileBlock GetMobile( string paramater )
+        public override MobileBlock GetMobile( string parameter )
         {
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
             var valueGuid = GetAttributeValue( "Component" );
@@ -66,8 +66,8 @@ namespace RockWeb.Plugins.Avalanche
                 CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
-            CustomAttributes["Content"] = GetContent();
-            CustomAttributes["InitialRequest"] = "Refresh";
+            CustomAttributes["Content"] = GetContent( parameter );
+            CustomAttributes["InitialRequest"] = parameter;
 
             return new MobileBlock()
             {
@@ -77,26 +77,23 @@ namespace RockWeb.Plugins.Avalanche
         }
         public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            if ( request == "Refresh" )
-            {
-                var content = GetContent();
-                var response = "{\"Content\": " + content + "}";
+            var content = GetContent( request );
+            var response = "{\"Content\": " + content + "}";
 
-                return new MobileBlockResponse()
-                {
-                    Request = request,
-                    Response = response,
-                    TTL = PageCache.OutputCacheDuration
-                };
-            }
-            return base.HandleRequest( request, Body );
+            return new MobileBlockResponse()
+            {
+                Request = request,
+                Response = response,
+                TTL = PageCache.OutputCacheDuration
+            };
         }
 
-        private string GetContent()
+        private string GetContent( string parameter = "" )
         {
             return AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
                                                                CurrentPerson,
-                                                               enabledLavaCommands: GetAttributeValue( "EnabledLavaCommands" ) );
+                                                               parameter,
+                                                               GetAttributeValue( "EnabledLavaCommands" ) );
         }
     }
 }

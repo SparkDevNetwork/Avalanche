@@ -289,11 +289,6 @@
             {
                 var headingStack = new StackLayout();
                 headingStack.Children.Add(label);
-                headingStack.Children.Add(new BoxView
-                {
-                    HeightRequest = style.BorderSize,
-                    BackgroundColor = style.BorderColor,
-                });
                 stack.Children.Add(headingStack);
             }
             else

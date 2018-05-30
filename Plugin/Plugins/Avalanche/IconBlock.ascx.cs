@@ -31,15 +31,14 @@ using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
-    [DisplayName( "Video Player Block" )]
+    [DisplayName( "Icon Block" )]
     [Category( "Avalanche" )]
-    [Description( "Mobile video player." )]
+    [Description( "Font Awesome Icon." )]
 
-    [TextField( "Source", "Video to be displayed. Data is parsed through Lava with the request {{parameter}}.", false )]
     [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
-    [BooleanField( "AutoPlay", "Start playing video on load" )]
-    [TextField( "Aspect Ratio", "The aspect ratio to display the video. Common ratios: 0.5625 = HD Video, 1.7778 = Vertical Video, 0.75 = SD Video", true, "0.5625" )]
-    public partial class VideoPlayerBlock : AvalancheBlock
+    [ActionItemField( "Action Item", "", false )]
+    [TextField( "Text", "The text of the label to be displayed.", false )]
+    public partial class IconBlock : AvalancheBlock
     {
 
         /// <summary>
@@ -48,21 +47,31 @@ namespace RockWeb.Plugins.Avalanche
         /// <param name="e">The <see cref="T:System.EventArgs" /> object that contains the event data.</param>
         protected override void OnLoad( EventArgs e )
         {
-            lLava.Text = GetAttributeValue( "Source" );
+            lbLabel.Text = string.Format( "<i class='{0}'></i>", GetAttributeValue( "Text" ) );
+            var fontsize = GetAttributeValue( "FontSize" ).AsInteger();
+            if ( fontsize != 0 )
+            {
+                lbLabel.Style.Add( "font-size", GetAttributeValue( "FontSize" ) + "px" );
+            }
+            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "TextColor" ) ) )
+            {
+                lbLabel.Style.Add( "color", GetAttributeValue( "TextColor" ) );
+            }
         }
 
         public override MobileBlock GetMobile( string parameter )
         {
-            CustomAttributes.Add( "Source", AvalancheUtilities.ProcessLava( GetAttributeValue( "Source" ),
-                                                                            CurrentPerson,
-                                                                            parameter,
-                                                                            GetAttributeValue( "EnabledLavaCommands" )
-                                                                            ) );
-            CustomAttributes.Add( "AutoPlay", GetAttributeValue( "AutoPlay" ) );
-            CustomAttributes.Add( "AspectRatio", GetAttributeValue( "AspectRatio" ) );
+
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+
+            CustomAttributes["Text"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
+                                                                       CurrentPerson,
+                                                                       parameter,
+                                                                       GetAttributeValue( "EnabledLavaCommands" ) );
+
             return new MobileBlock()
             {
-                BlockType = "Avalanche.Blocks.VideoPlayerBlock",
+                BlockType = "Avalanche.Blocks.IconBlock",
                 Attributes = CustomAttributes
             };
         }

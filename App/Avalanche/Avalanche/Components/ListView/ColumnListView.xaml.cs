@@ -44,6 +44,7 @@ namespace Avalanche.Components.ListView
                 _resetItems();
             }
         }
+        public double ImageWidth { get; set; } = 0;
 
         private bool _isRefreshing;
         public bool IsRefreshing
@@ -127,11 +128,13 @@ namespace Avalanche.Components.ListView
                 gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
             }
 
+            int itemNumber = 0;
             foreach ( ListElement item in ItemsSource )
             {
                 AddCell( item,
-                         ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
-                         Convert.ToInt32( Math.Floor( ( ItemsSource.Count - 1 ) / Columns ) ) );
+                         ( itemNumber ) % Convert.ToInt32( Columns ),
+                         Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
+                itemNumber++;
             }
         }
 
@@ -152,7 +155,11 @@ namespace Avalanche.Components.ListView
 
         private void AddCell( ListElement item, int x, int y )
         {
-            StackLayout sl = new StackLayout() { HorizontalOptions = LayoutOptions.Center };
+            StackLayout sl = new StackLayout()
+            {
+                HorizontalOptions = LayoutOptions.Center,
+                Spacing = 0
+            };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
                 CachedImage img = new CachedImage()
@@ -162,6 +169,11 @@ namespace Avalanche.Components.ListView
                     WidthRequest = App.Current.MainPage.Width / Columns,
                     InputTransparent = true
                 };
+                if ( ImageWidth > 0 )
+                {
+                    img.WidthRequest = ImageWidth;
+                }
+
                 sl.Children.Add( img );
             }
             else
@@ -177,16 +189,32 @@ namespace Avalanche.Components.ListView
                 sl.Children.Add( icon );
             }
 
-            Label label = new Label()
+            Label title = new Label()
             {
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
                 FontSize = item.FontSize,
                 HorizontalTextAlignment = TextAlignment.Center,
+                FontAttributes = FontAttributes.Bold,
                 InputTransparent = true,
                 TextColor = item.TextColor
             };
-            sl.Children.Add( label );
+            sl.Children.Add( title );
+
+            if ( !string.IsNullOrWhiteSpace( item.Description ) )
+            {
+                Label description = new Label()
+                {
+                    Margin = new Thickness( 0, -2, 0, 2 ),
+                    Text = item.Description,
+                    HorizontalOptions = LayoutOptions.Center,
+                    FontSize = item.FontSize,
+                    HorizontalTextAlignment = TextAlignment.Center,
+                    InputTransparent = true,
+                    TextColor = item.TextColor
+                };
+                sl.Children.Add( description );
+            }
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {

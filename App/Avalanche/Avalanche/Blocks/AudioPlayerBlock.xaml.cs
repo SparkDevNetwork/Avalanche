@@ -12,7 +12,7 @@ using Xamarin.Forms.Xaml;
 namespace Avalanche.Blocks
 {
     [XamlCompilation( XamlCompilationOptions.Compile )]
-    public partial class AudioPlayerBlock : ContentView, IRenderable
+    public partial class AudioPlayerBlock : ContentView, IRenderable, INotify
     {
         private MediaFile mediaFile;
         private TimeSpan Duration = TimeSpan.Zero;
@@ -102,6 +102,11 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
+            try
+            {
+                CrossMediaManager.Current.MediaNotificationManager.StopNotifications();
+            }
+            catch { }
             GetMediaFile();
             if ( IsCurrentPlaying() && CrossMediaManager.Current.Status == Plugin.MediaManager.Abstractions.Enums.MediaPlayerStatus.Playing )
             {
@@ -272,6 +277,23 @@ namespace Avalanche.Blocks
                     CrossMediaManager.Current.Seek( ts );
                     lCurrent.Text = CrossMediaManager.Current.Position.ToString( @"mm\:ss" );
                 }
+            }
+        }
+
+        public void OnAppearing()
+        {
+
+        }
+
+        public void OnDisappearing()
+        {
+            if ( CrossMediaManager.Current.Status != Plugin.MediaManager.Abstractions.Enums.MediaPlayerStatus.Playing )
+            {
+                try
+                {
+                    CrossMediaManager.Current.MediaNotificationManager.StopNotifications();
+                }
+                catch { }
             }
         }
     }

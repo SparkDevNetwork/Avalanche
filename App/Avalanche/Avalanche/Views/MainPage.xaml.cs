@@ -28,31 +28,53 @@ using Avalanche.CustomControls;
 using Avalanche.Interfaces;
 using Newtonsoft.Json;
 
-namespace Avalanche
+namespace Avalanche.Views
 {
-    public partial class MainPage : AvalanchePage
+    public partial class MainPage : ContentPage
     {
-        ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
+        public ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
-        private List<IRenderable> nonMediaBlocks = new List<IRenderable>();
+        private List<INotify> notifyBlock = new List<INotify>();
+        private List<View> nonMediaBlocks = new List<View>();
         private StackLayout nav;
         private LayoutManager layoutManager;
 
+        private string _backgroundImage;
+        public new string BackgroundImage
+        {
+            get
+            {
+                return _backgroundImage;
+            }
+            set
+            {
+                _backgroundImage = value;
+                AddBackgroundImage();
+            }
+        }
+
         public MainPage()
         {
+            InitializeComponent();
+            observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            Task.Run( () => { Handle_Timeout(); } );
         }
 
         public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
-            On<Xamarin.Forms.PlatformConfiguration.iOS>().SetUseSafeArea( true );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
+            Task.Run( () => { Handle_Timeout(); } );
             if ( !string.IsNullOrWhiteSpace( parameter ) )
             {
                 resource += "/" + parameter;
             }
-            Task.Run( () => { Handle_Timeout(); } );
             RockClient.GetResource<MobilePage>( observableResource, "/api/avalanche/" + resource );
+            Content.Margin = new Thickness(
+                AvalancheNavigation.SafeInset.Left,
+                AvalancheNavigation.SafeInset.Top + AvalancheNavigation.YOffSet,
+                AvalancheNavigation.SafeInset.Right,
+                AvalancheNavigation.SafeInset.Bottom );
         }
 
         private void ObservableResource_PropertyChanged( object sender, System.ComponentModel.PropertyChangedEventArgs e )
@@ -93,19 +115,6 @@ namespace Avalanche
                         hasPostbackBlock.MessageHandler = new BlockMessenger( block.BlockId );
                     }
 
-                    //Setup media if needed
-                    if ( mobileBlock is IHasMedia )
-                    {
-                        var mediaBlock = ( IHasMedia ) mobileBlock;
-                        mediaBlocks.Add( mediaBlock );
-                        mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
-                    }
-                    else
-                    {
-                        nonMediaBlocks.Add( mobileBlock );
-                    }
-
-                    //var zone = layout.FindByName<Layout<View>>( block.Zone );
                     var zone = layoutManager.GetElement( block.Zone );
 
                     if ( zone != null )
@@ -115,6 +124,24 @@ namespace Avalanche
                             var renderedBlock = mobileBlock.Render();
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
+
+                            //Get blocks that need notfication of appearing and disappearing
+                            if ( mobileBlock is INotify )
+                            {
+                                notifyBlock.Add( ( INotify ) mobileBlock );
+                            }
+
+                            //Setup media if needed
+                            if ( mobileBlock is IHasMedia )
+                            {
+                                var mediaBlock = ( IHasMedia ) mobileBlock;
+                                mediaBlocks.Add( mediaBlock );
+                                mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
+                            }
+                            else
+                            {
+                                nonMediaBlocks.Add( renderedBlock );
+                            }
                         }
                         catch ( Exception e )
                         {
@@ -138,6 +165,20 @@ namespace Avalanche
             }
             btnBack.IsVisible = false;
             lTimeout.IsVisible = false;
+        }
+        public void AddBackgroundImage()
+        {
+            var mainGrid = this.FindByName<Grid>( "MainGrid" );
+            if ( mainGrid != null )
+            {
+                var image = new FFImageLoading.Forms.CachedImage()
+                {
+                    Aspect = Aspect.AspectFill,
+                    Source = _backgroundImage
+
+                };
+                mainGrid.Children.Add( image );
+            }
         }
 
         private void MediaBlock_FullScreenChanged( object sender, bool isFullScreen )
@@ -167,6 +208,24 @@ namespace Avalanche
             return back;
         }
 
+        protected override void OnDisappearing()
+        {
+            base.OnDisappearing();
+            foreach ( var block in notifyBlock )
+            {
+                block.OnDisappearing();
+            }
+        }
+
+        protected override void OnAppearing()
+        {
+            base.OnAppearing();
+            foreach ( var block in notifyBlock )
+            {
+                block.OnAppearing();
+            }
+        }
+
         private void AddTitleBar( ContentView layout, MobilePage page )
         {
             nav = ( StackLayout ) layoutManager.GetElement( "NavBar" );
@@ -187,7 +246,7 @@ namespace Avalanche
 
                 nav.Children.Add( stackLayout );
 
-                if ( App.Current.MainPage.Navigation.NavigationStack.Count > 1 )
+                if ( App.Navigation.Navigation.NavigationStack.Count > 1 )
                 {
                     IconLabel icon = new IconLabel
                     {

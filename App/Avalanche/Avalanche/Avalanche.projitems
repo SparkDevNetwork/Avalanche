@@ -34,6 +34,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\SoutheastIcons.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml.cs">
@@ -59,12 +60,15 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)IconBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasMedia.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\INotify.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\HomeRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LayoutTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\VideoPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasBlockMessenger.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)LaunchPage.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\LaunchPage.xaml.cs">
       <DependentUpon>LaunchPage.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
@@ -87,7 +91,7 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IPageAttribute.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IRenderable.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)MainPage.xaml.cs">
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Models\MobileBlock.cs" />
@@ -99,9 +103,13 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\LayoutManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utilities\RockClient.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml.cs">
+      <DependentUpon>MenuPage.xaml</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)MainPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -171,7 +179,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)LaunchPage.xaml">
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\LaunchPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
@@ -180,6 +188,12 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\AudioPlayerBlock.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

@@ -36,6 +36,7 @@
                
         <div class="row">
             <div class="col-md-12">
+			    <Rock:Zone Name="MainBackground" runat="server" />
                 <Rock:Zone Name="Main" runat="server" />
             </div>
         </div>
