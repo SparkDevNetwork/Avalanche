@@ -14,6 +14,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Avalanche.Interfaces;
 using Avalanche.Models;
 using Xamarin.Forms;
@@ -24,13 +25,14 @@ namespace Avalanche.Components.FormElements
     {
         public string Key { get; set; }
         public string Label { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
         public Color BackgroundColor { get; set; }
         public Color TextColor { get; set; }
         public View View { get; private set; }
+        public Dictionary<string, string> Attributes { get; set; }
         public string Value
         {
             get
@@ -74,7 +76,7 @@ namespace Avalanche.Components.FormElements
         {
             View = new Picker()
             {
-                ItemsSource = Options,
+                ItemsSource = Options.Select(o => o.Key).ToList(),
                 Title = Label,
                 Margin = new Thickness( 5 )
             };

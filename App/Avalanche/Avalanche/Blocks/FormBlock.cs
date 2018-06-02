@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -114,7 +115,10 @@ namespace Avalanche.Blocks
                 lbValidationMessage.IsVisible = true;
                 return;
             }
-            AttributeHelper.HandleActionItem( formResponse.ActionType, formResponse.Resource, formResponse.Parameter );
+            AttributeHelper.HandleActionItem( new Dictionary<string, string> {
+                { "ActionType", formResponse.ActionType },
+                { "Resource", formResponse.Resource },
+                { "Parameter", formResponse.Parameter } } );
 
         }
 

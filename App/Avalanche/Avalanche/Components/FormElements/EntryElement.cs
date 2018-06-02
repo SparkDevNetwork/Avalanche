@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +17,7 @@ using System;
 using System.Collections.Generic;
 using Avalanche.Interfaces;
 using Avalanche.Models;
+using Avalanche.Utilities;
 using Xamarin.Forms;
 
 namespace Avalanche.Components.FormElements
@@ -24,13 +26,14 @@ namespace Avalanche.Components.FormElements
     {
         public string Key { get; set; }
         public string Label { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
         public Color BackgroundColor { get; set; }
         public Color TextColor { get; set; }
         public View View { get; private set; }
+        public Dictionary<string, string> Attributes { get; set; }
         public string Value
         {
             get
@@ -77,7 +80,7 @@ namespace Avalanche.Components.FormElements
                 Text = Value,
                 Keyboard = ( Keyboard ) new KeyboardTypeConverter().ConvertFromInvariantString( Keyboard ?? "Default" ),
                 Placeholder = Label,
-                Margin = new Thickness(5)
+                Margin = new Thickness( 5 )
             };
 
             if ( BackgroundColor != null )
@@ -89,6 +92,8 @@ namespace Avalanche.Components.FormElements
             {
                 ( ( Entry ) View ).TextColor = TextColor;
             }
+
+            AttributeHelper.ApplyTranslation( ( Entry ) View, Attributes );
 
             return View;
         }

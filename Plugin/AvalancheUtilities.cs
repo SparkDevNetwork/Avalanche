@@ -69,9 +69,16 @@ namespace Avalanche
 
         public static string ProcessLava( string lava, Person currentPerson, string parameter = "", string enabledLavaCommands = "" )
         {
-            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
+            var mergeObjects = GetMergeFields( currentPerson );
             mergeObjects["parameter"] = parameter;
             return lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
+        }
+
+        public static Dictionary<string, Object> GetMergeFields( Person currentPerson )
+        {
+            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
+            mergeObjects.Add( "IsMobileApp", true );
+            return mergeObjects;
         }
 
         public static string GetLayout( string layoutName )

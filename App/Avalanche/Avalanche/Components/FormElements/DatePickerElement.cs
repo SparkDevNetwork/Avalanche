@@ -25,12 +25,13 @@ namespace Avalanche.Components.FormElements
         private DatePicker datePicker;
         public string Key { get; set; }
         public string Label { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
         public Color BackgroundColor { get; set; }
         public Color TextColor { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
         public View View { get; private set; }
         public string Value
         {

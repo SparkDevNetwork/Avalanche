@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,12 +29,13 @@ namespace Avalanche.Components.FormElements
         private string check_false = "fa fa-square-o";
         public string Key { get; set; }
         public string Label { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
         public View View { get; private set; }
         public Color BackgroundColor { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
         public Color TextColor { get; set; }
 
         private IconLabel icon;

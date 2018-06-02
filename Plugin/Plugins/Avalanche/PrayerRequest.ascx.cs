@@ -133,11 +133,6 @@ namespace RockWeb.Plugins.Avalanche
 
             AvalancheUtilities.SetActionItems( GetAttributeValue( "SuccessAction" ), CustomAttributes, CurrentPerson );
 
-            var textField = new Rock.Field.Types.TextFieldType();
-            textField.GetMobileElement();
-
-
-
             return new MobileBlock()
             {
                 BlockType = "Avalanche.Blocks.FormBlock",

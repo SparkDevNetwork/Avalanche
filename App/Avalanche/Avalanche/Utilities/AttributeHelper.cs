@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +24,11 @@ namespace Avalanche.Utilities
     public static class AttributeHelper
     {
         private static string[] trueStrings = new string[] { "true", "yes", "t", "y", "1" };
+
+        public static bool IsTrue( string s )
+        {
+            return ( trueStrings.Contains( s.ToLower() ) );
+        }
 
         private static Dictionary<string, TypeConverter> typeConverters = new Dictionary<string, TypeConverter>
         {
@@ -50,6 +56,11 @@ namespace Avalanche.Utilities
 
         public static void ApplyTranslation( object obj, Dictionary<string, string> attributes )
         {
+            if (attributes == null)
+            {
+                return;
+            }
+
             foreach ( var attribute in attributes )
             {
                 if ( string.IsNullOrWhiteSpace( attribute.Value ) )

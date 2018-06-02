@@ -33,9 +33,15 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\..\RockDev\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\..\RockDev\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -62,6 +68,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attribute\ActionItemFieldAttribute.cs" />
+    <Compile Include="Attribute\ConvertForFieldType.cs" />
     <Compile Include="AvalancheBlockCustomSettings.cs">
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
@@ -70,11 +77,16 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Controls\ActionItem.cs" />
+    <Compile Include="Field\Converters\FieldTypeConverter.cs" />
+    <Compile Include="Field\Converters\TextFieldTypeConverter.cs" />
+    <Compile Include="Field\FieldTypeExtensions.cs" />
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
     <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
     <Compile Include="Migrations\Layouts.cs" />
+    <Compile Include="Models\FormElementItem.cs" />
+    <Compile Include="Models\FormResponse.cs" />
     <Compile Include="Models\HomeRequest.cs" />
     <Compile Include="Models\InteractionInformation.cs" />
     <Compile Include="Models\MobileBlockResponse.cs" />
@@ -85,6 +97,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Controllers\AvalancheController.Partial.cs" />
     <Compile Include="Security\Authentication\PhoneNumber.cs" />
+    <Compile Include="Startup\LoadFieldTypeConverters.cs" />
     <Compile Include="Transactions\AppInteractionTransaction.cs" />
   </ItemGroup>
   <ItemGroup>

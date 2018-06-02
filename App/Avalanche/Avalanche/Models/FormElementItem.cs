@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,10 +30,11 @@ namespace Avalanche.Models
         public string Type { get; set; }
         public string Keyboard { get; set; }
         public string Value { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public bool Required { get; set; }
         public string BackgroundColor { get; set; }
         public string TextColor { get; set; }
+        public Dictionary<string, string> Attributes { get; set; }
         public IFormElement Render()
         {
             IFormElement element;
@@ -59,6 +61,9 @@ namespace Avalanche.Models
                 case FormElementType.Button:
                     element = new ButtonElement();
                     break;
+                case FormElementType.Label:
+                    element = new LabelElement();
+                    break;
                 default:
                     element = new EntryElement();
                     break;
@@ -69,6 +74,7 @@ namespace Avalanche.Models
             element.HeightRequest = HeightRequest;
             element.Options = Options;
             element.Required = Required;
+            element.Attributes = Attributes;
 
             if ( !string.IsNullOrWhiteSpace( BackgroundColor ) )
             {
@@ -98,5 +104,6 @@ namespace Avalanche.Models
         public const string Hidden = "Hidden";
         public const string Checkbox = "Checkbox";
         public const string Button = "Button";
+        public const string Label = "Label";
     }
 }

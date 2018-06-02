@@ -15,27 +15,17 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Avalanche.Models;
-using Xamarin.Forms;
+using Rock.Field;
+using Rock.Web.Cache;
 
-namespace Avalanche.Interfaces
+namespace Avalanche.Field.Converters
 {
-    public interface IFormElement
+    public abstract class FieldTypeConverter
     {
-        string Key { get; set; }
-        string Label { get; set; }
-        string Value { get; set; }
-        Dictionary<string, string> Options { get; set; }
-        int HeightRequest { get; set; }
-        string Keyboard { get; set; }
-        bool IsValid { get; }
-        bool Required { get; set; }
-        Color BackgroundColor { get; set; }
-        Color TextColor { get; set; }
-        Dictionary<string, string> Attributes { get; set; }
-        event EventHandler<string> PostBack;
-        View View { get; }
-        View Render();
+        public abstract FormElementItem Convert( IFieldType fieldType, AttributeCache attribute );
     }
 }

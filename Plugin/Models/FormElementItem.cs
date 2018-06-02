@@ -15,9 +15,10 @@ namespace Avalanche.Models
         public string Keyboard { get; set; }
         public string Value { get; set; }
         public bool Required { get; set; }
-        public List<string> Options { get; set; }
+        public Dictionary<string, string> Options { get; set; }
         public string BackgroundColor { get; set; }
         public string TextColor { get; set; }
+        public Dictionary<string, string> Attributes { get; set; } = new Dictionary<string, string>();
     }
 
     public class FormElementType
@@ -29,6 +30,7 @@ namespace Avalanche.Models
         public const string Hidden = "Hidden";
         public const string Checkbox = "Checkbox";
         public const string Button = "Button";
+        public const string Label = "Label";
     }
 
     public class Keyboard
