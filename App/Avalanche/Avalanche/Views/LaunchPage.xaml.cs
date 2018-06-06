@@ -65,7 +65,10 @@ namespace Avalanche.Views
 
         private void btnNext_Clicked( object sender, EventArgs e )
         {
-            Carousel.Position += 1;
+            if ( ( ( List<CarouselItem> ) Carousel.ItemsSource ).Count > Carousel.Position - 1 )
+            {
+                Carousel.Position += 1;
+            }
         }
 
         protected override bool OnBackButtonPressed()
