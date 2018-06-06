@@ -30,6 +30,7 @@ namespace Avalanche.Components.FormElements
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
+        public bool IsVisualOnly { get; } = true;
         public Color BackgroundColor { get; set; }
         public Color TextColor { get; set; }
         public View View { get; private set; }

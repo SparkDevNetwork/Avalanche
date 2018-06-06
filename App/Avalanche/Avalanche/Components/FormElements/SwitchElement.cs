@@ -23,22 +23,21 @@ using Xamarin.Forms;
 
 namespace Avalanche.Components.FormElements
 {
-    public class CheckboxElement : IFormElement
+    public class SwitchElement : IFormElement
     {
-        private string check_true = "fa fa-check-square-o";
-        private string check_false = "fa fa-square-o";
         public string Key { get; set; }
         public string Label { get; set; }
         public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
+        public bool IsVisualOnly { get; } = false;
         public View View { get; private set; }
         public Color BackgroundColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
         public Color TextColor { get; set; }
 
-        private IconLabel icon;
+        private Switch toggle;
         private string _value;
 
         public event EventHandler<string> PostBack;
@@ -51,12 +50,12 @@ namespace Avalanche.Components.FormElements
                 if ( AttributeHelper.IsTrue( value ) )
                 {
                     _value = "True";
-                    icon.Text = check_true;
+                    toggle.IsToggled = true;
                 }
                 else
                 {
                     _value = "False";
-                    icon.Text = check_false;
+                    toggle.IsToggled = false;
                 }
             }
         }
@@ -74,9 +73,8 @@ namespace Avalanche.Components.FormElements
             };
             View = stackLayout;
 
-            icon = new IconLabel()
+            toggle = new Switch()
             {
-                FontSize = 30,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
                 WidthRequest = 30,
                 Margin = new Thickness( 5 )
@@ -84,7 +82,7 @@ namespace Avalanche.Components.FormElements
 
             };
             Value = "False";
-            stackLayout.Children.Add( icon );
+            stackLayout.Children.Add( toggle );
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
@@ -104,7 +102,6 @@ namespace Avalanche.Components.FormElements
             if ( TextColor != null )
             {
                 label.TextColor = TextColor;
-                icon.TextColor = TextColor;
             }
 
             return View;

@@ -9,10 +9,11 @@ namespace Avalanche.Models
     public class FormResponse
     {
         public bool Success { get; set; }
-        public string ErrorMessage { get; set; }
+        public string Message { get; set; }
         public string ActionType { get; set; }
         public string Resource { get; set; }
         public string Parameter { get; set; }
+        public List<FormElementItem> FormElementItems { get; set; } = new List<FormElementItem>();
 
         public void SetResponse( string attributeValue )
         {

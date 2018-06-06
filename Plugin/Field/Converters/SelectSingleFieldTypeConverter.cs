@@ -18,13 +18,29 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Avalanche.Attribute;
+using Avalanche.Models;
+using Rock;
+using Rock.Field;
+using Rock.Field.Types;
+using Rock.Web.Cache;
 
-namespace Avalanche.Attribute
+namespace Avalanche.Field.Converters
 {
-    [AttributeUsage( AttributeTargets.Class, AllowMultiple = true )]
-    public class ConvertForFieldType : System.Attribute
+    [ConvertForFieldType( typeof( SelectSingleFieldType ) )]
+
+    public class SelectSingleFieldTypeConverter : FieldTypeConverter
     {
-        public string FieldTypeName { get; private set; }
-        public ConvertForFieldType( Type fieldType ) => FieldTypeName = fieldType.FullName;
+        public override FormElementItem Convert( IFieldType fieldType, AttributeCache attribute )
+        {
+            var element = new FormElementItem()
+            {
+                Type = FormElementType.Picker,
+                Keyboard = Keyboard.Text,
+                Options = Helper.GetConfiguredValues( attribute.QualifierValues )
+            };
+            
+            return element;
+        }
     }
 }

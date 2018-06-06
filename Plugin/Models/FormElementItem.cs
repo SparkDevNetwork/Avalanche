@@ -28,7 +28,8 @@ namespace Avalanche.Models
         public const string Picker = "Picker";
         public const string Editor = "Editor";
         public const string Hidden = "Hidden";
-        public const string Checkbox = "Checkbox";
+        public const string Switch = "Switch";
+        public const string CheckboxList = "CheckboxList";
         public const string Button = "Button";
         public const string Label = "Label";
     }

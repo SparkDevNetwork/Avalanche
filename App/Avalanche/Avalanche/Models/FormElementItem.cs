@@ -52,8 +52,11 @@ namespace Avalanche.Models
                 case FormElementType.Editor:
                     element = new EditorElement();
                     break;
-                case FormElementType.Checkbox:
-                    element = new CheckboxElement();
+                case FormElementType.Switch:
+                    element = new SwitchElement();
+                    break;
+                case FormElementType.CheckboxList:
+                    element = new CheckboxListElement();
                     break;
                 case FormElementType.Hidden:
                     element = new HiddenElement();
@@ -102,7 +105,8 @@ namespace Avalanche.Models
         public const string Picker = "Picker";
         public const string Editor = "Editor";
         public const string Hidden = "Hidden";
-        public const string Checkbox = "Checkbox";
+        public const string Switch = "Switch";
+        public const string CheckboxList = "CheckboxList";
         public const string Button = "Button";
         public const string Label = "Label";
     }

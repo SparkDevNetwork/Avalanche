@@ -15,6 +15,7 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Avalanche.Interfaces;
 using Avalanche.Models;
@@ -28,6 +29,10 @@ namespace Avalanche.Blocks
     {
         public Dictionary<string, string> Attributes { get; set; }
         public BlockMessenger MessageHandler { get; set; }
+        public Color ErrorBackgroundColor { get; set; } = Color.FromHex( "#f8d7da" );
+        public Color InfoBackgroundColor { get; set; } = Color.White;
+        public Color ErrorTextColor { get; set; } = Color.FromHex( "#941c24" );
+        public Color InfoTextColor { get; set; } = Color.Black;
 
         private List<IFormElement> formElements = new List<IFormElement>();
         private Dictionary<string, string> formValues;
@@ -35,12 +40,10 @@ namespace Avalanche.Blocks
         private ActivityIndicator activityIndicator;
         private StackLayout formLayout;
 
-
         public View Render()
         {
             MessageHandler.Response += MessageHandler_Response;
 
-            List<FormElementItem> formElementItems = GetFormElementItems();
             StackLayout stackLayout = new StackLayout();
 
             activityIndicator = new ActivityIndicator();
@@ -48,8 +51,6 @@ namespace Avalanche.Blocks
 
             lbValidationMessage = new Label()
             {
-                BackgroundColor = Color.FromHex( "#f8d7da" ),
-                TextColor = Color.FromHex( "#941c24" ),
                 IsVisible = false
             };
             stackLayout.Children.Add( lbValidationMessage );
@@ -57,6 +58,7 @@ namespace Avalanche.Blocks
             formLayout = new StackLayout();
             stackLayout.Children.Add( formLayout );
 
+            List<FormElementItem> formElementItems = GetFormElementItems();
             foreach ( var formElementItem in formElementItems )
             {
                 IFormElement formElement = formElementItem.Render();
@@ -94,6 +96,8 @@ namespace Avalanche.Blocks
                 activityIndicator.IsRunning = false;
                 formLayout.IsVisible = true;
                 lbValidationMessage.Text = "There was a problem with your request.";
+                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
+                lbValidationMessage.TextColor = ErrorTextColor;
                 lbValidationMessage.IsVisible = true;
                 return;
             }
@@ -103,23 +107,53 @@ namespace Avalanche.Blocks
                 activityIndicator.IsRunning = false;
                 formLayout.IsVisible = true;
                 lbValidationMessage.Text = "There was a problem with your request.";
+                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
+                lbValidationMessage.TextColor = ErrorTextColor;
                 lbValidationMessage.IsVisible = true;
                 return;
             }
 
+            //Handle a failed form
             if ( !formResponse.Success )
             {
                 activityIndicator.IsRunning = false;
                 formLayout.IsVisible = true;
-                lbValidationMessage.Text = formResponse.ErrorMessage;
+                lbValidationMessage.Text = formResponse.Message;
+                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
+                lbValidationMessage.TextColor = ErrorTextColor;
                 lbValidationMessage.IsVisible = true;
                 return;
             }
+
+            //Rebuild form if needed
+            if ( formResponse.FormElementItems.Any() )
+            {
+                formElements.Clear();
+                formLayout.Children.Clear();
+                foreach ( var formElementItem in formResponse.FormElementItems )
+                {
+                    IFormElement formElement = formElementItem.Render();
+                    formElements.Add( formElement );
+                    formLayout.Children.Add( formElement.View );
+                    formElement.PostBack += FormElement_PostBack;
+                }
+                activityIndicator.IsRunning = false;
+                formLayout.IsVisible = true;
+            }
+
+            if ( !string.IsNullOrWhiteSpace( formResponse.Message ) )
+            {
+                activityIndicator.IsRunning = false;
+                lbValidationMessage.Text = formResponse.Message;
+                lbValidationMessage.BackgroundColor = InfoBackgroundColor;
+                lbValidationMessage.TextColor = InfoTextColor;
+                lbValidationMessage.IsVisible = true;
+            }
+
             AttributeHelper.HandleActionItem( new Dictionary<string, string> {
                 { "ActionType", formResponse.ActionType },
                 { "Resource", formResponse.Resource },
                 { "Parameter", formResponse.Parameter } } );
-
         }
 
         private bool GetFormValues()
@@ -132,7 +166,10 @@ namespace Avalanche.Blocks
             {
                 if ( element.IsValid )
                 {
-                    formValues.Add( element.Key, element.Value );
+                    if ( !element.IsVisualOnly )
+                    {
+                        formValues.Add( element.Key, element.Value );
+                    }
                 }
                 else
                 {

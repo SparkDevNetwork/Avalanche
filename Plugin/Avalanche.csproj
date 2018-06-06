@@ -78,6 +78,8 @@
     </Compile>
     <Compile Include="Controls\ActionItem.cs" />
     <Compile Include="Field\Converters\FieldTypeConverter.cs" />
+    <Compile Include="Field\Converters\SelectMultiFieldTypeConverte.cs" />
+    <Compile Include="Field\Converters\SelectSingleFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\TextFieldTypeConverter.cs" />
     <Compile Include="Field\FieldTypeExtensions.cs" />
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
@@ -99,6 +101,7 @@
     <Compile Include="Security\Authentication\PhoneNumber.cs" />
     <Compile Include="Startup\LoadFieldTypeConverters.cs" />
     <Compile Include="Transactions\AppInteractionTransaction.cs" />
+    <Compile Include="Workflow\MobileRedirect.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

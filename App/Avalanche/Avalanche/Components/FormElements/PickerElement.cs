@@ -23,12 +23,16 @@ namespace Avalanche.Components.FormElements
 {
     public class PickerElement : IFormElement
     {
+        private Dictionary<string, string> reversedOptions = new Dictionary<string, string>();
+        private List<string> optionList = new List<string>();
+
         public string Key { get; set; }
         public string Label { get; set; }
         public Dictionary<string, string> Options { get; set; }
         public int HeightRequest { get; set; }
         public string Keyboard { get; set; }
         public bool Required { get; set; }
+        public bool IsVisualOnly { get; } = false;
         public Color BackgroundColor { get; set; }
         public Color TextColor { get; set; }
         public View View { get; private set; }
@@ -39,7 +43,19 @@ namespace Avalanche.Components.FormElements
             {
                 if ( View != null )
                 {
-                    return ( string ) ( ( Picker ) View ).SelectedItem;
+                    var key = ( string ) ( ( Picker ) View ).SelectedItem;
+                    if ( key == null )
+                    {
+                        return "";
+                    }
+                    if ( reversedOptions.ContainsKey( key ) )
+                    {
+                        return reversedOptions[key];
+                    }
+                    else
+                    {
+                        return key;
+                    }
                 }
                 return "";
             }
@@ -47,7 +63,12 @@ namespace Avalanche.Components.FormElements
             {
                 if ( View != null )
                 {
-                    ( ( Picker ) View ).SelectedItem = value;
+                    if ( reversedOptions.ContainsValue( value ) )
+                    {
+                        var optionKey = reversedOptions.Where( ro => ro.Value == value ).FirstOrDefault();
+
+                        ( ( Picker ) View ).SelectedItem = optionKey.Key;
+                    }
                 }
             }
         }
@@ -72,11 +93,32 @@ namespace Avalanche.Components.FormElements
 
         public event EventHandler<string> PostBack;
 
+
+
         public View Render()
         {
+            // In Xamarin pickers (aka dropdown list) are just a list of options
+            // We need to have a key value type list to work with Rock
+            // So the strat is to swap keys and values
+            // and insure no two values are the same
+
+            foreach ( var pair in Options )
+            {
+                var optionKey = pair.Value;
+                var counter = 1;
+                while ( optionList.Contains( optionKey ) )
+                {
+                    optionKey = string.Format( "{0} ({1})", pair.Value, counter );
+                    counter++;
+                }
+                optionList.Add( optionKey );
+                reversedOptions.Add( optionKey, pair.Key );
+            }
+
+
             View = new Picker()
             {
-                ItemsSource = Options.Select(o => o.Key).ToList(),
+                ItemsSource = optionList,
                 Title = Label,
                 Margin = new Thickness( 5 )
             };

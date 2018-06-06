@@ -20,6 +20,7 @@ using Avalanche.Models;
 using Avalanche.Field;
 using Newtonsoft.Json;
 using Rock.Field.Types;
+using System.Web;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -67,25 +68,29 @@ namespace RockWeb.Plugins.Avalanche
                 if ( HydrateObjects() )
                 {
                     BuildForm( true );
-                    ProcessActionRequest();
+
                 }
             }
         }
 
         public override MobileBlock GetMobile( string parameter )
         {
+            HttpContext.Current.Response.AddHeader( "ActionType", "1" );
+            var h = HttpContext.Current.Response.Headers;
+            var b = h.GetValues( "ActionTypes" );
+
             if ( HydrateObjects() )
             {
                 List<FormElementItem> elements = BuildForm( true );
                 CustomAttributes.Add( "FormElementItems", JsonConvert.SerializeObject( elements ) );
-                AvalancheUtilities.SetActionItems( GetAttributeValue( "SuccessAction" ), CustomAttributes, CurrentPerson );
-
+                ProcessActionRequest( parameter );
                 return new MobileBlock()
                 {
                     BlockType = "Avalanche.Blocks.FormBlock",
                     Attributes = CustomAttributes
                 };
             }
+
             return new MobileBlock();
         }
 
@@ -289,12 +294,11 @@ namespace RockWeb.Plugins.Avalanche
             }
         }
 
-        private void ProcessActionRequest()
+        private void ProcessActionRequest( string parameter )
         {
-            string action = PageParameter( "Command" );
-            if ( !string.IsNullOrWhiteSpace( action ) )
+            if ( !string.IsNullOrWhiteSpace( parameter ) )
             {
-                CompleteFormAction( action );
+                CompleteFormAction( parameter );
             }
         }
 
@@ -377,21 +381,192 @@ namespace RockWeb.Plugins.Avalanche
                     {
                         Type = FormElementType.Button,
                         Value = details[0].EscapeQuotes(),
+                        Label = details[0].EscapeQuotes(),
                         Key = details[0].EscapeQuotes()
                     } );
                 }
             }
+
+            formElements.Add( new FormElementItem
+            {
+                Type = FormElementType.Hidden,
+                Key = "__WorkflowId__",
+                Value = _workflow.Id.ToString()
+            } );
+
+            formElements.Add( new FormElementItem
+            {
+                Type = FormElementType.Hidden,
+                Key = "__ActionTypeId__",
+                Value = _action.ActionTypeId.ToString()
+            } );
+
             return formElements;
         }
 
-
-
-
-
         public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
+            if ( Body.ContainsKey( "__WorkflowId__" ) )
+            {
+                int id = 0;
+                int.TryParse( Body["__WorkflowId__"], out id );
+                if ( id > 0 )
+                {
+                    WorkflowId = id;
+                }
+            }
+
+            if ( Body.ContainsKey( "__ActionTypeId__" ) )
+            {
+                int id = 0;
+                int.TryParse( Body["__ActionTypeId__"], out id );
+                if ( id > 0 )
+                {
+                    ActionTypeId = id;
+                }
+            }
+
+            HydrateObjects();
+
             var response = new FormResponse();
 
+            SetFormValues( Body );
+
+            if ( !string.IsNullOrWhiteSpace( request ) &&
+                _workflow != null &&
+                _actionType != null &&
+                _actionType.WorkflowForm != null &&
+                _activity != null &&
+                _action != null )
+            {
+                var mergeFields = AvalancheUtilities.GetMergeFields( this.CurrentPerson );
+                mergeFields.Add( "Action", _action );
+                mergeFields.Add( "Activity", _activity );
+                mergeFields.Add( "Workflow", _workflow );
+
+                Guid activityTypeGuid = Guid.Empty;
+                string responseText = "Your information has been submitted successfully.";
+
+                foreach ( var action in _actionType.WorkflowForm.Actions.Split( new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries ) )
+                {
+                    var actionDetails = action.Split( new char[] { '^' } );
+                    if ( actionDetails.Length > 0 && actionDetails[0] == request )
+                    {
+                        if ( actionDetails.Length > 2 )
+                        {
+                            activityTypeGuid = actionDetails[2].AsGuid();
+                        }
+
+                        if ( actionDetails.Length > 3 && !string.IsNullOrWhiteSpace( actionDetails[3] ) )
+                        {
+                            responseText = actionDetails[3].ResolveMergeFields( mergeFields );
+                        }
+                        break;
+                    }
+                }
+
+                _action.MarkComplete();
+                _action.FormAction = request;
+                _action.AddLogEntry( "Form Action Selected: " + _action.FormAction );
+
+                if ( _action.ActionTypeCache.IsActivityCompletedOnSuccess )
+                {
+                    _action.Activity.MarkComplete();
+                }
+
+                if ( _actionType.WorkflowForm.ActionAttributeGuid.HasValue )
+                {
+                    var attribute = AttributeCache.Read( _actionType.WorkflowForm.ActionAttributeGuid.Value );
+                    if ( attribute != null )
+                    {
+                        IHasAttributes item = null;
+                        if ( attribute.EntityTypeId == _workflow.TypeId )
+                        {
+                            item = _workflow;
+                        }
+                        else if ( attribute.EntityTypeId == _activity.TypeId )
+                        {
+                            item = _activity;
+                        }
+
+                        if ( item != null )
+                        {
+                            item.SetAttributeValue( attribute.Key, request );
+                        }
+                    }
+                }
+
+                if ( !activityTypeGuid.IsEmpty() )
+                {
+                    var activityType = _workflowType.ActivityTypes.Where( a => a.Guid.Equals( activityTypeGuid ) ).FirstOrDefault();
+                    if ( activityType != null )
+                    {
+                        WorkflowActivity.Activate( activityType, _workflow );
+                    }
+                }
+
+                List<string> errorMessages;
+                if ( _workflowService.Process( _workflow, out errorMessages ) )
+                {
+                    int? previousActionId = null;
+
+                    if ( _action != null )
+                    {
+                        previousActionId = _action.Id;
+                    }
+
+                    ActionTypeId = null;
+                    _action = null;
+                    _actionType = null;
+                    _activity = null;
+
+                    if ( HttpContext.Current.Response.Headers.GetValues( "ActionType" ) != null && HttpContext.Current.Response.Headers.GetValues( "ActionType" ).Any() )
+                    {
+                        response.Success = true;
+                        response.ActionType = HttpContext.Current.Response.Headers.GetValues( "ActionType" ).FirstOrDefault();
+                        if ( HttpContext.Current.Response.Headers.GetValues( "Resource" ) != null )
+                        {
+                            response.Resource = HttpContext.Current.Response.Headers.GetValues( "Resource" ).FirstOrDefault();
+                        }
+                        if ( HttpContext.Current.Response.Headers.GetValues( "Parameter" ) != null )
+                        {
+                            response.Parameter = HttpContext.Current.Response.Headers.GetValues( "Parameter" ).FirstOrDefault();
+                        }
+                    }
+                    else
+                    {
+
+                        if ( HydrateObjects() && _action != null && _action.Id != previousActionId )
+                        {
+                            response.FormElementItems = BuildForm( true );
+                            response.Success = true;
+
+                        }
+                        else
+                        {
+                            response.Message = responseText;
+                            response.Success = true;
+                        }
+                    }
+                }
+                else
+                {
+                    response.Message = "Workflow Processing Error(s): \n";
+                    response.Message += errorMessages.AsDelimited( "\n", null, false );
+                }
+            }
+
+
+            return new MobileBlockResponse()
+            {
+                Request = request,
+                Response = JsonConvert.SerializeObject( response ),
+                TTL = 0
+            };
+        }
+
+        private void SetFormValues( Dictionary<string, string> body )
+        {
             if ( _workflow != null && _actionType != null )
             {
                 var form = _actionType.WorkflowForm;
@@ -403,7 +578,7 @@ namespace RockWeb.Plugins.Avalanche
                     {
                         var attribute = AttributeCache.Read( formAttribute.AttributeId );
 
-                        if ( attribute != null && Body.ContainsKey( attribute.Key ) )
+                        if ( attribute != null && body.ContainsKey( attribute.Key ) )
                         {
                             IHasAttributes item = null;
                             if ( attribute.EntityTypeId == _workflow.TypeId )
@@ -417,149 +592,18 @@ namespace RockWeb.Plugins.Avalanche
 
                             if ( item != null )
                             {
-                                item.SetAttributeValue( attribute.Key, Body[attribute.Key] );
+                                item.SetAttributeValue( attribute.Key, body[attribute.Key] );
                             }
                         }
                     }
                 }
             }
-
-
-            return new MobileBlockResponse()
-            {
-                Request = request,
-                Response = JsonConvert.SerializeObject( response ),
-                TTL = 0
-            };
         }
 
         private void CompleteFormAction( string formAction )
         {
-            //    if ( !string.IsNullOrWhiteSpace( formAction ) &&
-            //        _workflow != null &&
-            //        _actionType != null &&
-            //        _actionType.WorkflowForm != null &&
-            //        _activity != null &&
-            //        _action != null )
-            //    {
-            //        var mergeFields = Rock.Lava.LavaHelper.GetCommonMergeFields( this.RockPage, this.CurrentPerson );
-            //        mergeFields.Add( "Action", _action );
-            //        mergeFields.Add( "Activity", _activity );
-            //        mergeFields.Add( "Workflow", _workflow );
-
-            //        Guid activityTypeGuid = Guid.Empty;
-            //        string responseText = "Your information has been submitted successfully.";
-
-            //        foreach ( var action in _actionType.WorkflowForm.Actions.Split( new char[] { '|' }, StringSplitOptions.RemoveEmptyEntries ) )
-            //        {
-            //            var actionDetails = action.Split( new char[] { '^' } );
-            //            if ( actionDetails.Length > 0 && actionDetails[0] == formAction )
-            //            {
-            //                if ( actionDetails.Length > 2 )
-            //                {
-            //                    activityTypeGuid = actionDetails[2].AsGuid();
-            //                }
-
-            //                if ( actionDetails.Length > 3 && !string.IsNullOrWhiteSpace( actionDetails[3] ) )
-            //                {
-            //                    responseText = actionDetails[3].ResolveMergeFields( mergeFields );
-            //                }
-            //                break;
-            //            }
-            //        }
-
-            //        _action.MarkComplete();
-            //        _action.FormAction = formAction;
-            //        _action.AddLogEntry( "Form Action Selected: " + _action.FormAction );
-
-            //        if ( _action.ActionTypeCache.IsActivityCompletedOnSuccess )
-            //        {
-            //            _action.Activity.MarkComplete();
-            //        }
-
-            //        if ( _actionType.WorkflowForm.ActionAttributeGuid.HasValue )
-            //        {
-            //            var attribute = AttributeCache.Read( _actionType.WorkflowForm.ActionAttributeGuid.Value );
-            //            if ( attribute != null )
-            //            {
-            //                IHasAttributes item = null;
-            //                if ( attribute.EntityTypeId == _workflow.TypeId )
-            //                {
-            //                    item = _workflow;
-            //                }
-            //                else if ( attribute.EntityTypeId == _activity.TypeId )
-            //                {
-            //                    item = _activity;
-            //                }
-
-            //                if ( item != null )
-            //                {
-            //                    item.SetAttributeValue( attribute.Key, formAction );
-            //                }
-            //            }
-            //        }
-
-            //        if ( !activityTypeGuid.IsEmpty() )
-            //        {
-            //            var activityType = _workflowType.ActivityTypes.Where( a => a.Guid.Equals( activityTypeGuid ) ).FirstOrDefault();
-            //            if ( activityType != null )
-            //            {
-            //                WorkflowActivity.Activate( activityType, _workflow );
-            //            }
-            //        }
-
-            //        List<string> errorMessages;
-            //        if ( _workflowService.Process( _workflow, out errorMessages ) )
-            //        {
-            //            int? previousActionId = null;
-
-            //            if ( _action != null )
-            //            {
-            //                previousActionId = _action.Id;
-            //            }
-
-            //            ActionTypeId = null;
-            //            _action = null;
-            //            _actionType = null;
-            //            _activity = null;
-
-            //            if ( HydrateObjects() && _action != null && _action.Id != previousActionId )
-            //            {
-            //                // If we are already being directed (presumably from the Redirect Action), don't redirect again.
-            //                if ( !Response.IsRequestBeingRedirected )
-            //                {
-            //                    var cb = CurrentPageReference;
-            //                    cb.Parameters.AddOrReplace( "WorkflowId", _workflow.Id.ToString() );
-            //                    Response.Redirect( cb.BuildUrl(), false );
-            //                    Context.ApplicationInstance.CompleteRequest();
-            //                }
-            //            }
-            //            else
-            //            {
-            //                if ( lSummary.Text.IsNullOrWhiteSpace() )
-            //                {
-            //                    ShowMessage( NotificationBoxType.Success, string.Empty, responseText, ( _action == null || _action.Id != previousActionId ) );
-            //                }
-            //                else
-            //                {
-            //                    pnlForm.Visible = false;
-            //                }
-            //            }
-            //        }
-            //        else
-            //        {
-            //            ShowMessage( NotificationBoxType.Danger, "Workflow Processing Error(s):",
-            //                "<ul><li>" + errorMessages.AsDelimited( "</li><li>", null, true ) + "</li></ul>" );
-            //        }
-            //        if ( _workflow.Id != 0 )
-            //        {
-            //            WorkflowId = _workflow.Id;
-            //        }
-            //    }
-            //}
-
-            #endregion
-
+            HandleRequest( formAction, new Dictionary<string, string>() );
         }
+        #endregion
     }
 }
