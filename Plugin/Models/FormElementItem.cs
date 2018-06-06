@@ -15,6 +15,7 @@ namespace Avalanche.Models
         public string Keyboard { get; set; }
         public string Value { get; set; }
         public bool Required { get; set; }
+        public bool AutoPostBack { get; set; } = false;
         public Dictionary<string, string> Options { get; set; }
         public string BackgroundColor { get; set; }
         public string TextColor { get; set; }

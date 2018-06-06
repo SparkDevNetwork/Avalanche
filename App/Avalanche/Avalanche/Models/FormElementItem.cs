@@ -30,6 +30,7 @@ namespace Avalanche.Models
         public string Type { get; set; }
         public string Keyboard { get; set; }
         public string Value { get; set; }
+        public bool AutoPostBack { get; set; } = false;
         public Dictionary<string, string> Options { get; set; }
         public bool Required { get; set; }
         public string BackgroundColor { get; set; }
@@ -78,6 +79,7 @@ namespace Avalanche.Models
             element.Options = Options;
             element.Required = Required;
             element.Attributes = Attributes;
+            element.AutoPostBack = AutoPostBack;
 
             if ( !string.IsNullOrWhiteSpace( BackgroundColor ) )
             {

@@ -32,6 +32,7 @@ namespace Avalanche.Interfaces
         bool IsValid { get; }
         bool Required { get; set; }
         bool IsVisualOnly { get; }
+        bool AutoPostBack { get; set; }
         Color BackgroundColor { get; set; }
         Color TextColor { get; set; }
         Dictionary<string, string> Attributes { get; set; }

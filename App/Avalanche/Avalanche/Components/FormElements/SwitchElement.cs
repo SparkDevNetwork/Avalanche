@@ -32,6 +32,7 @@ namespace Avalanche.Components.FormElements
         public string Keyboard { get; set; }
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
+        public bool AutoPostBack { get; set; } = false;
         public View View { get; private set; }
         public Color BackgroundColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
@@ -116,6 +117,11 @@ namespace Avalanche.Components.FormElements
             else
             {
                 Value = "True";
+            }
+
+            if ( AutoPostBack )
+            {
+                PostBack?.Invoke( sender, Key );
             }
         }
     }
