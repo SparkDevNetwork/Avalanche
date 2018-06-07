@@ -12,8 +12,6 @@ Add the .csproj file to your Rock solution. There is a post build event which wi
 
 Make a new site using the Avalanche theme. Add a simple block to it (such as Label or Markdown) for testing. Go to General Settings > Global Attributes and put in the page number for the new page in the attribute Avalanche Home Page. You should now be able to go to http://localhost:6229/api/avalanche/home and see data.
 
-A migration will add a new 
-
 ### Installing the App
 
 Open the solution in Visual Studio. Edit the file Utilities/Constants and point it to your environment. Debug in Android or iOS.
@@ -22,6 +20,6 @@ Open the solution in Visual Studio. Edit the file Utilities/Constants and point 
 
 New features, wiki improvements or bug fixes welcome!
 
-## Liscence
+## license
 
 Distributed under the Southeast Christian Church License Agreement. Plugins and other includes under their respective liscences.
