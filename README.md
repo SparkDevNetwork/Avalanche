@@ -18,8 +18,8 @@ Open the solution in Visual Studio. Edit the file Utilities/Constants and point 
 
 ## Contributing
 
-New features, wiki improvements or bug fixes welcome!
-
-## license
+New features, wiki improvements or bug fixes welcome! Check out the [wiki](https://github.com/secc/Avalanche/wiki)
+ for more information. 
+## License
 
 Distributed under the Southeast Christian Church License Agreement. Plugins and other includes under their respective liscences.
