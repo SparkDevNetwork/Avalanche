@@ -233,7 +233,6 @@
   </ItemGroup>
   <ItemGroup>
     <AndroidAsset Include="Assets\fontawesome.ttf" />
-    <AndroidAsset Include="Assets\CustomIcons.ttf" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
