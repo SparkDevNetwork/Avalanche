@@ -86,12 +86,18 @@ namespace Avalanche.Components.FormElements
                 Margin = new Thickness( 5 )
             };
 
-            Label label = new Label()
-            {
-                Text = Label
-            };
 
-            stackLayout.Children.Add( label );
+            if ( !string.IsNullOrWhiteSpace( Label ) )
+            {
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 5, 0, 0, 5 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
+
             datePicker = new DatePicker();
             stackLayout.Children.Add( datePicker );
 

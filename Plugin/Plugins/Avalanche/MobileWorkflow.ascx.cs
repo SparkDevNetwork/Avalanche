@@ -330,6 +330,8 @@ namespace RockWeb.Plugins.Avalanche
                         value = _activity.AttributeValues[attribute.Key].Value;
                     }
 
+                    value = attribute.FieldType.Field.EncodeAttributeValue( attribute, value, formAttribute.IsReadOnly );
+
                     if ( !string.IsNullOrWhiteSpace( formAttribute.PreHtml ) )
                     {
                         formElements.Add( new FormElementItem
@@ -341,7 +343,6 @@ namespace RockWeb.Plugins.Avalanche
 
                     if ( formAttribute.IsReadOnly )
                     {
-
                         formElements.Add( new FormElementItem
                         {
                             Type = FormElementType.Label,
@@ -580,6 +581,7 @@ namespace RockWeb.Plugins.Avalanche
 
                         if ( attribute != null && body.ContainsKey( attribute.Key ) )
                         {
+
                             IHasAttributes item = null;
                             if ( attribute.EntityTypeId == _workflow.TypeId )
                             {
@@ -592,7 +594,8 @@ namespace RockWeb.Plugins.Avalanche
 
                             if ( item != null )
                             {
-                                item.SetAttributeValue( attribute.Key, body[attribute.Key] );
+                                var convertedValue = attribute.FieldType.Field.DecodeAttributeValue( attribute, body[attribute.Key] );
+                                item.SetAttributeValue( attribute.Key, convertedValue );
                             }
                         }
                     }

@@ -64,8 +64,23 @@ namespace Avalanche.Components.FormElements
 
         public View Render()
         {
-            var stackLayout = new StackLayout();
+            var stackLayout = new StackLayout
+            {
+                Spacing = 0
+            };
             View = stackLayout;
+
+            if ( !string.IsNullOrWhiteSpace( Label ) )
+            {
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 10, 0, 0, 0 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
+
             foreach ( var pair in Options )
             {
                 var itemStack = new StackLayout()

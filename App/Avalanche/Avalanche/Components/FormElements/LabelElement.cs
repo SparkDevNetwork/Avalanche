@@ -24,6 +24,7 @@ namespace Avalanche.Components.FormElements
 {
     public class LabelElement : IFormElement
     {
+        Label labelValue;
         public string Key { get; set; }
         public string Label { get; set; }
         public Dictionary<string, string> Options { get; set; }
@@ -40,17 +41,18 @@ namespace Avalanche.Components.FormElements
         {
             get
             {
-                if ( View != null )
+                if ( labelValue != null )
                 {
-                    return ( ( Label ) View ).Text;
+                    return labelValue.Text;
                 }
                 return "";
             }
+
             set
             {
-                if ( View != null )
+                if ( labelValue != null )
                 {
-                    ( ( Label ) View ).Text = value;
+                    labelValue.Text = value;
                 }
             }
         }
@@ -58,17 +60,6 @@ namespace Avalanche.Components.FormElements
         {
             get
             {
-                if ( Required )
-                {
-                    if ( !string.IsNullOrWhiteSpace( ( ( Entry ) View ).Text ) )
-                    {
-                        return true;
-                    }
-                    else
-                    {
-                        return false;
-                    }
-                }
                 return true;
             }
         }
@@ -77,11 +68,28 @@ namespace Avalanche.Components.FormElements
 
         public View Render()
         {
-            View = new Label()
+            StackLayout stackLayout = new StackLayout()
+            {
+                Margin = new Thickness( 5 )
+            };
+            View = stackLayout;
+
+            if ( !string.IsNullOrWhiteSpace( Label ) )
+            {
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 5, 0, 0, 0 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
+
+            labelValue = new Label()
             {
                 Text = Value,
-                Margin = new Thickness( 5, 0 )
             };
+            stackLayout.Children.Add( labelValue );
 
             if ( BackgroundColor != null )
             {
@@ -90,10 +98,10 @@ namespace Avalanche.Components.FormElements
 
             if ( TextColor != null )
             {
-                ( ( Label ) View ).TextColor = TextColor;
+                labelValue.TextColor = TextColor;
             }
 
-            AttributeHelper.ApplyTranslation( ( Label ) View, Attributes );
+            AttributeHelper.ApplyTranslation( labelValue, Attributes );
 
             return View;
         }

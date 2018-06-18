@@ -35,6 +35,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\ButtonElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\AddressElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\SwitchElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\CheckboxListElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\DatePickerElement.cs" />

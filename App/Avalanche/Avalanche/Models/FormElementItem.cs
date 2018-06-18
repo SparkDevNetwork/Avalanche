@@ -44,6 +44,9 @@ namespace Avalanche.Models
                 case FormElementType.Entry:
                     element = new EntryElement();
                     break;
+                case FormElementType.Address:
+                    element = new AddressElement();
+                    break;
                 case FormElementType.DatePicker:
                     element = new DatePickerElement();
                     break;
@@ -103,6 +106,7 @@ namespace Avalanche.Models
     public class FormElementType
     {
         public const string Entry = "Entry";
+        public const string Address = "Address";
         public const string DatePicker = "DatePicker";
         public const string Picker = "Picker";
         public const string Editor = "Editor";

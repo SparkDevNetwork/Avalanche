@@ -29,7 +29,7 @@ namespace Avalanche.Startup
                     var customAttributes = type.GetCustomAttributes( typeof( ConvertForFieldType ), true );
                     foreach ( var attribute in customAttributes as ConvertForFieldType[] )
                     {
-                        FieldTypeExtensions.fieldTypeConverters.Add( attribute.FieldTypeName, Activator.CreateInstance( type ) as FieldTypeConverter );
+                        FieldTypeExtensions.FieldTypeConverters.Add( attribute.FieldTypeName, Activator.CreateInstance( type ) as FieldTypeConverter );
                     }
                 }
             }

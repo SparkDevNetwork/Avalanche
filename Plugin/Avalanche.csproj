@@ -77,8 +77,10 @@
       <SubType>ASPXCodeBehind</SubType>
     </Compile>
     <Compile Include="Controls\ActionItem.cs" />
+    <Compile Include="Field\Converters\AddressFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\FieldTypeConverter.cs" />
-    <Compile Include="Field\Converters\SelectMultiFieldTypeConverte.cs" />
+    <Compile Include="Field\Converters\SelectMultiFieldTypeConverter.cs" />
+    <Compile Include="Field\Converters\BooleanFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\SelectSingleFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\TextFieldTypeConverter.cs" />
     <Compile Include="Field\FieldTypeExtensions.cs" />

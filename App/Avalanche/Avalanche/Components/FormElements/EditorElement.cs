@@ -81,12 +81,16 @@ namespace Avalanche.Components.FormElements
                 Margin = new Thickness( 5 )
             };
 
-            Label label = new Label
+            if ( !string.IsNullOrWhiteSpace( Label ) )
             {
-                Text = this.Label,
-                FontAttributes = FontAttributes.Bold
-            };
-            stackLayout.Children.Add( label );
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 5, 0, 0, 5 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
 
             editor = new Editor()
             {
@@ -98,12 +102,6 @@ namespace Avalanche.Components.FormElements
             if ( BackgroundColor != null )
             {
                 editor.BackgroundColor = BackgroundColor;
-            }
-
-            if ( TextColor != null )
-            {
-                label.TextColor = TextColor;
-                editor.TextColor = TextColor;
             }
 
             editor.TextChanged += ( s, e ) =>

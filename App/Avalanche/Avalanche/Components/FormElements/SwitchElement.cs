@@ -45,17 +45,15 @@ namespace Avalanche.Components.FormElements
 
         public string Value
         {
-            get => _value;
+            get => toggle.IsToggled.ToString();
             set
             {
                 if ( AttributeHelper.IsTrue( value ) )
                 {
-                    _value = "True";
                     toggle.IsToggled = true;
                 }
                 else
                 {
-                    _value = "False";
                     toggle.IsToggled = false;
                 }
             }
@@ -77,10 +75,7 @@ namespace Avalanche.Components.FormElements
             toggle = new Switch()
             {
                 VerticalOptions = LayoutOptions.CenterAndExpand,
-                WidthRequest = 30,
-                Margin = new Thickness( 5 )
-
-
+                Margin = new Thickness( 5 ),
             };
             Value = "False";
             stackLayout.Children.Add( toggle );
@@ -110,15 +105,6 @@ namespace Avalanche.Components.FormElements
 
         private void Tgr_Tapped( object sender, System.EventArgs e )
         {
-            if ( AttributeHelper.IsTrue( Value ) )
-            {
-                Value = "False";
-            }
-            else
-            {
-                Value = "True";
-            }
-
             if ( AutoPostBack )
             {
                 PostBack?.Invoke( sender, Key );

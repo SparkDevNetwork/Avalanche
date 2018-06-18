@@ -20,6 +20,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalanche.Field.Converters;
 using Avalanche.Models;
+using Rock.Attribute;
 using Rock.Field;
 using Rock.Field.Types;
 using Rock.Web.Cache;
@@ -28,14 +29,14 @@ namespace Avalanche.Field
 {
     public static class FieldTypeExtensions
     {
-        public static Dictionary<string, FieldTypeConverter> fieldTypeConverters = new Dictionary<string, FieldTypeConverter>();
+        public static Dictionary<string, FieldTypeConverter> FieldTypeConverters = new Dictionary<string, FieldTypeConverter>();
 
         public static FormElementItem GetMobileElement( this IFieldType fieldType, AttributeCache attribute )
         {
             var fieldTypeName = fieldType.GetType().FullName;
-            if ( fieldTypeConverters.ContainsKey( fieldTypeName ) )
+            if ( FieldTypeConverters.ContainsKey( fieldTypeName ) )
             {
-                return fieldTypeConverters[fieldTypeName].Convert( fieldType, attribute );
+                return FieldTypeConverters[fieldTypeName].Convert( fieldType, attribute );
             }
 
             return new FormElementItem()
@@ -43,7 +44,27 @@ namespace Avalanche.Field
                 Type = FormElementType.Entry,
                 Keyboard = Keyboard.Text,
             };
-
         }
+
+        public static string EncodeAttributeValue( this IFieldType fieldType, AttributeCache attribute, string value, bool isReadOnly = true )
+        {
+            var fieldTypeName = fieldType.GetType().FullName;
+            if ( FieldTypeConverters.ContainsKey( fieldTypeName ) )
+            {
+                return FieldTypeConverters[fieldTypeName].EncodeValue( fieldType, attribute, value, isReadOnly );
+            }
+            return "";
+        }
+
+        public static string DecodeAttributeValue( this IFieldType fieldType, AttributeCache attribute, string value )
+        {
+            var fieldTypeName = fieldType.GetType().FullName;
+            if ( FieldTypeConverters.ContainsKey( fieldTypeName ) )
+            {
+                return FieldTypeConverters[fieldTypeName].DecodeValue( fieldType, attribute, value );
+            }
+            return "";
+        }
+
     }
 }

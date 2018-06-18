@@ -23,6 +23,8 @@ namespace Avalanche.Components.FormElements
 {
     public class PickerElement : IFormElement
     {
+        private Picker picker;
+
         private Dictionary<string, string> reversedOptions = new Dictionary<string, string>();
         private List<string> optionList = new List<string>();
 
@@ -42,9 +44,9 @@ namespace Avalanche.Components.FormElements
         {
             get
             {
-                if ( View != null )
+                if ( picker != null )
                 {
-                    var key = ( string ) ( ( Picker ) View ).SelectedItem;
+                    var key = ( string ) picker.SelectedItem;
                     if ( key == null )
                     {
                         return "";
@@ -62,24 +64,24 @@ namespace Avalanche.Components.FormElements
             }
             set
             {
-                if ( View != null )
+                if ( picker != null )
                 {
                     if ( reversedOptions.ContainsValue( value ) )
                     {
                         var optionKey = reversedOptions.Where( ro => ro.Value == value ).FirstOrDefault();
-
-                        ( ( Picker ) View ).SelectedItem = optionKey.Key;
+                        picker.SelectedItem = optionKey.Key;
                     }
                 }
             }
         }
+
         public bool IsValid
         {
             get
             {
                 if ( Required )
                 {
-                    if ( !string.IsNullOrWhiteSpace( ( string ) ( ( Picker ) View ).SelectedItem ) )
+                    if ( !string.IsNullOrWhiteSpace( ( string ) picker.SelectedItem ) )
                     {
                         return true;
                     }
@@ -91,10 +93,7 @@ namespace Avalanche.Components.FormElements
                 return true;
             }
         }
-
         public event EventHandler<string> PostBack;
-
-
 
         public View Render()
         {
@@ -116,13 +115,32 @@ namespace Avalanche.Components.FormElements
                 reversedOptions.Add( optionKey, pair.Key );
             }
 
-
-            View = new Picker()
+            StackLayout stackLayout = new StackLayout()
             {
-                ItemsSource = optionList,
-                Title = Label,
                 Margin = new Thickness( 5 )
             };
+            View = stackLayout;
+
+            if ( !string.IsNullOrWhiteSpace( Label ) )
+            {
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 5, 0, 0, 0 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
+
+            picker = new Picker()
+            {
+                ItemsSource = optionList,
+            };
+            if ( Required )
+            {
+                picker.Title = "(Required)";
+            }
+            stackLayout.Children.Add( picker );
 
             if ( BackgroundColor != null )
             {
@@ -131,17 +149,16 @@ namespace Avalanche.Components.FormElements
 
             if ( TextColor != null )
             {
-                ( ( Picker ) View ).TextColor = TextColor;
+                picker.TextColor = TextColor;
             }
 
-            ( ( Picker ) View ).SelectedIndexChanged += ( s, e ) =>
-                 {
-                     if ( AutoPostBack )
-                     {
-                         PostBack?.Invoke( s, Key );
-                     }
-                 };
-
+            picker.SelectedIndexChanged += ( s, e ) =>
+                    {
+                        if ( AutoPostBack )
+                        {
+                            PostBack?.Invoke( s, Key );
+                        }
+                    };
             return View;
         }
     }

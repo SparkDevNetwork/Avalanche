@@ -24,6 +24,7 @@ namespace Avalanche.Components.FormElements
 {
     public class EntryElement : IFormElement
     {
+        Entry entry;
         public string Key { get; set; }
         public string Label { get; set; }
         public Dictionary<string, string> Options { get; set; }
@@ -40,17 +41,17 @@ namespace Avalanche.Components.FormElements
         {
             get
             {
-                if ( View != null )
+                if ( entry != null )
                 {
-                    return ( ( Entry ) View ).Text;
+                    return entry.Text;
                 }
                 return "";
             }
             set
             {
-                if ( View != null )
+                if ( entry != null )
                 {
-                    ( ( Entry ) View ).Text = value;
+                    entry.Text = value;
                 }
             }
         }
@@ -60,7 +61,7 @@ namespace Avalanche.Components.FormElements
             {
                 if ( Required )
                 {
-                    if ( !string.IsNullOrWhiteSpace( ( ( Entry ) View ).Text ) )
+                    if ( !string.IsNullOrWhiteSpace( entry.Text ) )
                     {
                         return true;
                     }
@@ -77,13 +78,34 @@ namespace Avalanche.Components.FormElements
 
         public View Render()
         {
-            View = new Entry()
+            StackLayout stackLayout = new StackLayout()
             {
-                Text = Value,
-                Keyboard = ( Keyboard ) new KeyboardTypeConverter().ConvertFromInvariantString( Keyboard ?? "Default" ),
-                Placeholder = Label,
                 Margin = new Thickness( 5 )
             };
+            View = stackLayout;
+
+            if ( !string.IsNullOrWhiteSpace( Label ) )
+            {
+                Label label = new Label
+                {
+                    Text = Label,
+                    Margin = new Thickness( 5, 0, 0, 0 ),
+                    FontAttributes = FontAttributes.Bold
+                };
+                stackLayout.Children.Add( label );
+            }
+
+            entry = new Entry()
+            {
+                Text = Value,
+                Keyboard = ( Keyboard ) new KeyboardTypeConverter().ConvertFromInvariantString( Keyboard ?? "Default" )
+            };
+            if ( Required )
+            {
+                entry.Placeholder = "(Required)";
+            }
+
+            stackLayout.Children.Add( entry );
 
             if ( BackgroundColor != null )
             {
@@ -92,10 +114,10 @@ namespace Avalanche.Components.FormElements
 
             if ( TextColor != null )
             {
-                ( ( Entry ) View ).TextColor = TextColor;
+                entry.TextColor = TextColor;
             }
 
-            ( ( Entry ) View ).TextChanged += ( s, e ) =>
+            entry.TextChanged += ( s, e ) =>
             {
                 if ( AutoPostBack )
                 {
@@ -103,7 +125,7 @@ namespace Avalanche.Components.FormElements
                 }
             };
 
-            AttributeHelper.ApplyTranslation( ( Entry ) View, Attributes );
+            AttributeHelper.ApplyTranslation( entry, Attributes );
 
             return View;
         }

@@ -186,6 +186,8 @@ namespace Avalanche.Blocks
             {
                 lbValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = errorMessages.ToString();
+                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
+                lbValidationMessage.TextColor = ErrorTextColor;
             }
 
             return isValid;

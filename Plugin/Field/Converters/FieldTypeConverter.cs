@@ -27,5 +27,35 @@ namespace Avalanche.Field.Converters
     public abstract class FieldTypeConverter
     {
         public abstract FormElementItem Convert( IFieldType fieldType, AttributeCache attribute );
+
+
+        /// <summary>
+        /// Encodes the attribute value from a format that Rock understands to a format for Avalanche.
+        /// Useful for more complex values such as an address.
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="attribute"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual string EncodeValue( IFieldType fieldType, AttributeCache attribute, string value, bool isReadOnly = false )
+        {
+            //Default is to passthrough the value
+            return value;
+        }
+
+
+        /// <summary>
+        /// Decodes the attribute value from Avalanche into a format Rock can use.
+        /// Useful for more complex values such as an address.
+        /// </summary>
+        /// <param name="fieldType"></param>
+        /// <param name="attribute"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public virtual string DecodeValue( IFieldType fieldType, AttributeCache attribute, string value )
+        {
+            //Default is to passthrough the value
+            return value;
+        }
     }
 }
