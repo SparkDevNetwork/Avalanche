@@ -28,6 +28,7 @@ namespace Avalanche
         public App()
         {
             InitializeComponent();
+            System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             RockClient.CreateDatabase();
             MainPage = new AvalanchePage();
         }
