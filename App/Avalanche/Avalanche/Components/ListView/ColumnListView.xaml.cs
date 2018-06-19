@@ -228,6 +228,5 @@ namespace Avalanche.Components.ListView
             sl.GestureRecognizers.Add( tgr );
             gGrid.Children.Add( sl, x, y );
         }
-
     }
 }
