@@ -30,7 +30,8 @@
     <CodesignKey>iPhone Developer</CodesignKey>
     <MtouchSdkVersion>
     </MtouchSdkVersion>
-    <CodesignProvision>Avalanche Dev</CodesignProvision>
+    <CodesignProvision>
+    </CodesignProvision>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|iPhoneSimulator' ">
     <DebugType>none</DebugType>

@@ -70,7 +70,6 @@ namespace Avalanche.Components.ListView
         public object SelectedItem { get; set; }
 
         public bool CanRefresh { get; set; }
-        ObservableCollection<ListElement> IListViewComponent.ItemsSource { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         public event EventHandler Refreshing;
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
@@ -131,23 +130,20 @@ namespace Avalanche.Components.ListView
             {
                 gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
             }
+            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
 
-            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 0, GridUnitType.Auto ) } );
-
-            var rowCounter = 0;
-            var columnCounter = 0;
-
-            foreach ( var item in ItemsSource )
+            while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
             {
-                if ( columnCounter > Columns )
-                {
-                    columnCounter = 0;
-                    rowCounter++;
-                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-                }
+                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+            }
 
-                AddCell( item, rowCounter, columnCounter );
-                columnCounter++;
+            int itemNumber = 0;
+            foreach ( ListElement item in ItemsSource )
+            {
+                AddCell( item,
+                         ( itemNumber ) % Convert.ToInt32( Columns ),
+                         Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
+                itemNumber++;
             }
         }
 
@@ -155,14 +151,14 @@ namespace Avalanche.Components.ListView
         {
             while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
             {
-                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 0, GridUnitType.Auto ) } );
+                gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
             }
 
             foreach ( ListElement item in e.NewItems )
             {
                 AddCell( item,
                         ( ItemsSource.Count - 1 ) % Convert.ToInt32( Columns ),
-                        ( ( ItemsSource.Count + 1 ) / Convert.ToInt32( Columns ) ) - 1 );
+                        Convert.ToInt32( Math.Floor( ( ItemsSource.Count - 1 ) / Columns ) ) );
             }
         }
 
@@ -177,7 +173,7 @@ namespace Avalanche.Components.ListView
             StackLayout sl = new StackLayout()
             {
                 HorizontalOptions = LayoutOptions.Center,
-                WidthRequest = ( App.Current.MainPage.Width / Columns ) - 10,
+                WidthRequest = ( App.Current.MainPage.Width / Columns ) - 10
             };
             frame.Content = sl;
 
@@ -208,9 +204,9 @@ namespace Avalanche.Components.ListView
             {
                 Text = item.Title,
                 HorizontalOptions = LayoutOptions.Center,
-                FontSize = 20,
+                FontSize = item.FontSize,
+                TextColor = item.TextColor,
                 Margin = new Thickness( 10, 0 )
-
             };
             sl.Children.Add( title );
 
@@ -226,10 +222,10 @@ namespace Avalanche.Components.ListView
                 NumberOfTapsRequired = 1
             };
             tgr.Tapped += ( s, ee ) =>
-            {
-                SelectedItem = item;
-                ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
-            };
+                    {
+                        SelectedItem = item;
+                        ItemSelected?.Invoke( sl, new SelectedItemChangedEventArgs( item ) );
+                    };
             sl.GestureRecognizers.Add( tgr );
             gGrid.Children.Add( frame, x, y );
         }

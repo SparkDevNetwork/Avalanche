@@ -23,16 +23,16 @@ namespace Avalanche.Models
         public string Id { get; set; }
 
         public string Title { get; set; }
-        public double FontSize { get; set; }
+        public double FontSize { get; set; } = 20;
         public Color TextColor { get; set; }
 
         public string Description { get; set; }
-        public double DescriptionFontSize { get; set; }
+        public double DescriptionFontSize { get; set; } = 12;
         public Color DescriptionTextColor { get; set; }
 
 
         public string Icon { get; set; }
-        public double IconFontSize { get; set; }
+        public double IconFontSize { get; set; } = 40;
         public Color IconTextColor { get; set; }
 
         public string Image { get; set; }
