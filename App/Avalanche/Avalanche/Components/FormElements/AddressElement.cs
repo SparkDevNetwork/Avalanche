@@ -40,8 +40,8 @@ namespace Avalanche.Components.FormElements
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
-        public Color BackgroundColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public View View { get; private set; }
         public Dictionary<string, string> Attributes { get; set; }
         public string Value
@@ -149,6 +149,11 @@ namespace Avalanche.Components.FormElements
                     Margin = new Thickness( 5, 0, 0, 5 ),
                     FontAttributes = FontAttributes.Bold
                 };
+
+                if ( ElementTextColor != null )
+                {
+                    label.TextColor = ElementTextColor;
+                }
                 addressStack.Children.Add( label );
             }
 
@@ -199,6 +204,25 @@ namespace Avalanche.Components.FormElements
                 Orientation = StackOrientation.Horizontal,
                 Spacing = 0
             };
+
+            if ( ElementTextColor != null )
+            {
+                Street1.TextColor = ElementTextColor;
+                Street2.TextColor = ElementTextColor;
+                City.TextColor = ElementTextColor;
+                State.TextColor = ElementTextColor;
+                PostalCode.TextColor = ElementTextColor;
+            }
+
+            if ( ElementBackgroundColor != null )
+            {
+                Street1.BackgroundColor = ElementBackgroundColor;
+                Street2.BackgroundColor = ElementBackgroundColor;
+                City.BackgroundColor = ElementBackgroundColor;
+                State.BackgroundColor = ElementBackgroundColor;
+                PostalCode.BackgroundColor = ElementBackgroundColor;
+            }
+
             horizontalStack.Children.Add( State );
             horizontalStack.Children.Add( PostalCode );
             addressStack.Children.Add( horizontalStack );

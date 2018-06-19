@@ -30,8 +30,8 @@ namespace Avalanche.Components.FormElements
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
-        public Color BackgroundColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public View View { get; private set; }
         public string Value { get; set; } = "";
         public Dictionary<string, string> Attributes { get; set; }

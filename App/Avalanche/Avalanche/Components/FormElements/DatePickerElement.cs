@@ -31,8 +31,8 @@ namespace Avalanche.Components.FormElements
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
-        public Color BackgroundColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
         public View View { get; private set; }
         public string Value
@@ -95,20 +95,25 @@ namespace Avalanche.Components.FormElements
                     Margin = new Thickness( 5, 0, 0, 5 ),
                     FontAttributes = FontAttributes.Bold
                 };
+
+                if ( ElementTextColor != null )
+                {
+                    label.TextColor = ElementTextColor;
+                }
                 stackLayout.Children.Add( label );
             }
 
             datePicker = new DatePicker();
             stackLayout.Children.Add( datePicker );
 
-            if ( BackgroundColor != null )
+            if ( ElementBackgroundColor != null )
             {
-                datePicker.BackgroundColor = BackgroundColor;
+                datePicker.BackgroundColor = ElementBackgroundColor;
             }
 
-            if ( TextColor != null )
+            if ( ElementTextColor != null )
             {
-                datePicker.TextColor = TextColor;
+                datePicker.TextColor = ElementTextColor;
             }
 
             datePicker.DateSelected += ( s, e ) =>

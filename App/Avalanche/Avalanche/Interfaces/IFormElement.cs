@@ -33,8 +33,8 @@ namespace Avalanche.Interfaces
         bool Required { get; set; }
         bool IsVisualOnly { get; }
         bool AutoPostBack { get; set; }
-        Color BackgroundColor { get; set; }
-        Color TextColor { get; set; }
+        Color ElementBackgroundColor { get; set; }
+        Color ElementTextColor { get; set; }
         Dictionary<string, string> Attributes { get; set; }
         event EventHandler<string> PostBack;
         View View { get; }

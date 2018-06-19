@@ -34,9 +34,9 @@ namespace Avalanche.Components.FormElements
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
         public View View { get; private set; }
-        public Color BackgroundColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
-        public Color TextColor { get; set; }
 
         private Switch toggle;
         private string _value;
@@ -93,12 +93,13 @@ namespace Avalanche.Components.FormElements
                 FontSize = 20,
                 VerticalOptions = LayoutOptions.CenterAndExpand,
             };
-            stackLayout.Children.Add( label );
 
-            if ( TextColor != null )
+            if ( ElementTextColor != null )
             {
-                label.TextColor = TextColor;
+                label.TextColor = ElementTextColor;
             }
+
+            stackLayout.Children.Add( label );
 
             return View;
         }

@@ -31,8 +31,8 @@ namespace Avalanche.Components.FormElements
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; }
-        public Color BackgroundColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public View View { get; private set; }
         public Dictionary<string, string> Attributes { get; set; }
         public string Value
@@ -60,14 +60,14 @@ namespace Avalanche.Components.FormElements
 
             View = button;
 
-            if ( BackgroundColor != null )
+            if ( ElementBackgroundColor != null )
             {
-                View.BackgroundColor = BackgroundColor;
+                View.BackgroundColor = ElementBackgroundColor;
             }
 
-            if ( TextColor != null )
+            if ( ElementTextColor != null )
             {
-                button.TextColor = TextColor;
+                button.TextColor = ElementTextColor;
             }
 
             button.Clicked += ( s, e ) => { PostBack?.Invoke( s, Key ); };

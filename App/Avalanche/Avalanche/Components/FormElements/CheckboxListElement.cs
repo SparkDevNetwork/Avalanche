@@ -40,9 +40,9 @@ namespace Avalanche.Components.FormElements
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
         public View View { get; private set; }
-        public Color BackgroundColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
-        public Color TextColor { get; set; }
 
         public event EventHandler<string> PostBack;
 
@@ -78,6 +78,11 @@ namespace Avalanche.Components.FormElements
                     Margin = new Thickness( 10, 0, 0, 0 ),
                     FontAttributes = FontAttributes.Bold
                 };
+
+                if ( ElementTextColor != null )
+                {
+                    label.TextColor = ElementTextColor;
+                }
                 stackLayout.Children.Add( label );
             }
 
@@ -113,12 +118,19 @@ namespace Avalanche.Components.FormElements
                     FontSize = 20,
                     VerticalOptions = LayoutOptions.CenterAndExpand,
                 };
+
+                if ( ElementTextColor != null )
+                {
+                    label.TextColor = ElementTextColor;
+                    icon.TextColor = ElementTextColor;
+                }
+
                 itemStack.Children.Add( label );
 
-                if ( TextColor != null )
+                if ( ElementTextColor != null )
                 {
-                    label.TextColor = TextColor;
-                    icon.TextColor = TextColor;
+                    label.TextColor = ElementTextColor;
+                    icon.TextColor = ElementTextColor;
                 }
 
                 TapGestureRecognizer tgr = new TapGestureRecognizer()

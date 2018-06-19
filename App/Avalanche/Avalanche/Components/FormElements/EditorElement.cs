@@ -31,8 +31,8 @@ namespace Avalanche.Components.FormElements
         public bool Required { get; set; }
         public bool IsVisualOnly { get; } = false;
         public bool AutoPostBack { get; set; } = false;
-        public Color BackgroundColor { get; set; }
-        public Color TextColor { get; set; }
+        public Color ElementBackgroundColor { get; set; }
+        public Color ElementTextColor { get; set; }
         public View View { get; private set; }
         public Dictionary<string, string> Attributes { get; set; }
         public string Value
@@ -89,6 +89,11 @@ namespace Avalanche.Components.FormElements
                     Margin = new Thickness( 5, 0, 0, 5 ),
                     FontAttributes = FontAttributes.Bold
                 };
+
+                if ( ElementTextColor != null )
+                {
+                    label.TextColor = ElementTextColor;
+                }
                 stackLayout.Children.Add( label );
             }
 
@@ -99,9 +104,9 @@ namespace Avalanche.Components.FormElements
             };
             stackLayout.Children.Add( editor );
 
-            if ( BackgroundColor != null )
+            if ( ElementBackgroundColor != null )
             {
-                editor.BackgroundColor = BackgroundColor;
+                editor.BackgroundColor = ElementBackgroundColor;
             }
 
             editor.TextChanged += ( s, e ) =>

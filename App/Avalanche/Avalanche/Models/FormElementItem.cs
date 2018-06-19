@@ -33,8 +33,8 @@ namespace Avalanche.Models
         public bool AutoPostBack { get; set; } = false;
         public Dictionary<string, string> Options { get; set; }
         public bool Required { get; set; }
-        public string BackgroundColor { get; set; }
-        public string TextColor { get; set; }
+        public string ElementBackgroundColor { get; set; }
+        public string ElementTextColor { get; set; }
         public Dictionary<string, string> Attributes { get; set; }
         public IFormElement Render()
         {
@@ -84,14 +84,14 @@ namespace Avalanche.Models
             element.Attributes = Attributes;
             element.AutoPostBack = AutoPostBack;
 
-            if ( !string.IsNullOrWhiteSpace( BackgroundColor ) )
+            if ( !string.IsNullOrWhiteSpace( ElementBackgroundColor ) )
             {
-                element.BackgroundColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( BackgroundColor );
+                element.ElementBackgroundColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( ElementBackgroundColor );
             }
 
-            if ( !string.IsNullOrWhiteSpace( TextColor ) )
+            if ( !string.IsNullOrWhiteSpace( ElementTextColor ) )
             {
-                element.TextColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( TextColor );
+                element.ElementTextColor = ( Color ) new ColorTypeConverter().ConvertFromInvariantString( ElementTextColor );
             }
 
             element.Render();

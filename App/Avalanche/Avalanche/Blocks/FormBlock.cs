@@ -61,6 +61,16 @@ namespace Avalanche.Blocks
             List<FormElementItem> formElementItems = GetFormElementItems();
             foreach ( var formElementItem in formElementItems )
             {
+                if ( Attributes.ContainsKey( "ElementBackgroundColor" ) )
+                {
+                    formElementItem.ElementBackgroundColor = Attributes["ElementBackgroundColor"];
+                }
+
+                if ( Attributes.ContainsKey( "ElementTextColor" ) )
+                {
+                    formElementItem.ElementTextColor = Attributes["ElementTextColor"];
+                }
+
                 IFormElement formElement = formElementItem.Render();
                 formElements.Add( formElement );
                 formLayout.Children.Add( formElement.View );
