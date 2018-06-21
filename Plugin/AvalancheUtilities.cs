@@ -41,7 +41,7 @@ namespace Avalanche
                 );
         }
 
-        public static void SetActionItems( string ActionItemValue, Dictionary<string, string> CustomAttributes, Person CurrentPerson )
+        public static void SetActionItems( string ActionItemValue, Dictionary<string, string> CustomAttributes, Person CurrentPerson, Dictionary<string, object> MergeObjects = null, string EnabledLavaCommands = "", string parameter = "" )
         {
             var actionItems = ( ActionItemValue ?? "" ).Split( new char[] { '|' } );
 
@@ -57,7 +57,14 @@ namespace Avalanche
                     }
                     if ( actionItems.Length > 2 )
                     {
-                        CustomAttributes.Add( "Parameter", actionItems[2] );
+                        if ( MergeObjects != null )
+                        {
+                            CustomAttributes.Add( "Parameter", ProcessLava( actionItems[2], CurrentPerson, parameter, EnabledLavaCommands, MergeObjects ) );
+                        }
+                        else
+                        {
+                            CustomAttributes.Add( "Parameter", ProcessLava( actionItems[2], CurrentPerson, parameter, EnabledLavaCommands ) );
+                        }
                     }
                 }
             }
@@ -67,11 +74,21 @@ namespace Avalanche
             }
         }
 
-        public static string ProcessLava( string lava, Person currentPerson, string parameter = "", string enabledLavaCommands = "" )
+        public static string ProcessLava( string lava, Person currentPerson, string parameter = "", string enabledLavaCommands = "", Dictionary<string, object> mergeObjects = null )
         {
-            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
+            if ( mergeObjects == null )
+            {
+                mergeObjects = GetMergeFields( currentPerson );
+            }
             mergeObjects["parameter"] = parameter;
             return lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
+        }
+
+        public static Dictionary<string, Object> GetMergeFields( Person currentPerson )
+        {
+            var mergeObjects = Rock.Lava.LavaHelper.GetCommonMergeFields( null, currentPerson );
+            mergeObjects.Add( "IsMobileApp", true );
+            return mergeObjects;
         }
 
         public static string GetLayout( string layoutName )

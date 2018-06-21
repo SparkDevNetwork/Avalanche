@@ -110,7 +110,8 @@ namespace Avalanche.Blocks
                     slLoading.IsVisible = false;
                     break;
                 case LoginResponse.Success:
-                    App.Current.MainPage = new NavigationPage( new Avalanche.Views.MainPage( "home" ) );
+                    AvalancheNavigation.Footer = null;
+                    App.Current.MainPage = new AvalanchePage();
                     break;
                 default:
                     break;

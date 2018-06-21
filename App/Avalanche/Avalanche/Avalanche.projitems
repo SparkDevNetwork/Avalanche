@@ -18,12 +18,12 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ButtonBlock.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Blocks\PersonCard.xaml.cs">
-      <DependentUpon>PersonCard.xaml</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\FormBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\IconButton.xaml.cs">
       <DependentUpon>IconButton.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\PersonCard.xaml.cs">
+      <DependentUpon>PersonCard.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\ImageBlock.cs" />
@@ -34,6 +34,19 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
+<<<<<<< HEAD
+=======
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\ButtonElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\AddressElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\SwitchElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\CheckboxListElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\DatePickerElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\EditorElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\LabelElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\EntryElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\HiddenElement.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\PickerElement.cs" />
+>>>>>>> master
     <Compile Include="$(MSBuildThisFileDirectory)Components\IconFont\FontAwesome.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\IIconFont.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\ListView\CardListView.xaml.cs">
@@ -60,8 +73,11 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\IconLabel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)IconBlock.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IFormElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasMedia.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\INotify.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\FormElementItem.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\FormResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HomeRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LayoutTemplate.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
@@ -130,12 +146,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\IconButton.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\ThumbnailListView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
@@ -193,6 +203,12 @@
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Views\MenuPage.xaml">
       <SubType>Designer</SubType>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\IconButton.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
   </ItemGroup>
 </Project>
