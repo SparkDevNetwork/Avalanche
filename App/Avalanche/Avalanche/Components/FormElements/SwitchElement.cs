@@ -80,6 +80,8 @@ namespace Avalanche.Components.FormElements
             Value = "False";
             stackLayout.Children.Add( toggle );
 
+            toggle.Toggled += Toggle_Toggled;
+
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
                 NumberOfTapsRequired = 1
@@ -104,12 +106,17 @@ namespace Avalanche.Components.FormElements
             return View;
         }
 
-        private void Tgr_Tapped( object sender, System.EventArgs e )
+        private void Toggle_Toggled( object sender, ToggledEventArgs e )
         {
             if ( AutoPostBack )
             {
                 PostBack?.Invoke( sender, Key );
             }
+        }
+
+        private void Tgr_Tapped( object sender, System.EventArgs e )
+        {
+            toggle.IsToggled = !toggle.IsToggled;
         }
     }
 }
