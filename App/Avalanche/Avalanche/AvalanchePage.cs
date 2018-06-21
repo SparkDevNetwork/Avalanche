@@ -76,31 +76,28 @@ namespace Avalanche
             localPortrait = height > width;
 
             base.OnSizeAllocated( width, height );
-            if ( width != -1 )
+            if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
             {
-                if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
+                AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
+
+                isPortrait = localPortrait;
+                if ( AvalancheNavigation.Footer != null )
                 {
-                    AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
-
-                    isPortrait = localPortrait;
-                    if ( AvalancheNavigation.Footer != null )
-                    {
-                        AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
-                        AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
-                        AvalancheNavigation.Footer.TranslationY = App.Current.MainPage.Height - AvalancheNavigation.YOffSet;
-                        AvalancheNavigation.SafeInset.Bottom = 0;
-                    }
-
-                    mainPage.Content.Margin = new Thickness(
-                        AvalancheNavigation.SafeInset.Left,
-                        AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
-                        AvalancheNavigation.SafeInset.Right,
-                        AvalancheNavigation.SafeInset.Bottom );
-
-                    App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
+                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
+                    AvalancheNavigation.Footer.TranslationY = App.Current.MainPage.Height - AvalancheNavigation.YOffSet;
+                    AvalancheNavigation.SafeInset.Bottom = 0;
                 }
-                AvalancheNavigation.AllowResize = false;
+
+                mainPage.Content.Margin = new Thickness(
+                    AvalancheNavigation.SafeInset.Left,
+                    AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
+                    AvalancheNavigation.SafeInset.Right,
+                    AvalancheNavigation.SafeInset.Bottom );
+
+                App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
             }
+            AvalancheNavigation.AllowResize = false;
         }
 
         protected override Xamarin.Forms.Page CreateDefault( object item )
