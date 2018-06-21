@@ -30,12 +30,13 @@ namespace Avalanche.Blocks
         public Dictionary<string, string> Attributes { get; set; }
         public BlockMessenger MessageHandler { get; set; }
         public Color ErrorBackgroundColor { get; set; } = Color.FromHex( "#f8d7da" );
-        public Color InfoBackgroundColor { get; set; } = Color.White;
+        public Color InfoBackgroundColor { get; set; } = Color.FromHex( "#d4edda" );
         public Color ErrorTextColor { get; set; } = Color.FromHex( "#941c24" );
-        public Color InfoTextColor { get; set; } = Color.Black;
+        public Color InfoTextColor { get; set; } = Color.FromHex( "#155743" );
 
         private List<IFormElement> formElements = new List<IFormElement>();
         private Dictionary<string, string> formValues;
+        private StackLayout slValidationMessage;
         private Label lbValidationMessage;
         private ActivityIndicator activityIndicator;
         private StackLayout formLayout;
@@ -49,16 +50,30 @@ namespace Avalanche.Blocks
             activityIndicator = new ActivityIndicator();
             stackLayout.Children.Add( activityIndicator );
 
-            lbValidationMessage = new Label()
+            slValidationMessage = new StackLayout()
             {
                 IsVisible = false
             };
-            stackLayout.Children.Add( lbValidationMessage );
+
+            stackLayout.Children.Add( slValidationMessage );
+
+            lbValidationMessage = new Label()
+            {
+                Margin = new Thickness( 10, 10 )
+            };
+            slValidationMessage.Children.Add( lbValidationMessage );
 
             formLayout = new StackLayout();
             stackLayout.Children.Add( formLayout );
 
             List<FormElementItem> formElementItems = GetFormElementItems();
+            RenderForm( formElementItems );
+
+            return stackLayout;
+        }
+
+        private void RenderForm( List<FormElementItem> formElementItems )
+        {
             foreach ( var formElementItem in formElementItems )
             {
                 if ( Attributes.ContainsKey( "ElementBackgroundColor" ) )
@@ -77,7 +92,6 @@ namespace Avalanche.Blocks
                 formElement.PostBack += FormElement_PostBack;
             }
 
-            return stackLayout;
         }
 
         private void FormElement_PostBack( object sender, string e )
@@ -86,6 +100,7 @@ namespace Avalanche.Blocks
             if ( isValid )
             {
                 activityIndicator.IsRunning = true;
+                activityIndicator.IsVisible = true;
                 formLayout.IsVisible = false;
                 MessageHandler.Post( e, formValues );
             }
@@ -104,22 +119,24 @@ namespace Avalanche.Blocks
             catch
             {
                 activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
                 formLayout.IsVisible = true;
+                slValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = "There was a problem with your request.";
-                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 lbValidationMessage.TextColor = ErrorTextColor;
-                lbValidationMessage.IsVisible = true;
+                slValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 return;
             }
 
             if ( formResponse == null )
             {
                 activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
                 formLayout.IsVisible = true;
+                slValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = "There was a problem with your request.";
-                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 lbValidationMessage.TextColor = ErrorTextColor;
-                lbValidationMessage.IsVisible = true;
+                slValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 return;
             }
 
@@ -127,11 +144,12 @@ namespace Avalanche.Blocks
             if ( !formResponse.Success )
             {
                 activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
                 formLayout.IsVisible = true;
+                slValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = formResponse.Message;
-                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
+                slValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 lbValidationMessage.TextColor = ErrorTextColor;
-                lbValidationMessage.IsVisible = true;
                 return;
             }
 
@@ -140,24 +158,20 @@ namespace Avalanche.Blocks
             {
                 formElements.Clear();
                 formLayout.Children.Clear();
-                foreach ( var formElementItem in formResponse.FormElementItems )
-                {
-                    IFormElement formElement = formElementItem.Render();
-                    formElements.Add( formElement );
-                    formLayout.Children.Add( formElement.View );
-                    formElement.PostBack += FormElement_PostBack;
-                }
-                activityIndicator.IsRunning = false;
                 formLayout.IsVisible = true;
+                RenderForm( formResponse.FormElementItems );
+                activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
             }
 
             if ( !string.IsNullOrWhiteSpace( formResponse.Message ) )
             {
                 activityIndicator.IsRunning = false;
+                activityIndicator.IsVisible = false;
+                slValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = formResponse.Message;
-                lbValidationMessage.BackgroundColor = InfoBackgroundColor;
                 lbValidationMessage.TextColor = InfoTextColor;
-                lbValidationMessage.IsVisible = true;
+                slValidationMessage.BackgroundColor = InfoBackgroundColor;
             }
 
             AttributeHelper.HandleActionItem( new Dictionary<string, string> {
@@ -190,14 +204,14 @@ namespace Avalanche.Blocks
 
             if ( isValid )
             {
-                lbValidationMessage.IsVisible = false;
+                slValidationMessage.IsVisible = false;
             }
             else
             {
-                lbValidationMessage.IsVisible = true;
+                slValidationMessage.IsVisible = true;
                 lbValidationMessage.Text = errorMessages.ToString();
-                lbValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 lbValidationMessage.TextColor = ErrorTextColor;
+                slValidationMessage.BackgroundColor = ErrorBackgroundColor;
             }
 
             return isValid;
