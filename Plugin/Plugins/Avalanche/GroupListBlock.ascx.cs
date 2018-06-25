@@ -16,11 +16,8 @@
 using System;
 using System.ComponentModel;
 using Rock.Model;
-using Rock.Security;
 using System.Web.UI;
 using Rock.Web.Cache;
-using Rock.Web.UI;
-using System.Web;
 using Rock.Data;
 using System.Linq;
 using System.Collections.Generic;
@@ -28,18 +25,27 @@ using Rock;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
-using Newtonsoft.Json;
+using Avalanche.Attribute;
 
 namespace RockWeb.Plugins.Avalanche
 {
     [DisplayName( "Group List" )]
     [Category( "Avalanche" )]
-    [Description( "Way to show list of groups" )]
+    [Description( "Block to show a list of groups." )]
 
-    [LinkedPage( "Detail Page", "The page to navigate to for details.", false, "", "", 1 )]
-    [TextField( "Parent Group Ids", "Comma separated list of id's of parent groups to look into." )]
+    [TextField( "Parent Group Ids", "Comma separated list of id's of parent groups to display." )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
+    [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
+    [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
+    [CodeEditorField( "Lava", "Lava to display list items.", Rock.Web.UI.Controls.CodeEditorMode.Lava, defaultValue: defaultLava )]
+    [BooleanField( "Only Show If Leader", "Should groups be hidden from all users except leaders?", true )]
     public partial class GroupListBlock : AvalancheBlock
     {
+        public const string defaultLava = @"[
+{% for group in Groups -%}
+  { ""Id"":""{{group.Id}}"", ""Title"":""{{group.Name}}"", ""Description"":""{{group.Description}}"", ""Icon"":""{{group.GroupType.IconCssClass}}"" },
+{% endfor -%}
+]";
 
         /// <summary>
         /// Raises the <see cref="E:System.Web.UI.Control.Load" /> event.
@@ -63,6 +69,7 @@ namespace RockWeb.Plugins.Avalanche
                     }
                 }
 
+                var gr = new Group();
                 var parentGroups = groupService.Queryable().Where( g => ids.Contains( g.Id ) ).Select( g => g.Name ).ToList();
                 lbGroups.Text = String.Join( "<br>", parentGroups );
             }
@@ -70,22 +77,26 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
-            var pageGuid = GetAttributeValue( "DetailPage" );
-            PageCache page = PageCache.Read( pageGuid.AsGuid() );
-            if ( page != null && page.IsAuthorized( "View", CurrentPerson ) )
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+            var valueGuid = GetAttributeValue( "Component" );
+            var value = DefinedValueCache.Read( valueGuid );
+            if ( value != null )
             {
-                CustomAttributes["ActionType"] = "1";
+                CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
-            CustomAttributes["InitialRequest"] = "0"; //Request for pull to refresh
-            var groups = GetGroupElements( 0 );
-            CustomAttributes["Content"] = JsonConvert.SerializeObject( groups );
-            if ( groups.Any() )
+            CustomAttributes["InitialRequest"] = parameter; //Request for pull to refresh
+            var groups = GetGroups();
+            Dictionary<string, object> mergeObjects = new Dictionary<string, object>
             {
-                CustomAttributes["NextReqest"] = "1"; //Next request
-            }
+                { "Groups", groups }
+            };
 
-            CustomAttributes["Component"] = "Avalanche.Components.ListView.ColumnListView";
+            CustomAttributes["Content"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
+                                                              CurrentPerson,
+                                                              parameter,
+                                                              GetAttributeValue( "EnabledLavaCommands" ),
+                                                              mergeObjects );
 
             return new MobileBlock()
             {
@@ -96,43 +107,33 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
         {
-            if ( request == "" )
+            var groups = GetGroups();
+            Dictionary<string, object> mergeObjects = new Dictionary<string, object>
             {
-                return new MobileBlockResponse()
-                {
-                    Request = request,
-                    Response = JsonConvert.SerializeObject( new ListViewResponse() ),
-                    TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger()
-                };
-            }
-
-            var start = request.AsInteger();
-            List<ListElement> groups = GetGroupElements( start );
-
-            var response = new ListViewResponse
-            {
-                Content = groups,
+                { "Groups", groups }
             };
-            if ( groups.Any() )
-            {
-                response.NextRequest = ( start+1 ).ToString();
-            }
+            var content = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
+                                                              CurrentPerson,
+                                                              request,
+                                                              GetAttributeValue( "EnabledLavaCommands" ),
+                                                              mergeObjects );
+            var response = "{\"Content\": " + content + "}";
 
             return new MobileBlockResponse()
             {
                 Request = request,
-                Response = JsonConvert.SerializeObject( response ),
-                TTL = GetAttributeValue( "OutputCacheDuration" ).AsInteger(),
+                Response = response,
+                TTL = PageCache.OutputCacheDuration
             };
         }
 
-        private List<ListElement> GetGroupElements( int start )
+        private List<Group> GetGroups()
         {
             RockContext rockContext = new RockContext();
             GroupService groupService = new GroupService( rockContext );
 
             var ids = new List<int>();
-            var strings = GetAttributeValue( "ParentGroupIds" ).Split( new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries );
+            var strings = GetAttributeValue( "ParentGroupIds" ).SplitDelimitedValues( false );
             foreach ( var s in strings )
             {
                 var id = s.AsInteger();
@@ -149,30 +150,23 @@ namespace RockWeb.Plugins.Avalanche
                 personId = CurrentPerson.Id;
             }
 
-            var groups = groupService.Queryable()
+            var qry = groupService.Queryable()
                 .Where( g => ids.Contains( g.Id ) )
                 .SelectMany( g => g.Groups )
                 .Join(
                     groupMemberService.Queryable(),
                     g => g.Id,
                     m => m.GroupId,
-                    ( g, m ) => new { Group = g, Member = m }
-                ).Where( m => m.Member.PersonId == personId && m.Member.GroupRole.IsLeader && m.Member.GroupMemberStatus == GroupMemberStatus.Active )
-                .OrderBy( m => m.Group.Name )
-                .Skip( start * 50 )
-                .Take( 50 )
-                .ToList() // leave sql server
-                .Select( m => new ListElement
-                {
-                    Id = m.Group.Guid.ToString(),
-                    Title = m.Group.Name,
-                    Icon = m.Group.GroupType.IconCssClass,
-                    Image = "",
-                    Description = ""
-                } )
+                    ( g, m ) => new { Group = g, Member = m } );
+            if ( GetAttributeValue( "OnlyShowIfLeader" ).AsBoolean() )
+            {
+                qry = qry.Where( m => m.Member.PersonId == personId && m.Member.GroupRole.IsLeader && m.Member.GroupMemberStatus == GroupMemberStatus.Active );
+            }
+            var groups = qry
+                .Select( m => m.Group )
                 .DistinctBy( g => g.Id )
+                .OrderBy( g => g.Name )
                 .ToList();
-
             return groups;
         }
     }
