@@ -33,6 +33,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
+    <Reference Include="HtmlAgilityPack, Version=1.5.5.0, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\..\RockDev\packages\HtmlAgilityPack.1.5.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Owin, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\RockDev\packages\Microsoft.Owin.4.0.0\lib\net451\Microsoft.Owin.dll</HintPath>
     </Reference>
@@ -42,6 +45,9 @@
     </Reference>
     <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
       <HintPath>..\..\RockDev\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="ReverseMarkdown, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\RockDev\packages\ReverseMarkdown.1.5.0\lib\net46\ReverseMarkdown.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.Composition" />
@@ -86,6 +92,7 @@
     <Compile Include="Field\FieldTypeExtensions.cs" />
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
+    <Compile Include="Lava\CustomFilters.cs" />
     <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
     <Compile Include="Migrations\Layouts.cs" />
@@ -101,6 +108,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Rest\Controllers\AvalancheController.Partial.cs" />
     <Compile Include="Security\Authentication\PhoneNumber.cs" />
+    <Compile Include="Startup\LoadCustomFilters.cs" />
     <Compile Include="Startup\LoadFieldTypeConverters.cs" />
     <Compile Include="Transactions\AppInteractionTransaction.cs" />
     <Compile Include="Workflow\MobileRedirect.cs" />
@@ -110,6 +118,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\RockDev\DotLiquid\DotLiquid.csproj">
+      <Project>{00EDCB8D-EF33-459C-AD62-02876BD24DFF}</Project>
+      <Name>DotLiquid</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Rock\Rock.Migrations\Rock.Migrations.csproj">
       <Project>{704740d8-b539-4560-9f8c-681670c9d6ad}</Project>
       <Name>Rock.Migrations</Name>

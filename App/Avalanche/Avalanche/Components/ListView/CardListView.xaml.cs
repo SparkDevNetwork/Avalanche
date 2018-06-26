@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Avalanche.CustomControls;
 using Avalanche.Models;
 using FFImageLoading.Forms;
+using FFImageLoading.Svg.Forms;
 using FFImageLoading.Transformations;
 using Xam.Forms.Markdown;
 using Xamarin.Forms;
@@ -179,13 +180,29 @@ namespace Avalanche.Components.ListView
 
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
-                CachedImage img = new CachedImage()
+                if ( item.Image.Contains( ".svg" ) )
                 {
-                    Source = item.Image,
-                    Aspect = Aspect.AspectFit,
-                    WidthRequest = App.Current.MainPage.Width / Columns,
-                };
-                sl.Children.Add( img );
+                    SvgCachedImage img = new SvgCachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+                    sl.Children.Add( img );
+                }
+                else
+                {
+                    CachedImage img = new CachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+
+                    sl.Children.Add( img );
+                }
             }
             else
             {

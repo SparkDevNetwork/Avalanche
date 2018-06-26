@@ -26,6 +26,7 @@ using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
 using Avalanche.Attribute;
+using Newtonsoft.Json;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -92,11 +93,13 @@ namespace RockWeb.Plugins.Avalanche
                 { "Groups", groups }
             };
 
-            CustomAttributes["Content"] = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
+            var content = AvalancheUtilities.ProcessLava( GetAttributeValue( "Lava" ),
                                                               CurrentPerson,
                                                               parameter,
                                                               GetAttributeValue( "EnabledLavaCommands" ),
                                                               mergeObjects );
+            content = content.Replace("\\", "\\\\");
+            CustomAttributes["Content"] = content;
 
             return new MobileBlock()
             {
@@ -117,6 +120,7 @@ namespace RockWeb.Plugins.Avalanche
                                                               request,
                                                               GetAttributeValue( "EnabledLavaCommands" ),
                                                               mergeObjects );
+            content = content.Replace( "\\", "\\\\" );
             var response = "{\"Content\": " + content + "}";
 
             return new MobileBlockResponse()

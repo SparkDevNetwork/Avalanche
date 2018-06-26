@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Avalanche.CustomControls;
 using Avalanche.Models;
 using FFImageLoading.Forms;
+using FFImageLoading.Svg.Forms;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -162,19 +163,38 @@ namespace Avalanche.Components.ListView
             };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
-                CachedImage img = new CachedImage()
+                if ( item.Image.Contains( ".svg" ) )
                 {
-                    Source = item.Image,
-                    Aspect = Aspect.AspectFit,
-                    WidthRequest = App.Current.MainPage.Width / Columns,
-                    InputTransparent = true
-                };
-                if ( ImageWidth > 0 )
-                {
-                    img.WidthRequest = ImageWidth;
-                }
+                    SvgCachedImage img = new SvgCachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+                    if ( ImageWidth > 0 )
+                    {
+                        img.WidthRequest = ImageWidth;
+                    }
 
-                sl.Children.Add( img );
+                    sl.Children.Add( img );
+                }
+                else
+                {
+                    CachedImage img = new CachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+                    if ( ImageWidth > 0 )
+                    {
+                        img.WidthRequest = ImageWidth;
+                    }
+
+                    sl.Children.Add( img );
+                }
             }
             else
             {

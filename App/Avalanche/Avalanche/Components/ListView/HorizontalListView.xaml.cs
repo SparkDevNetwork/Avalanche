@@ -23,6 +23,7 @@ using System.Threading.Tasks;
 using Avalanche.CustomControls;
 using Avalanche.Models;
 using FFImageLoading.Forms;
+using FFImageLoading.Svg.Forms;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -119,7 +120,7 @@ namespace Avalanche.Components.ListView
         protected override void OnSizeAllocated( double width, double height )
         {
             base.OnSizeAllocated( width, height );
-            foreach (var child in slStackLayout.Children )
+            foreach ( var child in slStackLayout.Children )
             {
                 child.WidthRequest = ( App.Current.MainPage.Width / Columns ) - ( slStackLayout.Spacing * ( Columns - 1 ) );
             }
@@ -137,12 +138,28 @@ namespace Avalanche.Components.ListView
             };
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
-                CachedImage img = new CachedImage()
+                if ( item.Image.Contains( ".svg" ) )
                 {
-                    Source = item.Image,
-                    Aspect = Aspect.AspectFit,
-                };
-                sl.Children.Add( img );
+                    SvgCachedImage img = new SvgCachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+                    sl.Children.Add( img );
+                }
+                else
+                {
+                    CachedImage img = new CachedImage()
+                    {
+                        Source = item.Image,
+                        Aspect = Aspect.AspectFit,
+                        WidthRequest = App.Current.MainPage.Width / Columns,
+                        InputTransparent = true
+                    };
+                    sl.Children.Add( img );
+                }
             }
             else
             {
