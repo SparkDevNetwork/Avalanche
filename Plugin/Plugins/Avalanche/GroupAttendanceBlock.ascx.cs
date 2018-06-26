@@ -126,115 +126,115 @@ namespace RockWeb.Plugins.Avalanche
                     {
                         occurances.AddOrIgnore( ( schedule - new DateTime( 1970, 1, 1, 0, 0, 0, DateTimeKind.Utc ) ).TotalSeconds.ToString(), schedule.ToString( "MMM d, yyyy -  h:mmtt" ) );
                     }
+                }
+                if ( occurances.Any() && string.IsNullOrWhiteSpace( currentOccurance ) )
+                {
+                    currentOccurance = occurances.Last().Key;
+                }
 
-                    if ( occurances.Any() && string.IsNullOrWhiteSpace( currentOccurance ) )
+                FormElementItem datePicker = new FormElementItem
+                {
+                    Type = FormElementType.Picker,
+                    Options = occurances,
+                    Value = currentOccurance,
+                    Key = "schedule",
+                    Label = "Schedule",
+                    AutoPostBack = true
+                };
+
+                form.Add( datePicker );
+
+
+                var didNotMeet = false;
+
+
+                if ( !string.IsNullOrWhiteSpace( currentOccurance ) )
+                {
+                    //The drop down stores the time in unix time
+                    var occurenceDate = new DateTime( 1970, 1, 1, 0, 0, 0, DateTimeKind.Local )
+                         .AddSeconds( currentOccurance.AsInteger() );
+
+                    var attendanceData = new AttendanceService( rockContext )
+                        .Queryable()
+                        .Where( a => a.GroupId == group.Id && a.StartDateTime == occurenceDate )
+                        .ToList();
+
+                    if ( didNotMeetOverride == null )
                     {
-                        currentOccurance = occurances.FirstOrDefault().Key;
+                        didNotMeet = ( attendanceData.Where( a => a.DidAttend == true ).Count() <= 0
+                                       && attendanceData.Where( a => a.DidNotOccur == true ).Count() > 0 );
+                    }
+                    else
+                    {
+                        didNotMeet = didNotMeetOverride.Value;
                     }
 
-                    FormElementItem datePicker = new FormElementItem
+                    if ( !didNotMeet )
                     {
-                        Type = FormElementType.Picker,
-                        Options = occurances,
-                        Value = currentOccurance,
-                        Key = "schedule",
-                        Label = "Schedule",
-                        AutoPostBack = true
-                    };
 
-                    form.Add( datePicker );
-
-
-                    var didNotMeet = false;
-
-
-                    if ( !string.IsNullOrWhiteSpace( currentOccurance ) )
-                    {
-                        //The drop down stores the time in unix time
-                        var occurenceDate = new DateTime( 1970, 1, 1, 0, 0, 0, DateTimeKind.Local )
-                             .AddSeconds( currentOccurance.AsInteger() );
-
-                        var attendanceData = new AttendanceService( rockContext )
-                            .Queryable()
-                            .Where( a => a.GroupId == group.Id && a.StartDateTime == occurenceDate )
+                        var items = groupMembers
+                            .Where( gm => gm.GroupMemberStatus == GroupMemberStatus.Active )
+                            .OrderBy( gm => gm.Person.LastName )
+                            .ThenBy( gm => gm.Person.NickName )
+                            .Select( m => new
+                            {
+                                PersonId = m.PersonId.ToString(),
+                                FullName = m.ToString(),
+                                Attended = ( attendanceData.Where( a => a.PersonAlias.PersonId == m.PersonId ).Any()
+                                    && ( attendanceData.Where( a => a.PersonAlias.PersonId == m.PersonId ).FirstOrDefault().DidAttend ?? false ) )
+                            }
+                            )
                             .ToList();
 
-                        if ( didNotMeetOverride == null )
+                        var checkBoxOptions = new Dictionary<string, string>();
+                        var selectedPeople = new List<string>();
+                        foreach ( var item in items )
                         {
-                            didNotMeet = ( attendanceData.Where( a => a.DidAttend == true ).Count() <= 0
-                                           && attendanceData.Where( a => a.DidNotOccur == true ).Count() > 0 );
-                        }
-                        else
-                        {
-                            didNotMeet = didNotMeetOverride.Value;
-                        }
-
-                        if ( !didNotMeet )
-                        {
-
-                            var items = groupMembers
-                                .Where( gm => gm.GroupMemberStatus == GroupMemberStatus.Active )
-                                .OrderBy( gm => gm.Person.LastName )
-                                .ThenBy( gm => gm.Person.NickName )
-                                .Select( m => new
-                                {
-                                    PersonId = m.PersonId.ToString(),
-                                    FullName = m.ToString(),
-                                    Attended = ( attendanceData.Where( a => a.PersonAlias.PersonId == m.PersonId ).Any()
-                                        && ( attendanceData.Where( a => a.PersonAlias.PersonId == m.PersonId ).FirstOrDefault().DidAttend ?? false ) )
-                                }
-                                )
-                                .ToList();
-
-                            var checkBoxOptions = new Dictionary<string, string>();
-                            var selectedPeople = new List<string>();
-                            foreach ( var item in items )
+                            checkBoxOptions.Add( item.PersonId, item.FullName );
+                            if ( item.Attended )
                             {
-                                checkBoxOptions.Add( item.PersonId, item.FullName );
-                                if ( item.Attended )
-                                {
-                                    selectedPeople.Add( item.PersonId );
-                                }
+                                selectedPeople.Add( item.PersonId );
                             }
-                            var checkBoxList = new FormElementItem
-                            {
-                                Type = FormElementType.CheckboxList,
-                                Key = "groupMembers",
-                                Label = "Group Members",
-                                Options = checkBoxOptions,
-                                Value = string.Join( ",", selectedPeople )
-                            };
-
-                            form.Add( checkBoxList );
                         }
+                        var checkBoxList = new FormElementItem
+                        {
+                            Type = FormElementType.CheckboxList,
+                            Key = "groupMembers",
+                            Label = "Group Members",
+                            Options = checkBoxOptions,
+                            Value = string.Join( ",", selectedPeople )
+                        };
+
+                        form.Add( checkBoxList );
                     }
-
-                    var didNotMeetSwitch = new FormElementItem
-                    {
-                        Type = FormElementType.Switch,
-                        Key = "didNotMeet",
-                        Label = "Did Not Meet",
-                        Value = didNotMeet.ToString(),
-                        AutoPostBack = true
-                    };
-                    form.Add( didNotMeetSwitch );
-
-                    var button = new FormElementItem
-                    {
-                        Label = "Save",
-                        Key = "save",
-                        Type = FormElementType.Button
-                    };
-                    form.Add( button );
-
-                    var groupId = new FormElementItem
-                    {
-                        Type = FormElementType.Hidden,
-                        Key = "groupId",
-                        Value = group.Id.ToString()
-                    };
-                    form.Add( groupId );
                 }
+
+                var didNotMeetSwitch = new FormElementItem
+                {
+                    Type = FormElementType.Switch,
+                    Key = "didNotMeet",
+                    Label = "Did Not Meet",
+                    Value = didNotMeet.ToString(),
+                    AutoPostBack = true
+                };
+                form.Add( didNotMeetSwitch );
+
+                var button = new FormElementItem
+                {
+                    Label = "Save",
+                    Key = "save",
+                    Type = FormElementType.Button
+                };
+                form.Add( button );
+
+                var groupId = new FormElementItem
+                {
+                    Type = FormElementType.Hidden,
+                    Key = "groupId",
+                    Value = group.Id.ToString()
+                };
+                form.Add( groupId );
+
             }
             return form;
         }
