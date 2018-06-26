@@ -38,6 +38,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Mobile block to show group members of a group." )]
 
     [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
+    [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
     [IntegerField( "Members Per Request", "The number of members to get per request. All group members will be loaded, but in multiple requests.", true, 20 )]
     public partial class GroupMemberListBlock : AvalancheBlock
     {
@@ -53,8 +54,14 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
-            var groupMembers = GetGroupMembers( parameter, 0 );
+            var valueGuid = GetAttributeValue( "Component" );
+            var value = DefinedValueCache.Read( valueGuid );
+            if ( value != null )
+            {
+                CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
+            }
 
+            var groupMembers = GetGroupMembers( parameter, 0 );
             if ( groupMembers == null || !groupMembers.Any() )
             {
                 return new MobileBlock()
@@ -125,12 +132,17 @@ namespace RockWeb.Plugins.Avalanche
                 return null;
             }
 
-            var groupGuid = parameter.AsGuid();
+            var groupId = parameter.AsInteger();
             RockContext rockContext = new RockContext();
             GroupService groupService = new GroupService( rockContext );
-            var group = groupService.Get( groupGuid );
+            var group = groupService.Get( groupId );
 
             if ( group == null )
+            {
+                return null;
+            }
+
+            if ( !group.IsAuthorized( Authorization.EDIT, CurrentPerson ) )
             {
                 return null;
             }
