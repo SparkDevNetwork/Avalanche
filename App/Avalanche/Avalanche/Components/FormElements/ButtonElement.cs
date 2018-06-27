@@ -55,7 +55,8 @@ namespace Avalanche.Components.FormElements
 
             Button button = new Button()
             {
-                Text = Label
+                Text = Label,
+                Margin = new Thickness( 5 )
             };
 
             View = button;
