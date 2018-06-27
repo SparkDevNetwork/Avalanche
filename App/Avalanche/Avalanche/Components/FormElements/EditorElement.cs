@@ -86,7 +86,7 @@ namespace Avalanche.Components.FormElements
                 Label label = new Label
                 {
                     Text = Label,
-                    Margin = new Thickness( 5, 0, 0, 5 ),
+                    Margin = new Thickness( 5, 0, 0, 0 ),
                     FontAttributes = FontAttributes.Bold
                 };
 
