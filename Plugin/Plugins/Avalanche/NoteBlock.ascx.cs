@@ -51,7 +51,6 @@ namespace RockWeb.Plugins.Avalanche
             var noteTypeString = GetAttributeValue( "NoteType" );
             var noteType = NoteTypeCache.Read( noteTypeString.AsGuid() );
 
-
             if ( noteType != null )
             {
                 lEntityType.Text = "Note Type: " + noteType.Name;
