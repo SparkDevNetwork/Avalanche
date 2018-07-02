@@ -36,7 +36,6 @@ namespace RockWeb.Plugins.Avalanche
     [Category( "Avalanche" )]
     [Description( "Allows the user to make a single personal note for an entity. Useful for sermons and blog posts." )]
 
-    [ActionItemField( "Action Item", "", false )]
     [NoteTypeField( "Note Type", "Type of note." )]
     [IntegerField( "Note Field Height", "The height of the editor form element.", true, 200 )]
     [TextField( "Note Field Label", "The height of the editor form element.", true, "Notes:" )]
@@ -70,7 +69,6 @@ namespace RockWeb.Plugins.Avalanche
                     Attributes = CustomAttributes
                 };
             }
-            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson, parameter: parameter );
 
             var form = GetForm( noteType, parameter.AsInteger() );
             CustomAttributes.Add( "FormElementItems", JsonConvert.SerializeObject( form ) );

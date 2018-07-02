@@ -77,6 +77,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\FormResponse.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\HomeRequest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\LayoutTemplate.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RckipidToken.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\VideoPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasBlockMessenger.cs" />

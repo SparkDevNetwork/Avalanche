@@ -193,6 +193,25 @@ namespace Avalanche.Rest.Controllers
             return new MobileBlockResponse();
         }
 
+        [HttpGet]
+        [Authenticate]
+        [System.Web.Http.Route( "api/avalanche/token" )]
+        public RckipidToken GetToken()
+        {
+            var person = GetPerson();
+            if ( person == null )
+            {
+                return null;
+            }
+            var expiration = Rock.RockDateTime.Now.AddDays( 7 );
+            var token = PersonToken.CreateNew( person.PrimaryAlias, expiration, 1, null );
+            return new RckipidToken
+            {
+                Expiration = expiration,
+                Token = token
+            };
+        }
+
         [HttpPost]
         [Authenticate]
         [System.Web.Http.Route( "api/avalanche/interaction" )]

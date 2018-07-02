@@ -111,54 +111,5 @@ namespace Avalanche.Utilities
                 }
             }
         }
-
-        public static void HandleActionItem( Dictionary<string, string> Attributes )
-        {
-            if ( !Attributes.ContainsKey( "ActionType" ) || Attributes["ActionType"] == "0" )
-            {
-                return;
-            }
-
-            var resource = "";
-            if ( Attributes.ContainsKey( "Resource" ) )
-            {
-                resource = Attributes["Resource"];
-            }
-
-            var parameter = "";
-            if ( Attributes.ContainsKey( "Parameter" ) )
-            {
-                parameter = Attributes["Parameter"];
-            }
-
-            if ( Attributes["ActionType"] == "1" && !string.IsNullOrWhiteSpace( resource ) ) //push new page
-            {
-                AvalancheNavigation.GetPage( Attributes["Resource"], parameter );
-            }
-            else if ( Attributes["ActionType"] == "2" && !string.IsNullOrWhiteSpace( resource ) ) //replace
-            {
-                AvalancheNavigation.ReplacePage( Attributes["Resource"], parameter );
-            }
-            else if ( Attributes["ActionType"] == "3" ) //pop page
-            {
-                AvalancheNavigation.RemovePage();
-            }
-            else if ( Attributes["ActionType"] == "4" && !string.IsNullOrWhiteSpace( resource ) )
-            {
-                if ( !string.IsNullOrWhiteSpace( parameter ) )
-                {
-                    if ( resource.Contains( "?" ) )
-                    {
-                        resource += "&rckipid=" + parameter;
-                    }
-                    else
-                    {
-                        resource += "?rckipid=" + parameter;
-                    }
-                }
-                Device.OpenUri( new Uri( resource ) );
-            }
-        }
-
     }
 }

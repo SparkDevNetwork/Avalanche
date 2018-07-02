@@ -53,7 +53,14 @@ namespace Avalanche
                 {
                     if ( actionItems.Length > 1 )
                     {
-                        CustomAttributes.Add( "Resource", actionItems[1] );
+                        if ( MergeObjects != null )
+                        {
+                            CustomAttributes.Add( "Resource", ProcessLava( actionItems[1], CurrentPerson, parameter, EnabledLavaCommands, MergeObjects ) );
+                        }
+                        else
+                        {
+                            CustomAttributes.Add( "Resource", ProcessLava( actionItems[1], CurrentPerson, parameter, EnabledLavaCommands ) );
+                        }
                     }
                     if ( actionItems.Length > 2 )
                     {

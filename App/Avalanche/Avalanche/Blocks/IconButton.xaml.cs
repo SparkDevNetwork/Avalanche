@@ -128,7 +128,7 @@ namespace Avalanche.Blocks
 
         private void BtnButton_Clicked( object sender, EventArgs e )
         {
-            AttributeHelper.HandleActionItem( Attributes );
+            AvalancheNavigation.HandleActionItem( Attributes );
         }
 
         public Dictionary<string, string> Attributes { get; set; }
