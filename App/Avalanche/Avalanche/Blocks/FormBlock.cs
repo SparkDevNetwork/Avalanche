@@ -174,7 +174,7 @@ namespace Avalanche.Blocks
                 slValidationMessage.BackgroundColor = InfoBackgroundColor;
             }
 
-            AttributeHelper.HandleActionItem( new Dictionary<string, string> {
+            AvalancheNavigation.HandleActionItem( new Dictionary<string, string> {
                 { "ActionType", formResponse.ActionType },
                 { "Resource", formResponse.Resource },
                 { "Parameter", formResponse.Parameter } } );

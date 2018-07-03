@@ -137,7 +137,12 @@ namespace RockWeb.Plugins.Avalanche.Event
             CategoryPanelOpen = !String.IsNullOrWhiteSpace( GetAttributeValue( "FilterCategories" ) ) && GetAttributeValue( "CategoryFilterDisplayMode" ) == "3";
             CategoryPanelClosed = !String.IsNullOrWhiteSpace( GetAttributeValue( "FilterCategories" ) ) && GetAttributeValue( "CategoryFilterDisplayMode" ) == "4";
 
-            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
+                                   CustomAttributes,
+                                   CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
+                                   GetAttributeValue( "EnabledLavaCommands" ),
+                                   parameter );
+
             var valueGuid = GetAttributeValue( "Component" );
             var value = DefinedValueCache.Read( valueGuid );
             if ( value != null )

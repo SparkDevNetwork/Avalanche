@@ -37,7 +37,7 @@ namespace Avalanche.Blocks
         }
         private void Tgr_Tapped( object sender, EventArgs e )
         {
-            AttributeHelper.HandleActionItem( Attributes );
+            AvalancheNavigation.HandleActionItem( Attributes );
         }
     }
 }

@@ -58,7 +58,12 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
-            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
+                                   CustomAttributes,
+                                   CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
+                                   GetAttributeValue( "EnabledLavaCommands" ),
+                                   parameter );
+
 
             CustomAttributes.Add( "Source", AvalancheUtilities.ProcessLava( GetAttributeValue( "Image" ),
                                                                             CurrentPerson,

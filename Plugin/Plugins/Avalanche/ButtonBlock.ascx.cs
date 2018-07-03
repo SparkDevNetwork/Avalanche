@@ -57,7 +57,12 @@ namespace RockWeb.Plugins.Avalanche
                                                                           parameter,
                                                                           GetAttributeValue( "EnabledLavaCommands" ) ) );
 
-            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson, parameter: parameter );
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
+                                   CustomAttributes,
+                                   CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
+                                   GetAttributeValue( "EnabledLavaCommands" ),
+                                   parameter );
+
 
             return new MobileBlock()
             {

@@ -14,33 +14,15 @@
 //
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
-using Avalanche.Interfaces;
-using Avalanche.Utilities;
-using Xamarin.Forms;
+using System.Threading.Tasks;
 
-namespace Avalanche.Blocks
+namespace Avalanche.Models
 {
-    class ImageBlock : FFImageLoading.Forms.CachedImage, IRenderable
+    public class RckipidToken
     {
-        public Dictionary<string, string> Attributes { get; set; }
-
-        public View Render()
-        {
-            TapGestureRecognizer tgr = new TapGestureRecognizer()
-            {
-                NumberOfTapsRequired = 1
-            };
-            tgr.Tapped += Tgr_Tapped;
-            this.GestureRecognizers.Add( tgr );
-
-
-            return this;
-        }
-
-        private void Tgr_Tapped( object sender, EventArgs e )
-        {
-            AvalancheNavigation.HandleActionItem( Attributes );
-        }
+        public string Token { get; set; }
+        public DateTime Expiration { get; set; }
     }
 }

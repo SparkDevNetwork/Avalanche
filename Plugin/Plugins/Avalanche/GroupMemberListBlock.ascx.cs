@@ -38,6 +38,7 @@ namespace RockWeb.Plugins.Avalanche
     [Description( "Mobile block to show group members of a group." )]
 
     [ActionItemField( "Action Item", "Action to take upon press of item in list." )]
+    [LavaCommandsField( "Enabled Lava Commands", "The Lava commands that should be enabled for this block.", false )]
     [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
     [IntegerField( "Members Per Request", "The number of members to get per request. All group members will be loaded, but in multiple requests.", true, 20 )]
     public partial class GroupMemberListBlock : AvalancheBlock
@@ -71,7 +72,11 @@ namespace RockWeb.Plugins.Avalanche
                 };
             }
 
-            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ), CustomAttributes, CurrentPerson );
+            AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
+                                   CustomAttributes,
+                                   CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
+                                   GetAttributeValue( "EnabledLavaCommands" ),
+                                   parameter );
 
             CustomAttributes["InitialRequest"] = parameter + "|0";
             CustomAttributes["NextRequest"] = parameter + "|1";

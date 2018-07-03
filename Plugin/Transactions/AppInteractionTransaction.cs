@@ -94,7 +94,7 @@ namespace Avalanche.Transactions
                     // Add the interaction
                     if ( interactionComponent != null )
                     {
-                        var deviceId = Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim();
+                        var deviceId = Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim().Substring( 0, 20 );
                         var deviceApplication = Regex.Match( UserAgent, "^[\\S]{0,}" ).Value.Trim() + " " + deviceId;
                         var clientOs = Regex.Match( UserAgent, "(?<=;).+(?=-)" ).Value.Trim();
                         var clientType = Regex.Match( UserAgent, "(?<=\\().+(?=;)" ).Value.Trim();
@@ -154,7 +154,8 @@ namespace Avalanche.Transactions
             device = new PersonalDevice()
             {
                 PersonAliasId = PersonAliasId,
-                DeviceUniqueIdentifier = deviceId
+                DeviceUniqueIdentifier = deviceId,
+                PersonalDeviceTypeValueId = DefinedTypeCache.Read( Rock.SystemGuid.DefinedValue.PERSONAL_DEVICE_TYPE_MOBILE.AsGuid() ).Id
             };
             personalDeviceService.Add( device );
             rockContext.SaveChanges();

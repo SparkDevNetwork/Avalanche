@@ -182,7 +182,7 @@ namespace Avalanche.Utilities
         }
 
 
-        private async static Task<string> GetAccessToken()
+        public async static Task<string> GetAccessToken()
         {
             var appProp = App.Current.Properties;
 

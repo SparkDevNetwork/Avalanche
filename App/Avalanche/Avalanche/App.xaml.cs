@@ -16,6 +16,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Avalanche.Models;
 using Avalanche.Utilities;
 using Xamarin.Forms;
@@ -24,6 +25,8 @@ namespace Avalanche
 {
     public partial class App : Application
     {
+        private bool active = true;
+
         public static NavigationPage Navigation = null;
         public App()
         {
@@ -31,8 +34,18 @@ namespace Avalanche
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             RockClient.CreateDatabase();
             MainPage = new AvalanchePage();
+            Task.Factory.StartNew( new Action( backgroundAction ) );
         }
 
+        private async void backgroundAction()
+        {
+            active = true;
+            while ( active )
+            {
+                AvalancheNavigation.UpdateRckipid();
+                await Task.Delay( 60000 );
+            }
+        }
 
         protected override void OnStart()
         {
@@ -50,7 +63,7 @@ namespace Avalanche
 
         protected override void OnResume()
         {
-            // Handle when your app resumes
+            Task.Factory.StartNew( new Action( backgroundAction ) );
         }
     }
 }

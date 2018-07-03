@@ -69,6 +69,7 @@ namespace Avalanche.Blocks
                 case LoginResponse.Success:
                     AvalancheNavigation.Footer = null;
                     App.Current.MainPage = new AvalanchePage();
+                    AvalancheNavigation.RequestNewRckipid();
                     break;
                 default:
                     break;

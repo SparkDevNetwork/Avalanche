@@ -43,7 +43,7 @@ namespace Avalanche.Blocks
 
         private void ButtonBlock_Clicked( object sender, EventArgs e )
         {
-            AttributeHelper.HandleActionItem( Attributes );
+            AvalancheNavigation.HandleActionItem( Attributes );
         }
     }
 }

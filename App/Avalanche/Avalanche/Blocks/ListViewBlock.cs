@@ -226,13 +226,13 @@ namespace Avalanche.Blocks
                     { "ActionType", item.ActionType },
                     { "Parameter", item.Id }
                 };
-                AttributeHelper.HandleActionItem( actionDictionary );
+                AvalancheNavigation.HandleActionItem( actionDictionary );
                 return;
             }
 
             listViewComponent.SelectedItem = null;
             Attributes["Parameter"] = item.Id;
-            AttributeHelper.HandleActionItem( Attributes );
+            AvalancheNavigation.HandleActionItem( Attributes );
         }
         #endregion
     }
