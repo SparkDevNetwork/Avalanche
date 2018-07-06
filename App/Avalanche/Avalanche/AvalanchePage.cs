@@ -67,26 +67,35 @@ namespace Avalanche
             AvalancheNavigation.AllowResize = true;
         }
 
-
-
         protected override void OnSizeAllocated( double width, double height )
         {
+            base.OnSizeAllocated( width, height );
             bool localPortrait = true;
 
             localPortrait = height > width;
 
-            base.OnSizeAllocated( width, height );
             if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
             {
                 AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
 
-                isPortrait = localPortrait;
                 if ( AvalancheNavigation.Footer != null )
                 {
-                    AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                    if ( AvalancheNavigation.Footer.Menu.Height != -1 )
+                    {
+                        AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                    }
+                    else
+                    {
+                        return;
+                    }
+                    isPortrait = localPortrait;
                     AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
                     AvalancheNavigation.Footer.TranslationY = App.Current.MainPage.Height - AvalancheNavigation.YOffSet;
                     AvalancheNavigation.SafeInset.Bottom = 0;
+                }
+                else
+                {
+                    AvalancheNavigation.YOffSet = 0;
                 }
 
                 mainPage.Content.Margin = new Thickness(
