@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,13 +32,26 @@ namespace Avalanche.Blocks
         public event EventHandler<bool> FullScreenChanged;
 
         private bool allocated = false;
+        private int allocount = 0;
         protected override void OnSizeAllocated( double width, double height )
         {
             base.OnSizeAllocated( width, height );
-            if ( !allocated )
+            if ( IsFullScreen )
             {
+                HeightRequest = App.Current.MainPage.Height;
                 allocated = true;
-                HeightRequest = Math.Min( width * this.AspectRatio, App.Current.MainPage.Height );
+            }
+            else
+            {
+
+                if ( !allocated && allocount < 10 )
+                {
+                    HeightRequest = Math.Min( width * this.AspectRatio, App.Current.MainPage.Height );
+                    if ( Height == HeightRequest )
+                    {
+                        allocated = true;
+                    }
+                }
             }
         }
 
@@ -51,6 +65,7 @@ namespace Avalanche.Blocks
         private void VideoPlayerBlock_FullScreenStatusChanged( object sender, bool e )
         {
             allocated = false;
+            allocount = 0;
             FullScreenChanged?.Invoke( this, e );
         }
 

@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -69,7 +70,6 @@ namespace Avalanche.Droid.CustomRenderers
         bool _prepared;
         static Activity _context;
         double playerHeight;
-        bool hasScrollView = false;
         const string FullScreenImageSource = "landscape_mode.png";
         const string ExitFullScreenImageSource = "portrait_mode.png";
         ImageView imageView;
@@ -123,7 +123,6 @@ namespace Avalanche.Droid.CustomRenderers
                 {
                     ( view as Xamarin.Forms.ScrollView ).Scrolled += delegate
                     { DisplaySeekbar( false ); };
-                    hasScrollView = true;
                     break;
                 }
             }
@@ -141,7 +140,7 @@ namespace Avalanche.Droid.CustomRenderers
                 if ( IsFullScreen )
                     ExitFullScreen();
                 else
-                    FullScreen( hasScrollView );
+                    FullScreen();
             };
         }
 
@@ -267,8 +266,8 @@ namespace Avalanche.Droid.CustomRenderers
         /// <summary>
         /// Change screen orientation to Landscape and set video player in full screen mode.
         /// </summary>
-        /// <param name="resizeLayout">set it True if you are using video player inside a scroo view</param>
-        public void FullScreen( bool resizeLayout = false )
+        /// <param name="resizeLayout">set it True if you are using video player inside a scrool view</param>
+        public void FullScreen()
         {
             if ( IsFullScreen )
                 return;
@@ -278,18 +277,13 @@ namespace Avalanche.Droid.CustomRenderers
             window.AddFlags( WindowManagerFlags.Fullscreen );
             imageView.SetImageResource( Resource.Drawable.landscape_mode );
             IsFullScreen = true;
-            if ( resizeLayout )
-            {
-                if ( Element.HeightRequest == -1 )
-                    playerHeight = ( Control.Width / _context.Resources.DisplayMetrics.Density );
-                else
-                    playerHeight = Element.HeightRequest;
-                Element.HeightRequest = deviceWidth;
-            }
+
+            if ( Element.HeightRequest == -1 )
+                playerHeight = ( Control.Width / _context.Resources.DisplayMetrics.Density );
             else
-            {
-                playerHeight = 0;
-            }
+                playerHeight = Element.HeightRequest;
+            Element.HeightRequest = deviceWidth;
+
             FullScreenStatusChanged?.Invoke( this, true );
         }
 
@@ -298,7 +292,7 @@ namespace Avalanche.Droid.CustomRenderers
             if ( !IsFullScreen )
                 return;
 
-            imageView.SetImageResource( Resource.Drawable.portrait_mode);
+            imageView.SetImageResource( Resource.Drawable.portrait_mode );
             _context.RequestedOrientation = Android.Content.PM.ScreenOrientation.Sensor;
             var window = ( _context as Activity ).Window;
             window.ClearFlags( WindowManagerFlags.Fullscreen );

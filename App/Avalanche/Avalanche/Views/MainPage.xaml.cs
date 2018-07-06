@@ -1,5 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
+// Copyright Mark Lee
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,7 +36,7 @@ namespace Avalanche.Views
         public ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
         private List<INotify> notifyBlock = new List<INotify>();
-        private List<View> nonMediaBlocks = new List<View>();
+        private List<View> blocks = new List<View>();
         private StackLayout nav;
         private LayoutManager layoutManager;
 
@@ -124,7 +125,6 @@ namespace Avalanche.Views
                             var renderedBlock = mobileBlock.Render();
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
-
                             //Get blocks that need notfication of appearing and disappearing
                             if ( mobileBlock is INotify )
                             {
@@ -138,10 +138,7 @@ namespace Avalanche.Views
                                 mediaBlocks.Add( mediaBlock );
                                 mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
                             }
-                            else
-                            {
-                                nonMediaBlocks.Add( renderedBlock );
-                            }
+                            blocks.Add( renderedBlock );
                         }
                         catch ( Exception e )
                         {
@@ -181,16 +178,60 @@ namespace Avalanche.Views
             }
         }
 
+
+        MenuPage footer;
+        double yOffset;
         private void MediaBlock_FullScreenChanged( object sender, bool isFullScreen )
         {
-            foreach ( var block in nonMediaBlocks )
+            foreach ( var block in blocks )
             {
-                ( ( View ) block ).IsVisible = !isFullScreen;
+                if ( isFullScreen )
+                {
+                    HideView( block );
+                }
+                else
+                {
+                    ShowView( block );
+                }
+                ShowView( ( View ) ( sender ) );
             }
+
 
             if ( nav != null )
             {
                 nav.IsVisible = !isFullScreen;
+            }
+
+            if ( isFullScreen )
+            {
+                ( ( View ) sender ).VerticalOptions = LayoutOptions.FillAndExpand;
+            }
+
+            if ( AvalancheNavigation.Footer != null || footer != null )
+            {
+                if ( isFullScreen )
+                {
+                    footer = AvalancheNavigation.Footer;
+                    yOffset = AvalancheNavigation.YOffSet;
+                    AvalancheNavigation.Footer = null;
+                    Content.Margin = new Thickness(
+                        AvalancheNavigation.SafeInset.Left,
+                        AvalancheNavigation.SafeInset.Top,
+                        AvalancheNavigation.SafeInset.Right,
+                        AvalancheNavigation.SafeInset.Bottom );
+                    ( ( View ) sender ).HeightRequest = Content.Width;
+                }
+                else
+                {
+                    AvalancheNavigation.Footer = footer;
+                    footer = null;
+                    Content.Margin = new Thickness(
+                        AvalancheNavigation.SafeInset.Left,
+                        AvalancheNavigation.SafeInset.Top + yOffset,
+                        AvalancheNavigation.SafeInset.Right,
+                        AvalancheNavigation.SafeInset.Bottom );
+                    ( ( View ) sender ).HeightRequest = -1;
+                }
             }
         }
 
@@ -292,6 +333,32 @@ namespace Avalanche.Views
                 };
                 nav.Children.Add( boxview );
 
+            }
+        }
+
+        private void HideView( Xamarin.Forms.VisualElement view )
+        {
+            if ( view.Parent is Xamarin.Forms.VisualElement )
+            {
+                view.IsVisible = false;
+                var parent = ( Xamarin.Forms.VisualElement ) view.Parent;
+                if ( parent != null )
+                {
+                    HideView( parent );
+                }
+            }
+        }
+
+        private void ShowView( Xamarin.Forms.VisualElement view )
+        {
+            if ( view.Parent is Xamarin.Forms.VisualElement )
+            {
+                view.IsVisible = true;
+                var parent = ( Xamarin.Forms.VisualElement ) view.Parent;
+                if ( parent != null )
+                {
+                    ShowView( parent );
+                }
             }
         }
 

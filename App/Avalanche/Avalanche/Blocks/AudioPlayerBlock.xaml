@@ -6,7 +6,10 @@
              >
     <ContentView.Content>
         <Frame x:Name="fFrame" HasShadow="False">
-            <Grid>
+            <Grid HeightRequest="40">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                </Grid.RowDefinitions>
                 <ActivityIndicator x:Name="aiLoading"/>
                 <custom:IconLabel Text="fa fa-play" x:Name="ilPlay" FontSize="30"
                                   HorizontalOptions="Fill" VerticalOptions="CenterAndExpand"/>
