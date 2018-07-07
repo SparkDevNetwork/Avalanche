@@ -93,6 +93,7 @@
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
     <Compile Include="Lava\CustomFilters.cs" />
+    <Compile Include="Migrations\CarouselListView.cs" />
     <Compile Include="Migrations\Interactions.cs" />
     <Compile Include="Migrations\Init.cs" />
     <Compile Include="Migrations\Layouts.cs" />

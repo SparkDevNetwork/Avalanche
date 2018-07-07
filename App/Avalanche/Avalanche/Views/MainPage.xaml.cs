@@ -126,15 +126,15 @@ namespace Avalanche.Views
                             AttributeHelper.ApplyTranslation( renderedBlock, mobileBlock.Attributes );
                             zone.Children.Add( renderedBlock );
                             //Get blocks that need notfication of appearing and disappearing
-                            if ( mobileBlock is INotify )
+                            if ( renderedBlock is INotify )
                             {
-                                notifyBlock.Add( ( INotify ) mobileBlock );
+                                notifyBlock.Add( ( INotify ) renderedBlock );
                             }
 
                             //Setup media if needed
-                            if ( mobileBlock is IHasMedia )
+                            if ( renderedBlock is IHasMedia )
                             {
-                                var mediaBlock = ( IHasMedia ) mobileBlock;
+                                var mediaBlock = ( IHasMedia ) renderedBlock;
                                 mediaBlocks.Add( mediaBlock );
                                 mediaBlock.FullScreenChanged += MediaBlock_FullScreenChanged;
                             }
@@ -162,6 +162,7 @@ namespace Avalanche.Views
             }
             btnBack.IsVisible = false;
             lTimeout.IsVisible = false;
+            OnAppearing(); //iOS fires OnAppearing before the page can be rendered.
         }
         public void AddBackgroundImage()
         {
