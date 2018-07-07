@@ -1018,7 +1018,6 @@ $(document).ready(function() {
             var pageGuid = GetAttributeValue( "DetailPage" );
             CustomAttributes["Resource"] = PageCache.Read( pageGuid.AsGuid() ).Id.ToString();
             CustomAttributes["ActionType"] = "1";
-            CustomAttributes["Request"] = "0";
             CustomAttributes["InitialRequest"] = "0";
             var valueGuid = GetAttributeValue( "Component" );
             var value = DefinedValueCache.Read( valueGuid );

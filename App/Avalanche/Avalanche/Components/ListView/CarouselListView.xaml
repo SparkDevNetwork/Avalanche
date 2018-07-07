@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:cv="clr-namespace:Xamarin.Forms;assembly=Xamarin.Forms.CarouselView"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             x:Class="Avalanche.Components.ListView.CarouselListView">
+    <ContentView.Content>
+        <cv:CarouselView x:Name="Carousel" HeightRequest="400">
+            <cv:CarouselView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout>
+                        <StackLayout.GestureRecognizers>
+                            <TapGestureRecognizer Tapped="TapGestureRecognizer_Tapped" NumberOfTapsRequired="1"/>
+                        </StackLayout.GestureRecognizers>
+                        <ff:CachedImage HorizontalOptions="CenterAndExpand" Aspect="AspectFit" Source="{Binding Image}" />
+                        <Label TextColor="{Binding TextColor}" Text="{Binding Title}" FontSize="{Binding FontSize}"
+                                   HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                        <Label TextColor="{Binding DescriptionTextColor}" Margin="20,0" Text="{Binding Description}" FontSize="{Binding DescriptionFontSize}"
+                                   HorizontalOptions="Center" HorizontalTextAlignment="Center"/>
+                    </StackLayout>
+                </DataTemplate>
+            </cv:CarouselView.ItemTemplate>
+        </cv:CarouselView>
+    </ContentView.Content>
+</ContentView>

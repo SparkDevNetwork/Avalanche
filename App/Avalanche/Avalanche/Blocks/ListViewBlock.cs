@@ -71,10 +71,6 @@ namespace Avalanche.Blocks
             {
                 AddRenderContent();
             }
-            else if ( Attributes.ContainsKey( "Request" ) && !string.IsNullOrWhiteSpace( Attributes["Request"] ) )
-            {
-                MessageHandler.Get( Attributes["Request"] );
-            }
 
             if ( Attributes.ContainsKey( "NextRequest" ) && !string.IsNullOrWhiteSpace( Attributes["NextRequest"] ) )
             {
@@ -169,7 +165,13 @@ namespace Avalanche.Blocks
 
                 foreach ( var listElement in listViewResponse.Content )
                 {
-                    AddElement( listElement );
+                    try
+                    {
+                        AddElement( listElement );
+                    }
+                    catch
+                    {
+                    }
                 }
                 listViewComponent.IsRefreshing = false;
             }
@@ -219,6 +221,11 @@ namespace Avalanche.Blocks
             }
 
             var item = listViewComponent.SelectedItem as ListElement;
+            if ( item == null )
+            {
+                return;
+            }
+
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
                 var actionDictionary = new Dictionary<string, string> {
