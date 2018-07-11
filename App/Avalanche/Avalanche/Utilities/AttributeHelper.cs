@@ -51,12 +51,13 @@ namespace Avalanche.Utilities
             {typeof(Type).Name, new TypeTypeConverter() },
             {typeof(Uri).Name, new Xamarin.Forms.UriTypeConverter() },
             {typeof(WebViewSource).Name, new  WebViewSourceTypeConverter() },
+            { "CustomFontFamily", new CustomFontTypeConverter() }
         };
 
 
         public static void ApplyTranslation( object obj, Dictionary<string, string> attributes )
         {
-            if (attributes == null)
+            if ( attributes == null )
             {
                 return;
             }
@@ -76,7 +77,14 @@ namespace Avalanche.Utilities
 
                 if ( property.PropertyType == typeof( string ) )
                 {
-                    property.SetValue( obj, attribute.Value );
+                    if ( property.Name == "FontFamily" )
+                    {
+                        property.SetValue( obj, typeConverters["CustomFontFamily"].ConvertFromInvariantString( attribute.Value ) );
+                    }
+                    else
+                    {
+                        property.SetValue( obj, attribute.Value );
+                    }
                 }
                 else if ( property.PropertyType == typeof( int ) )
                 {
