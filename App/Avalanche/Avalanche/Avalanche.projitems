@@ -84,6 +84,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\INativePlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)CustomControls\VideoPlayer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Interfaces\IHasBlockMessenger.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utilities\CustomFontTypeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\LaunchPage.xaml.cs">
       <DependentUpon>LaunchPage.xaml</DependentUpon>
       <SubType>Code</SubType>

@@ -79,8 +79,11 @@
     <BuildIpa>True</BuildIpa>
     <CodesignProvision>
     </CodesignProvision>
-    <CodesignKey>iPhone Distribution: SOUTHEAST CHRISTIAN CHURCH OF JEFFERSON COUNTY</CodesignKey>
-    <CodesignEntitlements>Entitlements.plist</CodesignEntitlements>
+    <CodesignKey>iPhone Developer</CodesignKey>
+    <CodesignEntitlements>
+    </CodesignEntitlements>
+    <CodesignExtraArgs />
+    <CodesignResourceRules />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'AppStore|iPhone' ">
     <DebugType>none</DebugType>
@@ -113,6 +116,18 @@
     <ITunesArtwork Include="iTunesArtwork@2x" />
     <None Include="packages.config" />
     <BundleResource Include="Resources\fontawesome.ttf" />
+    <BundleResource Include="Resources\Comic-Sans-MS.ttf" />
+    <BundleResource Include="Resources\slabo-27px-v4-latin-regular.ttf" />
+    <BundleResource Include="Resources\OpenSans-Bold.ttf" />
+    <BundleResource Include="Resources\OpenSans-BoldItalic.ttf" />
+    <BundleResource Include="Resources\OpenSans-ExtraBold.ttf" />
+    <BundleResource Include="Resources\OpenSans-ExtraBoldItalic.ttf" />
+    <BundleResource Include="Resources\OpenSans-Italic.ttf" />
+    <BundleResource Include="Resources\OpenSans-Light.ttf" />
+    <BundleResource Include="Resources\OpenSans-LightItalic.ttf" />
+    <BundleResource Include="Resources\OpenSans-Regular.ttf" />
+    <BundleResource Include="Resources\OpenSans-Semibold.ttf" />
+    <BundleResource Include="Resources\OpenSans-SemiboldItalic.ttf" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default.png" />

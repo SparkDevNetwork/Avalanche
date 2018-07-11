@@ -93,6 +93,10 @@ namespace Avalanche
                         resource += "?rckipid=" + GetRckipid();
                     }
                 }
+                else if ( resource.Contains( "{{rckipid}}" ) )
+                {
+                    resource.Replace( "{{rckipid}}", GetRckipid() );
+                }
                 Device.OpenUri( new Uri( resource ) );
             }
         }
