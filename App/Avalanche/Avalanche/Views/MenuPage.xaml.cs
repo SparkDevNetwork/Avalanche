@@ -65,8 +65,8 @@ namespace Avalanche.Views
 
         protected override void OnSizeAllocated( double width, double height )
         {
-            base.OnSizeAllocated( width, height );
             AvalancheNavigation.AllowResize = true;
+            base.OnSizeAllocated( width, height );
         }
     }
 }
