@@ -29,7 +29,14 @@ namespace Avalanche.Utilities
             {   //ios                  //android
                 {"Comic Sans MS", "Comic-Sans-MS.ttf#Comic Sans MS" },
                 {"Slabo 27px", "slabo-27px-v4-latin-regular.ttf#Slabo 27px" },
-                { "Open Sans","OpenSans-Regular.ttf#Open Sans" }
+                {"Open Sans","OpenSans-Regular.ttf#Open Sans" },
+                {"Proxima Nova Black","ProximaNova-Black.ttf#Proxima Nova Black" },
+                {"Proxima Nova Bold","ProximaNova-Bold.ttf#Proxima Nova Bold" },
+                {"Proxima Nova Extrabold","ProximaNova-Extrabld.ttf#Proxima Nova Extrabold" },
+                {"Proxima Nova Light","ProximaNova-Light.ttf#Proxima Nova Light" },
+                {"Proxima Nova","ProximaNova-Regular.ttf#Proxima Nova" },
+                {"Proxima Nova Semibold","ProximaNova-Semibold.ttf#Proxima Nova Semibold" },
+                {"Proxima Nova Thin","ProximaNova-Thin.ttf#Proxima Nova Thin" }
             };
         }
 

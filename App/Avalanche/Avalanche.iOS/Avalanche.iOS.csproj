@@ -128,6 +128,13 @@
     <BundleResource Include="Resources\OpenSans-Regular.ttf" />
     <BundleResource Include="Resources\OpenSans-Semibold.ttf" />
     <BundleResource Include="Resources\OpenSans-SemiboldItalic.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Thin.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Black.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Bold.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Extrabld.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Light.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Regular.ttf" />
+    <BundleResource Include="Resources\ProximaNova-Semibold.ttf" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default.png" />

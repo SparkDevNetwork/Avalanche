@@ -57,6 +57,13 @@
     <string>Comic-Sans-MS.ttf</string>
     <string>slabo-27px-v4-latin-regular.ttf</string>
     <string>OpenSans-Regular.ttf</string>
+    <string>ProximaNova-Black.ttf</string>
+    <string>ProximaNova-Bold.ttf</string>
+    <string>ProximaNova-Extrabld.ttf</string>
+    <string>ProximaNova-Light.ttf</string>
+    <string>ProximaNova-Regular.ttf</string>
+    <string>ProximaNova-Semibold.ttf</string>
+    <string>ProximaNova-Thin.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>LaunchScreen</string>

@@ -246,6 +246,13 @@
     <AndroidAsset Include="Assets\OpenSans-Regular.ttf" />
     <AndroidAsset Include="Assets\OpenSans-Semibold.ttf" />
     <AndroidAsset Include="Assets\OpenSans-SemiboldItalic.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Regular.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Semibold.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Thin.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Black.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Bold.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Extrabld.ttf" />
+    <AndroidAsset Include="Assets\ProximaNova-Light.ttf" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />
