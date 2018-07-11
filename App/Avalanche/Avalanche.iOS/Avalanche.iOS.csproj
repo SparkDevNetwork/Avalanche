@@ -135,6 +135,7 @@
     <BundleResource Include="Resources\ProximaNova-Light.ttf" />
     <BundleResource Include="Resources\ProximaNova-Regular.ttf" />
     <BundleResource Include="Resources\ProximaNova-Semibold.ttf" />
+    <BundleResource Include="Resources\CustomIcons.ttf" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default.png" />

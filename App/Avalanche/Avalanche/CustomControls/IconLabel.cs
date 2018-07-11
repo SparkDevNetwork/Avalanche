@@ -58,7 +58,11 @@ namespace Avalanche.CustomControls
                     {
                         iconFont = ( IIconFont ) Activator.CreateInstance( typeof( FontAwesome ) );
                     }
-                    
+                    if ( prefix == "se" )
+                    {
+                        iconFont = ( IIconFont ) Activator.CreateInstance( typeof( CustomIcons ) );
+                    }
+
                     if ( iconFont == null )
                     {
                         return;

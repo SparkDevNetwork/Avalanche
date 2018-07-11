@@ -253,6 +253,7 @@
     <AndroidAsset Include="Assets\ProximaNova-Bold.ttf" />
     <AndroidAsset Include="Assets\ProximaNova-Extrabld.ttf" />
     <AndroidAsset Include="Assets\ProximaNova-Light.ttf" />
+    <AndroidAsset Include="Assets\CustomIcons.ttf" />
     <None Include="packages.config" />
     <None Include="Resources\AboutResources.txt" />
     <None Include="Assets\AboutAssets.txt" />

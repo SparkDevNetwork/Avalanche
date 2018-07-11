@@ -54,6 +54,7 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>fontawesome.ttf</string>
+    <string>CustomIcons.ttf</string>
     <string>Comic-Sans-MS.ttf</string>
     <string>slabo-27px-v4-latin-regular.ttf</string>
     <string>OpenSans-Regular.ttf</string>
