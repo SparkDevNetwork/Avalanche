@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net.Http;
 using System.ServiceModel.Channels;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Compilation;
@@ -30,6 +31,7 @@ using Avalanche.Models;
 using Avalanche.Transactions;
 using Newtonsoft.Json;
 using Rock;
+using Rock.Data;
 using Rock.Model;
 using Rock.Rest;
 using Rock.Rest.Filters;
@@ -244,6 +246,38 @@ namespace Avalanche.Rest.Controllers
             return new Dictionary<string, string> { { "Status", "Ok" } };
         }
 
+        [HttpPost]
+        [Authenticate]
+        [System.Web.Http.Route( "api/avalanche/registerfcm" )]
+        public Dictionary<string, string> RegisterFCM()
+        {
+            HttpContent requestContent = Request.Content;
+            string content = requestContent.ReadAsStringAsync().Result;
+            Dictionary<string, string> tokenDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>( content );
+            var person = GetPerson();
+
+            if ( tokenDictionary.ContainsKey( "Token" )
+                 && !string.IsNullOrWhiteSpace( tokenDictionary["Token"] )
+                 && person != null )
+            {
+                var userAgent = Request.Headers.UserAgent.ToString();
+                var deviceId = Regex.Match( userAgent, "(?<=-).+(?=\\))" ).Value.Trim();
+                if ( deviceId.Length > 20 )
+                {
+                    deviceId = deviceId.Substring( 0, 20 );
+                }
+                RockContext rockContext = new RockContext();
+                PersonalDevice personalDevice = AvalancheUtilities.GetPersonalDevice( deviceId, person.PrimaryAliasId, rockContext );
+                if ( personalDevice != null && personalDevice.DeviceRegistrationId != tokenDictionary["Token"] )
+                {
+                    personalDevice.DeviceRegistrationId = tokenDictionary["Token"];
+                    personalDevice.NotificationsEnabled = true;
+                    rockContext.SaveChanges();
+                }
+
+            }
+            return new Dictionary<string, string> { { "Status", "Ok" } };
+        }
 
         private void SavePageViewInteraction( PageCache Page, Person CurrentPerson )
         {

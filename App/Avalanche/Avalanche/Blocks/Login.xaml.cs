@@ -70,6 +70,7 @@ namespace Avalanche.Blocks
                     AvalancheNavigation.Footer = null;
                     App.Current.MainPage = new AvalanchePage();
                     AvalancheNavigation.RequestNewRckipid();
+                    FCMHelper.RegisterFCMToken();
                     break;
                 default:
                     break;

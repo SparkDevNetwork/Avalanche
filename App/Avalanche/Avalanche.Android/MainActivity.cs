@@ -17,13 +17,10 @@ using System;
 
 using Android.App;
 using Android.Content.PM;
-using Android.Runtime;
-using Android.Views;
-using Android.Widget;
 using Android.OS;
 using FFImageLoading.Forms.Droid;
-using Plugin.Permissions;
-using Plugin.Permissions.Abstractions;
+using Android.Gms.Common;
+using Firebase.Iid;
 
 namespace Avalanche.Droid
 {
@@ -39,9 +36,42 @@ namespace Avalanche.Droid
 
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
             CachedImageRenderer.Init();
+            var t = IsPlayServicesAvailable();
 
             global::Xamarin.Forms.Forms.Init( this, bundle );
             LoadApplication( new Avalanche.App() );
+        }
+
+        string debug;
+
+        public bool IsPlayServicesAvailable()
+        {
+            //This code is left in to help you debug your firebase for android
+            //You will need to rebuild your app each time you wish to make a change
+            //and use Firebase. This is a long standing Xamarin Android issue.
+            int resultCode = GoogleApiAvailability.Instance.IsGooglePlayServicesAvailable( this );
+            if ( resultCode != ConnectionResult.Success )
+            {
+                if ( GoogleApiAvailability.Instance.IsUserResolvableError( resultCode ) )
+                    debug = GoogleApiAvailability.Instance.GetErrorString( resultCode );
+                else
+                {
+                    debug = "This device is not supported";
+                    Finish();
+                }
+                return false;
+            }
+            else
+            {
+                try
+                {
+                    debug = FirebaseInstanceId.Instance.Token;
+                }
+                catch ( Exception e )
+                {
+                }
+                return true;
+            }
         }
     }
 }
