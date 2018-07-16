@@ -94,7 +94,11 @@ namespace Avalanche.Transactions
                     // Add the interaction
                     if ( interactionComponent != null )
                     {
-                        var deviceId = Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim().Substring( 0, 20 );
+                        var deviceId = Regex.Match( UserAgent, "(?<=-).+(?=\\))" ).Value.Trim();
+                        if ( deviceId.Length > 20 )
+                        {
+                            deviceId = deviceId.Substring( 0, 20 );
+                        }
                         var deviceApplication = Regex.Match( UserAgent, "^[\\S]{0,}" ).Value.Trim() + " " + deviceId;
                         var clientOs = Regex.Match( UserAgent, "(?<=;).+(?=-)" ).Value.Trim();
                         var clientType = Regex.Match( UserAgent, "(?<=\\().+(?=;)" ).Value.Trim();
@@ -119,7 +123,7 @@ namespace Avalanche.Transactions
 
                         interaction.InteractionSummary = InteractionSummary;
 
-                        PersonalDevice personalDevice = GetPersonalDevice( deviceId, rockContext );
+                        PersonalDevice personalDevice = AvalancheUtilities.GetPersonalDevice( deviceId, PersonAliasId, rockContext );
                         if ( personalDevice != null )
                         {
                             interaction.PersonalDeviceId = personalDevice.Id;
@@ -129,37 +133,6 @@ namespace Avalanche.Transactions
                     }
                 }
             }
-        }
-
-        private PersonalDevice GetPersonalDevice( string deviceId, RockContext rockContext )
-        {
-            if ( string.IsNullOrWhiteSpace( deviceId ) )
-            {
-                return null;
-            }
-
-            PersonalDeviceService personalDeviceService = new PersonalDeviceService( rockContext );
-            var device = personalDeviceService.Queryable().Where( d => d.DeviceUniqueIdentifier == deviceId ).FirstOrDefault();
-            if ( device != null )
-            {
-                if ( device.PersonAliasId == PersonAliasId )
-                {
-                    return device;
-                }
-                device.PersonAliasId = PersonAliasId;
-                rockContext.SaveChanges();
-                return device;
-            }
-
-            device = new PersonalDevice()
-            {
-                PersonAliasId = PersonAliasId,
-                DeviceUniqueIdentifier = deviceId,
-                PersonalDeviceTypeValueId = DefinedTypeCache.Read( Rock.SystemGuid.DefinedValue.PERSONAL_DEVICE_TYPE_MOBILE.AsGuid() ).Id
-            };
-            personalDeviceService.Add( device );
-            rockContext.SaveChanges();
-            return device;
         }
     }
 }
