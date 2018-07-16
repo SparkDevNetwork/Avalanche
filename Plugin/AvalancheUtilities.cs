@@ -19,6 +19,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Rock;
+using Rock.Data;
 using Rock.Model;
 using Rock.Web.Cache;
 
@@ -104,6 +105,38 @@ namespace Avalanche
             var value = definedType.DefinedValues.Where( d => d.Value.Replace( " ", "" ).ToLower() == layoutName.Replace( " ", "" ).ToLower() ).FirstOrDefault();
             var content = value.GetAttributeValue( "Content" );
             return content;
+        }
+
+
+        public static PersonalDevice GetPersonalDevice( string deviceId, int? PersonAliasId, RockContext rockContext )
+        {
+            if ( string.IsNullOrWhiteSpace( deviceId ) )
+            {
+                return null;
+            }
+
+            PersonalDeviceService personalDeviceService = new PersonalDeviceService( rockContext );
+            var device = personalDeviceService.Queryable().Where( d => d.DeviceUniqueIdentifier == deviceId ).FirstOrDefault();
+            if ( device != null )
+            {
+                if ( device.PersonAliasId == PersonAliasId )
+                {
+                    return device;
+                }
+                device.PersonAliasId = PersonAliasId;
+                rockContext.SaveChanges();
+                return device;
+            }
+
+            device = new PersonalDevice()
+            {
+                PersonAliasId = PersonAliasId,
+                DeviceUniqueIdentifier = deviceId,
+                PersonalDeviceTypeValueId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.PERSONAL_DEVICE_TYPE_MOBILE.AsGuid() ).Id
+            };
+            personalDeviceService.Add( device );
+            rockContext.SaveChanges();
+            return device;
         }
     }
 }
