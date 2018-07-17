@@ -92,7 +92,7 @@ namespace Avalanche
                     }
                     isPortrait = localPortrait;
                     AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
-                    AvalancheNavigation.Footer.TranslationY = mainPage.Content.Height - AvalancheNavigation.YOffSet;
+                    AvalancheNavigation.Footer.TranslationY = height - AvalancheNavigation.YOffSet;
                     AvalancheNavigation.SafeInset.Bottom = 0;
                 }
                 else

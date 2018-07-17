@@ -16,13 +16,14 @@
 	<key>UISupportedInterfaceOrientations~ipad</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>MinimumOSVersion</key>
 	<string>10.0</string>
 	<key>CFBundleDisplayName</key>
-	<string>Avalanche</string>
-	<key>CFBundleIdentifier</key>
-	<string>org.secc.Avalanche</string>
+	<string>Southeast Christian</string>
 	<key>CFBundleVersion</key>
 	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
@@ -47,6 +48,8 @@
 	<string>This app needs access to the camera to take photos.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>This app needs access to photos to save to change profile picture.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>This app needs calendare access to store event reminders.</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 	<key>UILaunchStoryboardName</key>
@@ -54,17 +57,17 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>fontawesome.ttf</string>
-    <string>CustomIcons.ttf</string>
-    <string>Comic-Sans-MS.ttf</string>
-    <string>slabo-27px-v4-latin-regular.ttf</string>
-    <string>OpenSans-Regular.ttf</string>
-    <string>ProximaNova-Black.ttf</string>
-    <string>ProximaNova-Bold.ttf</string>
-    <string>ProximaNova-Extrabld.ttf</string>
-    <string>ProximaNova-Light.ttf</string>
-    <string>ProximaNova-Regular.ttf</string>
-    <string>ProximaNova-Semibold.ttf</string>
-    <string>ProximaNova-Thin.ttf</string>
+		<string>CustomIcons.ttf</string>
+		<string>Comic-Sans-MS.ttf</string>
+		<string>slabo-27px-v4-latin-regular.ttf</string>
+		<string>OpenSans-Regular.ttf</string>
+		<string>ProximaNova-Black.ttf</string>
+		<string>ProximaNova-Bold.ttf</string>
+		<string>ProximaNova-Extrabld.ttf</string>
+		<string>ProximaNova-Light.ttf</string>
+		<string>ProximaNova-Regular.ttf</string>
+		<string>ProximaNova-Semibold.ttf</string>
+		<string>ProximaNova-Thin.ttf</string>
 	</array>
 	<key>UIMainStoryboardFile</key>
 	<string>LaunchScreen</string>
@@ -73,11 +76,13 @@
 	<key>XSAppIconAssets</key>
 	<string>Resources/Media.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.3</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
-    <string>remote-notification</string>
+		<string>remote-notification</string>
 	</array>
+	<key>CFBundleIdentifier</key>
+	<string>org.southeastchristian.seccapp</string>
 </dict>
 </plist>
