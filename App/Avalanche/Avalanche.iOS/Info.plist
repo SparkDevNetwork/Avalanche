@@ -24,8 +24,6 @@
 	<string>10.0</string>
 	<key>CFBundleDisplayName</key>
 	<string>Southeast Christian</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
 	<key>CFBundleIconFiles</key>
 	<array>
 		<string>Icon-60@2x.png</string>
@@ -84,5 +82,7 @@
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>org.southeastchristian.seccapp</string>
+	<key>CFBundleVersion</key>
+	<string>3</string>
 </dict>
 </plist>

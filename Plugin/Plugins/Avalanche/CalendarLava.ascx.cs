@@ -109,7 +109,7 @@ namespace RockWeb.Plugins.Avalanche.Event
         {
             base.OnInit( e );
 
-            
+
         }
 
         /// <summary>
@@ -214,10 +214,29 @@ namespace RockWeb.Plugins.Avalanche.Event
 
             // Get the beginning and end dates
             var today = RockDateTime.Now;
-            var filterStart =today;
+            var filterStart = today;
             var monthStart = new DateTime( filterStart.Year, filterStart.Month, 1 );
             var rangeStart = monthStart.AddMonths( -1 );
             var rangeEnd = monthStart.AddMonths( 2 );
+
+            FilterStartDate = today;
+            FilterEndDate = today;
+            ViewMode = GetAttributeValue( "DefaultViewOption" );
+            if ( ViewMode == "Week" )
+            {
+                FilterStartDate = today.StartOfWeek( _firstDayOfWeek );
+                FilterEndDate = today.EndOfWeek( _firstDayOfWeek );
+            }
+            else if ( ViewMode == "Month" )
+            {
+                FilterStartDate = new DateTime( today.Year, today.Month, 1 );
+                FilterEndDate = FilterStartDate.Value.AddMonths( 1 ).AddDays( -1 );
+            }
+            else if ( ViewMode == "Year" )
+            {
+                FilterEndDate = FilterStartDate.Value.AddYears( 1 ).AddDays( -1 );
+            }
+
             var beginDate = FilterStartDate.HasValue ? FilterStartDate.Value : rangeStart;
             var endDate = FilterEndDate.HasValue ? FilterEndDate.Value : rangeEnd;
 
