@@ -33,6 +33,9 @@ namespace Avalanche.Views
 {
     public partial class MainPage : ContentPage
     {
+        public string Resource { get; set; }
+        public string Parameter { get; set; }
+
         public ObservableResource<MobilePage> observableResource = new ObservableResource<MobilePage>();
         private List<IHasMedia> mediaBlocks = new List<IHasMedia>();
         private List<INotify> notifyBlock = new List<INotify>();
@@ -64,6 +67,8 @@ namespace Avalanche.Views
         public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
+            Resource = resource;
+            Parameter = parameter;
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
             Task.Run( () => { Handle_Timeout(); } );
             if ( !string.IsNullOrWhiteSpace( parameter ) )
