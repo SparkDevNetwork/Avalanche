@@ -23,7 +23,7 @@ namespace Avalanche.Migrations
         {
             //CarouselListView ListView
             RockMigrationHelper.AddDefinedValue( AvalancheUtilities.MobileListViewComponent, "Carousel ListView", "A one at a time slide show. Set the Custom Attribute 'ScrollInterval' with a number in seconds to have it auto scroll.", "77B69D91-5FF2-405E-96DB-ED24BF797529" );
-            RockMigrationHelper.UpdateDefinedValueAttributeValue( "77B69D91-5FF2-405E-96DB-ED24BF797529", "9107CE0D-3EC8-4C4F-8BB1-A45EFD4DB2E9", "Avalanche.Components.ListView.CarouselListView" );
+            RockMigrationHelper.UpdateDefinedValueAttributeValue( "77B69D91-5FF2-405E-96DB-ED24BF797529", "ACAE178E-E804-4F32-9BE3-2F020E7314CF", "Avalanche.Components.ListView.CarouselListView" );
         }
 
         public override void Down()
