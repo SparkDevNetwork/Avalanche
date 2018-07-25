@@ -118,6 +118,12 @@ namespace Avalanche.Transactions
                             rockContext.SaveChanges();
                         }
 
+                        Operation = TrimString( Operation, 25 );
+                        InteractionSummary = TrimString( InteractionSummary, 500 );
+                        clientType = TrimString( clientType, 25 );
+                        deviceApplication = TrimString( deviceApplication, 100 );
+                        clientOs = TrimString( clientOs, 100 );
+
                         var interaction = new InteractionService( rockContext ).AddInteraction( interactionComponent.Id, null, Operation, InteractionData, PersonAliasId, DateViewed,
                             deviceApplication, clientOs, clientType, UserAgent, IPAddress, interactionSession.Guid );
 
@@ -134,5 +140,15 @@ namespace Avalanche.Transactions
                 }
             }
         }
+
+        private string TrimString( string input, int length )
+        {
+            if ( input.Length > length )
+            {
+                input = input.Substring( 0, length );
+            }
+            return input;
+        }
+
     }
 }
