@@ -20,7 +20,7 @@ namespace Avalanche.Models
 {
     class ListViewResponse
     {
-        public List<ListElement> Content { get; set; }
+        public List<Dictionary<string, string>> Content { get; set; }
         public string NextRequest { get; set; }
     }
 }

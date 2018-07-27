@@ -38,5 +38,6 @@ namespace Avalanche.Models
         public string Image { get; set; }
         public string ActionType { get; set; }
         public string Resource { get; set; }
+        public string Parameter { get; set; }
     }
 }
