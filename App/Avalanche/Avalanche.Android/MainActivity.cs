@@ -35,11 +35,18 @@ namespace Avalanche.Droid
             base.OnCreate( bundle );
 
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
-            CachedImageRenderer.Init();
+            CachedImageRenderer.Init(false);
             var t = IsPlayServicesAvailable();
 
             global::Xamarin.Forms.Forms.Init( this, bundle );
-            LoadApplication( new Avalanche.App() );
+            try
+            {
+                LoadApplication( new Avalanche.App() );
+            }
+            catch ( Exception e )
+            {
+
+            }
         }
 
         string debug;
