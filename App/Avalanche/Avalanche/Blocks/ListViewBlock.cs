@@ -108,7 +108,7 @@ namespace Avalanche.Blocks
 
         private void AddRenderContent()
         {
-            List<ListElement> mlv = JsonConvert.DeserializeObject<List<ListElement>>( Attributes["Content"] );
+            List<Dictionary<string, string>> mlv = JsonConvert.DeserializeObject<List<Dictionary<string, string>>>( Attributes["Content"] );
             foreach ( var element in mlv )
             {
                 AddElement( element );
@@ -116,12 +116,19 @@ namespace Avalanche.Blocks
             listViewComponent.IsRefreshing = false;
         }
 
-        private void AddElement( ListElement element )
+        private void AddElement( Dictionary<string, string> template )
         {
             var keys = new List<string> { "Resource", "ActionType" };
             var clonedAttributes = Attributes
                 .Where( a => !keys.Contains( a.Key ) )
                 .ToDictionary( a => a.Key, a => a.Value );
+
+            foreach ( var item in template )
+            {
+                clonedAttributes[item.Key] = item.Value;
+            }
+
+            var element = new ListElement();
 
             AttributeHelper.ApplyTranslation( element, clonedAttributes );
             foreach ( var i in listViewComponent.ItemsSource )
@@ -226,19 +233,29 @@ namespace Avalanche.Blocks
                 return;
             }
 
+            //see if a parameter has been provided
+            //if not use the item's id
+            var parameter = item.Id;
+            if ( !string.IsNullOrWhiteSpace( item.Parameter ) )
+            {
+                parameter = item.Parameter;
+            }
+
+            //if the individual item determins it's action type and resource
             if ( !string.IsNullOrWhiteSpace( item.Resource ) && !string.IsNullOrWhiteSpace( item.ActionType ) )
             {
                 var actionDictionary = new Dictionary<string, string> {
                     { "Resource", item.Resource },
                     { "ActionType", item.ActionType },
-                    { "Parameter", item.Id }
+                    { "Parameter",  parameter}
                 };
                 AvalancheNavigation.HandleActionItem( actionDictionary );
                 return;
             }
 
+            //default to the block is supplying the action type and resource
             listViewComponent.SelectedItem = null;
-            Attributes["Parameter"] = item.Id;
+            Attributes["Parameter"] = parameter;
             AvalancheNavigation.HandleActionItem( Attributes );
         }
         #endregion

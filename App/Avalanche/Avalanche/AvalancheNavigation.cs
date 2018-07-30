@@ -34,6 +34,15 @@ namespace Avalanche
 
         public static void GetPage( string resource, string parameter = "" )
         {
+            var currentPage = App.Navigation.Navigation.NavigationStack[App.Navigation.Navigation.NavigationStack.Count - 1];
+            if ( currentPage != null && currentPage is MainPage )
+            {
+                var topPage = ( MainPage ) currentPage;
+                if ( topPage.Resource == "page/" + resource && topPage.Parameter == parameter )
+                {
+                    return;
+                }
+            }
             App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
         }
 
@@ -42,11 +51,19 @@ namespace Avalanche
             App.Navigation.Navigation.PopAsync();
         }
 
-        public async static void ReplacePage( string resource, string argument = "" )
+        public async static void ReplacePage( string resource, string parameter = "" )
         {
-            var page = App.Navigation.Navigation.NavigationStack[App.Navigation.Navigation.NavigationStack.Count - 1];
-            await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, argument ) );
-            App.Navigation.Navigation.RemovePage( page );
+            var currentPage = App.Navigation.Navigation.NavigationStack[App.Navigation.Navigation.NavigationStack.Count - 1];
+            if ( currentPage != null && currentPage is MainPage )
+            {
+                var topPage = ( MainPage ) currentPage;
+                if ( topPage.Resource == "page/" + resource && topPage.Parameter == parameter )
+                {
+                    return;
+                }
+            }
+            await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
+            App.Navigation.Navigation.RemovePage( currentPage );
         }
 
         public static void HandleActionItem( Dictionary<string, string> Attributes )
