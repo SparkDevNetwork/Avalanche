@@ -289,6 +289,7 @@ namespace Avalanche.Rest.Controllers
                 PageTitle = Page.PageTitle,
                 Operation = "View",
                 PersonAliasId = CurrentPerson?.PrimaryAliasId,
+                InteractionSummary = Page.PageTitle,
                 InteractionData = Request.RequestUri.ToString(),
                 IPAddress = GetClientIp( Request ),
                 UserAgent = Request.Headers.UserAgent.ToString()
