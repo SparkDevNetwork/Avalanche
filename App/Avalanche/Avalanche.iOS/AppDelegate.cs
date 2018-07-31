@@ -41,7 +41,7 @@ namespace Avalanche.iOS
         public override bool FinishedLaunching( UIApplication app, NSDictionary options )
         {
             //Uncomment to enable push notifications.
-            //RegisterForPushNotifications();
+            RegisterForPushNotifications();
 
             CachedImageRenderer.Init();
             global::Xamarin.Forms.Forms.Init();
