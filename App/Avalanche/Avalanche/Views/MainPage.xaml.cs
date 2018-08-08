@@ -91,6 +91,13 @@ namespace Avalanche.Views
 
         private void HandleResponse()
         {
+            foreach ( var block in notifyBlock )
+            {
+                block.OnDisappearing();
+            }
+            notifyBlock.Clear();
+            mediaBlocks.Clear();
+
             var page = observableResource.Resource as MobilePage;
             this.Title = page.Title;
 
