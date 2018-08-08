@@ -78,7 +78,7 @@ namespace Avalanche.Migrations
   }
 ]";
 
-            RockMigrationHelper.AddDefinedValue( AvalancheUtilities.LayoutsDefinedType, "Simple", "Simple layout with a featured, main, three sub sections, and a footer.", "BB5006D8-7F51-43D5-B977-5E07F5ACA8C2" );
+            RockMigrationHelper.AddDefinedValue( AvalancheUtilities.LayoutsDefinedType, "Simple", "Simple layout with a featured, main, three sub sections, and a footer.", "BB5006D8-7F51-43D5-B977-5E07F5ACA8C2", false );
             RockMigrationHelper.AddDefinedValueAttributeValue( "BB5006D8-7F51-43D5-B977-5E07F5ACA8C2", "E5DE699C-49F6-488B-BA1F-F4CC13CE8B91", simple );
 
             var noscroll = @"[
@@ -104,59 +104,9 @@ namespace Avalanche.Migrations
   ""Orientation"": ""Vertical"",
 }
 ]";
-            RockMigrationHelper.AddDefinedValue( AvalancheUtilities.LayoutsDefinedType, "No Scroll", "Layout with no scrolling elements. Good for list views.", "3812C543-8B80-4A7C-BBD0-4DEFEABBA7DC" );
+            RockMigrationHelper.AddDefinedValue( AvalancheUtilities.LayoutsDefinedType, "No Scroll", "Layout with no scrolling elements. Good for list views.", "3812C543-8B80-4A7C-BBD0-4DEFEABBA7DC", false );
             RockMigrationHelper.AddDefinedValueAttributeValue( "3812C543-8B80-4A7C-BBD0-4DEFEABBA7DC", "E5DE699C-49F6-488B-BA1F-F4CC13CE8B91", noscroll );
-
-            var boxes = @"[
-{
-  ""Name"": ""Container"",
-  ""Type"": ""Grid"",
-  ""ScrollY"": true,
-  ""ColumnDefinitions"": ""*,*,*,*"",
-  ""RowDefinitions"": ""Auto,Auto,Auto"",
-  ""Children"": [
-    {
-      ""Type"": ""StackLayout"",
-      ""Name"": ""ZoneA"",
-      ""Row"": 0,
-      ""Column"": 0,
-      ""ColumnSpan"": 4
-    },
-    {
-      ""Type"": ""StackLayout"",
-      ""Name"": ""ZoneB"",
-      ""Row"": 1,
-      ""Column"": 0,
-      ""ColumnSpan"": 3
-    },
-    
-      ""Type"": ""StackLayout"",
-      ""Name"": ""ZoneC"",
-      ""Row"": 1,
-      ""Column"": 3
-    },
-    {
-      ""Type"": ""StackLayout"",
-      ""Name"": ""ZoneD"",
-      ""Row"": 2,
-      ""Column"": 0,
-      ""ColumnSpan"": 2
-    },
-    {
-      ""Type"": ""StackLayout"",
-      ""Name"": ""ZoneE"",
-      ""Row"": 2,
-      ""Column"": 2,
-      ""ColumnSpan"": 2
-    }
-  ]
-}
-]";
-
-            RockMigrationHelper.AddDefinedValue( AvalancheUtilities.LayoutsDefinedType, "Boxes", "Grid based layout with five areas.", "25CB1590-39AA-11E8-B566-0800200C9A66" );
-            RockMigrationHelper.AddDefinedValueAttributeValue( "25CB159D-39AA-11E8-B566-18032A0C9A66", "E5DE699C-49F6-488B-BA1F-F4CC13CE8B91", boxes );
         }
-
         public override void Down()
         {
         }
