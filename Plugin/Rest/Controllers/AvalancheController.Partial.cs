@@ -96,9 +96,10 @@ namespace Avalanche.Rest.Controllers
             mobilePage.Layout = AvalancheUtilities.GetLayout( pageCache.Layout.Name );
             mobilePage.Title = pageCache.PageTitle;
             mobilePage.ShowTitle = pageCache.PageDisplayTitle;
-            foreach ( var attribute in pageCache.AttributeValues )
+
+            foreach ( var attribute in pageCache.Attributes )
             {
-                mobilePage.Attributes.Add( attribute.Key, attribute.Value.ValueFormatted );
+                mobilePage.Attributes.Add( attribute.Key, pageCache.GetAttributeValue( attribute.Key ) );
             }
             foreach ( var block in pageCache.Blocks )
             {
