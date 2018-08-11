@@ -40,6 +40,7 @@ namespace Avalanche.Components.FormElements
         public Color ElementTextColor { get; set; }
         public View View { get; private set; }
         public Dictionary<string, string> Attributes { get; set; }
+        private string originalValue = "";
         public string Value
         {
             get
@@ -70,6 +71,7 @@ namespace Avalanche.Components.FormElements
                     {
                         var optionKey = reversedOptions.Where( ro => ro.Value == value ).FirstOrDefault();
                         picker.SelectedItem = optionKey.Key;
+                        originalValue = optionKey.Key;
                     }
                 }
             }
@@ -157,9 +159,9 @@ namespace Avalanche.Components.FormElements
                 picker.TextColor = ElementTextColor;
             }
 
-            picker.SelectedIndexChanged += ( s, e ) =>
+            picker.Unfocused += ( s, e ) =>
                     {
-                        if ( AutoPostBack )
+                        if ( AutoPostBack  &&( (string) picker.SelectedItem) != originalValue)
                         {
                             PostBack?.Invoke( s, Key );
                         }
