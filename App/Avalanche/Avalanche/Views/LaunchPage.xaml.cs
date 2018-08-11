@@ -33,56 +33,37 @@ namespace Avalanche.Views
             {
                 new CarouselItem
                 {
-                    Image = "Splash1.png",
-                    Title = "Southeast Christian",
-                    Description = "Southeast Christian Church is a multi-campus located throughout the Louisville area.",
-                    Next = true
+                    Image = "Splash1.jpg",
                 },
                 new CarouselItem
                 {
-                    Image = "Splash2.png",
-                    Title = "Your Church, Your App",
-                    Description = "This app is here to help you get the most out of your church.",
-                    Next = true
+                    Image = "Splash2.jpg",
                 },
                 new CarouselItem
                 {
-                    Image = "Splash3.png",
-                    Title = "Always Welcome",
-                    Description = "If you have never attended a service at Southeast Christian Church, know you are welcome here.",
-                    End = true
+                    Image = "Splash3.jpg",
                 },
+                new CarouselItem
+                {
+                }
             };
 
             Carousel.ItemsSource = items;
+
+            Carousel.PositionSelected += Carousel_PositionSelected;
         }
 
-
-        private void btnGo_Clicked( object sender, EventArgs e )
+        private void Carousel_PositionSelected( object sender, SelectedPositionChangedEventArgs e )
         {
-            Navigation.PopModalAsync();
-        }
-
-        private void btnNext_Clicked( object sender, EventArgs e )
-        {
-            if ( ( ( List<CarouselItem> ) Carousel.ItemsSource ).Count > Carousel.Position - 1 )
+            if ( Carousel.Position == 3 )
             {
-                Carousel.Position += 1;
+                Navigation.PopModalAsync();
             }
-        }
-
-        protected override bool OnBackButtonPressed()
-        {
-            return false;
         }
 
         private class CarouselItem
         {
             public string Image { get; set; }
-            public string Title { get; set; }
-            public string Description { get; set; }
-            public bool Next { get; set; }
-            public bool End { get; set; }
         }
     }
 }
