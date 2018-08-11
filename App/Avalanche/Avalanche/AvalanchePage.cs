@@ -78,35 +78,31 @@ namespace Avalanche
 
             if ( AvalancheNavigation.AllowResize || localPortrait != isPortrait )
             {
-                AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
-
-                if ( AvalancheNavigation.Footer != null )
+                Device.BeginInvokeOnMainThread( () =>
                 {
-                    if ( AvalancheNavigation.Footer.Menu.Height != -1 )
+                    AvalancheNavigation.SafeInset = On<Xamarin.Forms.PlatformConfiguration.iOS>().SafeAreaInsets();
+
+                    if ( AvalancheNavigation.Footer != null )
                     {
-                        AvalancheNavigation.YOffSet = AvalancheNavigation.Footer.Menu.Height + AvalancheNavigation.SafeInset.Bottom;
+                        AvalancheNavigation.YOffSet = 60 + AvalancheNavigation.SafeInset.Bottom;
+                        isPortrait = localPortrait;
+                        AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
+                        AvalancheNavigation.Footer.TranslationY = height - AvalancheNavigation.YOffSet;
+                        AvalancheNavigation.SafeInset.Bottom = 0;
                     }
                     else
                     {
-                        return;
+                        AvalancheNavigation.YOffSet = 0;
                     }
-                    isPortrait = localPortrait;
-                    AvalancheNavigation.Footer.Menu.Margin = new Thickness( AvalancheNavigation.SafeInset.Left, 0, AvalancheNavigation.SafeInset.Right, 0 );
-                    AvalancheNavigation.Footer.TranslationY = height - AvalancheNavigation.YOffSet;
-                    AvalancheNavigation.SafeInset.Bottom = 0;
-                }
-                else
-                {
-                    AvalancheNavigation.YOffSet = 0;
-                }
 
-                mainPage.Content.Margin = new Thickness(
-                    AvalancheNavigation.SafeInset.Left,
-                    AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
-                    AvalancheNavigation.SafeInset.Right,
-                    AvalancheNavigation.SafeInset.Bottom );
+                    mainPage.Content.Margin = new Thickness(
+                            AvalancheNavigation.SafeInset.Left,
+                            AvalancheNavigation.YOffSet + AvalancheNavigation.SafeInset.Top,
+                            AvalancheNavigation.SafeInset.Right,
+                            AvalancheNavigation.SafeInset.Bottom );
 
-                App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
+                    App.Navigation.TranslationY = AvalancheNavigation.YOffSet * -1;
+                } );
             }
             AvalancheNavigation.AllowResize = false;
         }

@@ -372,15 +372,6 @@
     <BundleResource Include="Resources\avalancheGlowgo.png" />
   </ItemGroup>
   <ItemGroup>
-    <BundleResource Include="Resources\Splash1.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\Splash2.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <BundleResource Include="Resources\Splash3.png" />
-  </ItemGroup>
-  <ItemGroup>
     <BundleResource Include="Resources\Default-568h%402x.png" />
   </ItemGroup>
   <ItemGroup>
@@ -388,6 +379,15 @@
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default-Portrait%402x.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Splash1.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Splash3.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <BundleResource Include="Resources\Splash2.jpg" />
   </ItemGroup>
   <Import Project="..\Avalanche\Avalanche.projitems" Label="Shared" Condition="Exists('..\Avalanche\Avalanche.projitems')" />
   <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />

@@ -82,11 +82,6 @@ namespace RockWeb.Plugins.Avalanche.Event
         private string _calendarName = string.Empty;
         private DayOfWeek _firstDayOfWeek = DayOfWeek.Sunday;
 
-        protected bool CampusPanelOpen { get; set; }
-        protected bool CampusPanelClosed { get; set; }
-        protected bool CategoryPanelOpen { get; set; }
-        protected bool CategoryPanelClosed { get; set; }
-
         #endregion
 
         #region Properties
@@ -132,11 +127,6 @@ namespace RockWeb.Plugins.Avalanche.Event
                 _calendarName = eventCalendar.Name;
             }
 
-            CampusPanelOpen = GetAttributeValue( "CampusFilterDisplayMode" ) == "3";
-            CampusPanelClosed = GetAttributeValue( "CampusFilterDisplayMode" ) == "4";
-            CategoryPanelOpen = !String.IsNullOrWhiteSpace( GetAttributeValue( "FilterCategories" ) ) && GetAttributeValue( "CategoryFilterDisplayMode" ) == "3";
-            CategoryPanelClosed = !String.IsNullOrWhiteSpace( GetAttributeValue( "FilterCategories" ) ) && GetAttributeValue( "CategoryFilterDisplayMode" ) == "4";
-
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
                                    CustomAttributes,
                                    CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
@@ -150,8 +140,7 @@ namespace RockWeb.Plugins.Avalanche.Event
                 CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
-
-            var data = BindData();
+            var data = BindData( parameter );
             CustomAttributes["Content"] = data;
             CustomAttributes["InitialRequest"] = parameter;
 
@@ -172,12 +161,32 @@ namespace RockWeb.Plugins.Avalanche.Event
         /// <summary>
         /// Loads and displays the event item occurrences
         /// </summary>
-        private string BindData()
+        private string BindData( string parameter )
         {
-            var cacheKey = string.Format( "{0}CalendarLava", BlockCache.Id.ToString() );
+            var cacheKey = string.Format( "{0}{1}CalendarLava", BlockCache.Id.ToString(), parameter );
 
             var cache = RockMemoryCache.Default;
             var content = ( string ) cache.Get( cacheKey );
+            if ( !string.IsNullOrWhiteSpace( content ) )
+            {
+                return content;
+            }
+
+            var selectedCampus = "0";
+            var selectedMinistry = "0";
+            if ( !string.IsNullOrWhiteSpace( parameter ) )
+            {
+                var split = parameter.Split( '|' );
+                if ( split.Length > 0 )
+                {
+                    selectedCampus = split[0];
+                }
+                if ( split.Length > 1 )
+                {
+                    selectedMinistry = split[1];
+                }
+            }
+
 
             var rockContext = new RockContext();
             var eventItemOccurrenceService = new EventItemOccurrenceService( rockContext );
@@ -186,9 +195,26 @@ namespace RockWeb.Plugins.Avalanche.Event
 
             int calendarItemEntityTypeId = EntityTypeCache.GetId( typeof( EventCalendarItem ) ).Value;
 
+
+            var eventQry = eventItemOccurrenceService
+                    .Queryable( "EventItem, EventItem.EventItemAudiences,Schedule" );
+            //filter by campus
+            if ( selectedCampus.AsInteger() != 0 )
+            {
+                var campusId = selectedCampus.AsInteger();
+                eventQry = eventQry.Where( e => e.CampusId == campusId  );
+            }
+
+            //filter by ministry
+            if ( selectedMinistry.AsInteger() != 0 )
+            {
+                var ministryId = selectedMinistry.AsInteger();
+                eventQry = eventQry.Where( e => e.EventItem.EventItemAudiences.Select(a => a.DefinedValueId).Contains( ministryId ) );
+            }
+
+
             // Grab events
-            var qry = eventItemOccurrenceService
-                    .Queryable( "EventItem, EventItem.EventItemAudiences,Schedule" )
+            var qry = eventQry
                     .GroupJoin(
                         attributeService.Queryable(),
                         p => calendarItemEntityTypeId,
@@ -323,6 +349,7 @@ namespace RockWeb.Plugins.Avalanche.Event
             mergeFields.Add( "EventItems", eventSummaries );
             mergeFields.Add( "EventItemOccurrences", eventOccurrenceSummaries );
             mergeFields.Add( "CurrentPerson", CurrentPerson );
+            mergeFields.Add( "parameter", parameter );
 
             content = ( string ) GetAttributeValue( "LavaTemplate" ).ResolveMergeFields( mergeFields, GetAttributeValue( "EnabledLavaCommands" ) );
 
