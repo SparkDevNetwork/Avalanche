@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<ContentView xmlns="http://xamarin.com/schemas/2014/forms" 
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Avalanche.Blocks.TextOverImage"
+             xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
+             HorizontalOptions="FillAndExpand">
+    <ContentView.Content>
+        <Grid x:Name="gGrid">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <ff:CachedImage x:Name="ffImage"  Aspect="AspectFill" VerticalOptions="Center" />
+            <Label x:Name="lLabel" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
+                   VerticalOptions="Center" HorizontalOptions="FillAndExpand"               
+                   />
+        </Grid>
+    </ContentView.Content>
+</ContentView>

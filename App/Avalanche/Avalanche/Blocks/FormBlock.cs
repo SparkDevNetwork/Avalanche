@@ -47,7 +47,10 @@ namespace Avalanche.Blocks
 
             StackLayout stackLayout = new StackLayout();
 
-            activityIndicator = new ActivityIndicator();
+            activityIndicator = new ActivityIndicator()
+            {
+                IsVisible = false
+            };
             stackLayout.Children.Add( activityIndicator );
 
             slValidationMessage = new StackLayout()
@@ -127,7 +130,7 @@ namespace Avalanche.Blocks
                 slValidationMessage.BackgroundColor = ErrorBackgroundColor;
                 return;
             }
-
+            activityIndicator.IsRunning = false;
             if ( formResponse == null )
             {
                 activityIndicator.IsRunning = false;
