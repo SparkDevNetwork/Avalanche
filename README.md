@@ -20,6 +20,11 @@ Open the solution in Visual Studio. Edit the file Utilities/Constants and point 
 
 New features, wiki improvements or bug fixes welcome! Check out the [wiki](https://github.com/secc/Avalanche/wiki)
  for more information. 
+ 
+[![Build status](https://build.appcenter.ms/v0.1/apps/58278ba1-767b-474b-ba5b-228a3629a64e/branches/master/badge)](https://appcenter.ms)
+ 
 ## License
 
 Distributed under the Southeast Christian Church License Agreement. Plugins and other includes under their respective liscences.
+
+[Markdown View](https://github.com/aloisdeniel/MarkdownView) used under MIT license 
