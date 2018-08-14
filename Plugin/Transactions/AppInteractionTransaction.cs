@@ -112,7 +112,7 @@ namespace Avalanche.Transactions
                             interactionSession = new InteractionSession()
                             {
                                 DeviceTypeId = deviceType.Id,
-                                IpAddress = IPAddress
+                                IpAddress = TrimString( IPAddress, 25 )
                             };
                             interactionSessionService.Add( interactionSession );
                             rockContext.SaveChanges();
@@ -143,6 +143,10 @@ namespace Avalanche.Transactions
 
         private string TrimString( string input, int length )
         {
+            if ( input == null )
+            {
+                return null;
+            }
             if ( input.Length > length )
             {
                 input = input.Substring( 0, length );
