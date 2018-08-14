@@ -80,7 +80,7 @@ namespace Avalanche.Rest.Controllers
             }
 
             var pageCache = PageCache.Read( id );
-            if ( !pageCache.IsAuthorized( Authorization.VIEW, person ) )
+            if ( pageCache == null || !pageCache.IsAuthorized( Authorization.VIEW, person ) )
             {
                 return new MobilePage();
             }
