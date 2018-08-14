@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "798389763113",
+    "firebase_url": "https://secc-test.firebaseio.com",
+    "project_id": "secc-test",
+    "storage_bucket": "secc-test.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:798389763113:android:77282950fdca09c2",
+        "android_client_info": {
+          "package_name": "org.secc.testapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "798389763113-q5fuuvnmj66bq2i1cq926e23anlc9t28.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBf7KRzCPec7F5jsj0M2EY-9I9h6DIJlbs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
