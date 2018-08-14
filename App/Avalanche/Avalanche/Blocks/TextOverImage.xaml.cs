@@ -18,7 +18,7 @@ namespace Avalanche.Blocks
         public string FontFamily { get => lLabel.FontFamily; set => lLabel.FontFamily = value; }
         public Color TextColor { get => lLabel.TextColor; set => lLabel.TextColor = value; }
         public ImageSource Source { get => ffImage.Source; set => ffImage.Source = value; }
-        public double AspectRatio { get => .35; }
+        public ImageSource LoadingPlaceholder { get => ffImage.LoadingPlaceholder; set => ffImage.LoadingPlaceholder = value; }
 
         public TextOverImage()
         {
@@ -30,13 +30,11 @@ namespace Avalanche.Blocks
 
         public View Render()
         {
-            double aspect = 0.5;
-            if ( Attributes.ContainsKey( "AspectRatio" ) && !string.IsNullOrWhiteSpace( Attributes["AspectRatio"] ) )
-            {
-                aspect = Convert.ToDouble( Attributes["AspectRatio"] );
+            SetAspectRatio();
+            ffImage.Finish += FfImage_Finish;
+            ffImage.DownloadStarted += FfImage_DownloadStarted;
 
-            }
-            ffImage.HeightRequest = App.Current.MainPage.Width * aspect;
+
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
@@ -47,6 +45,31 @@ namespace Avalanche.Blocks
 
             return this;
         }
+
+        private void FfImage_DownloadStarted( object sender, CachedImageEvents.DownloadStartedEventArgs e )
+        {
+            SetAspectRatio();
+        }
+
+        private void SetAspectRatio()
+        {
+            try
+            {
+                double aspect = 0.5;
+                if ( Attributes.ContainsKey( "AspectRatio" ) && !string.IsNullOrWhiteSpace( Attributes["AspectRatio"] ) )
+                {
+                    aspect = Convert.ToDouble( Attributes["AspectRatio"] );
+                }
+                ffImage.HeightRequest = App.Current.MainPage.Width * aspect;
+            }
+            catch { }
+        }
+
+        private void FfImage_Finish( object sender, CachedImageEvents.FinishEventArgs e )
+        {
+            SetAspectRatio();
+        }
+
         private void Tgr_Tapped( object sender, EventArgs e )
         {
             AvalancheNavigation.HandleActionItem( Attributes );

@@ -3,7 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Avalanche.Blocks.TextOverImage"
              xmlns:ff="clr-namespace:FFImageLoading.Forms;assembly=FFImageLoading.Forms"
-             HorizontalOptions="FillAndExpand">
+             HorizontalOptions="FillAndExpand"
+             MinimumHeightRequest="50">
     <ContentView.Content>
         <Grid x:Name="gGrid">
             <Grid.RowDefinitions>
@@ -11,8 +12,7 @@
             </Grid.RowDefinitions>
             <ff:CachedImage x:Name="ffImage"  Aspect="AspectFill" VerticalOptions="Center" />
             <Label x:Name="lLabel" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"
-                   VerticalOptions="Center" HorizontalOptions="FillAndExpand"               
-                   />
+                   VerticalOptions="Center" HorizontalOptions="CenterAndExpand" />
         </Grid>
     </ContentView.Content>
 </ContentView>
