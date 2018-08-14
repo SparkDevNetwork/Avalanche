@@ -67,6 +67,7 @@ namespace Avalanche.Views
         public MainPage( string resource, string parameter = "" )
         {
             InitializeComponent();
+            BackgroundColor = Color.FromHex( "#FEFEFE" );
             Resource = resource;
             Parameter = parameter;
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;

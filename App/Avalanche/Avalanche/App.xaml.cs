@@ -31,11 +31,40 @@ namespace Avalanche
         public static NavigationPage Navigation = null;
         public App()
         {
+            if ( App.Current.Properties.ContainsKey( "SecondRun" ) )
+            {
+                var startup = new FFImageLoading.Forms.CachedImage { Opacity = 0 };
+                startup.Finish += Startup_Finish;
+                startup.Source = "https://rock.secc.org/Content/SEApp/Sermons.jpg";
+                var sl = new StackLayout();
+                MainPage = new ContentPage()
+                {
+                    Content = sl,
+                    BackgroundColor = Color.Black
+                };
+                sl.Children.Add( new ActivityIndicator { IsRunning = true, Color = Color.White } );
+                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Stories.jpg", Opacity = 0 } );
+                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Events.jpg", Opacity = 0 } );
+                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Serve.jpg", Opacity = 0 } );
+
+                sl.Children.Add( startup );
+            }
+            else
+            {
+                MainPage = new AvalanchePage();
+            }
             InitializeComponent();
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             RockClient.CreateDatabase();
-            MainPage = new AvalanchePage();
             Task.Factory.StartNew( new Action( backgroundAction ) );
+        }
+
+        private void Startup_Finish( object sender, FFImageLoading.Forms.CachedImageEvents.FinishEventArgs e )
+        {
+            Device.BeginInvokeOnMainThread( () =>
+            {
+                MainPage = new AvalanchePage();
+            } );
         }
 
         private async void backgroundAction()

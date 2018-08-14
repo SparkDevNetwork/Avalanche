@@ -32,9 +32,11 @@ namespace Avalanche
 
         public AvalanchePage()
         {
+            BackgroundColor = Color.Black;
             Children.Clear();
             AvalancheNavigation.Footer = null;
             mainPage = new MainPage();
+            mainPage.BackgroundColor = Color.Black;
             App.Navigation = new Xamarin.Forms.NavigationPage( mainPage );
             Children.Add( App.Navigation );
             observableResource.PropertyChanged += ObservableResource_PropertyChanged;
