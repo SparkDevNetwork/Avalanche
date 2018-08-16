@@ -33,6 +33,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Blocks\TextOverImage.xaml.cs">
+      <DependentUpon>TextOverImage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\ButtonElement.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\AddressElement.cs" />
@@ -216,6 +219,12 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="$(MSBuildThisFileDirectory)Components\ListView\CarouselListView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="$(MSBuildThisFileDirectory)Blocks\TextOverImage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </EmbeddedResource>
