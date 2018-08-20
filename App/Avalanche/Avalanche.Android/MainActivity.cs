@@ -21,6 +21,7 @@ using Android.OS;
 using FFImageLoading.Forms.Droid;
 using Android.Gms.Common;
 using Firebase.Iid;
+using Xamarin.Forms.PlatformConfiguration.AndroidSpecific;
 
 namespace Avalanche.Droid
 {
@@ -38,8 +39,26 @@ namespace Avalanche.Droid
             CachedImageRenderer.Init();
             var t = IsPlayServicesAvailable();
 
+
+            RegisterChannel();
+
             global::Xamarin.Forms.Forms.Init( this, bundle );
             LoadApplication( new Avalanche.App() );
+
+            //This is to fix softkeyboard covering forms
+            Xamarin.Forms.Application.Current.On<Xamarin.Forms.PlatformConfiguration.Android>().UseWindowSoftInputModeAdjust( WindowSoftInputModeAdjust.Resize );
+        }
+
+        private void RegisterChannel()
+        {
+            string chanName = "General";
+            var importance = NotificationImportance.Default;
+            NotificationChannel chan = new NotificationChannel( "org.southeastchristian.seccapp.notifications", chanName, importance );
+            chan.Description = "General updates and important messages.";
+            chan.EnableVibration( true );
+            chan.LockscreenVisibility = NotificationVisibility.Public;
+            NotificationManager notificationManager = ( NotificationManager ) GetSystemService( NotificationService );
+            notificationManager.CreateNotificationChannel( chan );
         }
 
         string debug;
