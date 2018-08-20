@@ -20,7 +20,8 @@ namespace FCMClient
                      .SetContentText( message.GetNotification().Body )
                      .SetSmallIcon( Resource.Drawable.notification )
                      .SetAutoCancel( true )
-                     .SetVisibility( NotificationVisibility.Public );
+                     .SetVisibility( NotificationVisibility.Public )
+                     .SetChannelId( "org.southeastchristian.seccapp.notifications" );
 
             var textStyle = new Notification.BigTextStyle();
             textStyle.BigText( message.GetNotification().Body );

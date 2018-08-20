@@ -19,7 +19,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Avalanche.Models;
 using Avalanche.Utilities;
-using Plugin.MediaManager;
 using Xamarin.Forms;
 
 namespace Avalanche
@@ -88,14 +87,7 @@ namespace Avalanche
 
         protected override void OnSleep()
         {
-            if ( CrossMediaManager.Current.Status != Plugin.MediaManager.Abstractions.Enums.MediaPlayerStatus.Playing )
-            {
-                try
-                {
-                    CrossMediaManager.Current.MediaNotificationManager.StopNotifications();
-                }
-                catch { }
-            }
+
         }
 
         protected override void OnResume()
