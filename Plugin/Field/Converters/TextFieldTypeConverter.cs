@@ -32,6 +32,7 @@ namespace Avalanche.Field.Converters
     [ConvertForFieldType( typeof( UrlLinkFieldType ) )]
     [ConvertForFieldType( typeof( CurrencyFieldType ) )]
     [ConvertForFieldType( typeof( DecimalFieldType ) )]
+    [ConvertForFieldType( typeof( PhoneNumberFieldType ) )]
     public class TextFieldTypeConverter : FieldTypeConverter
     {
         public override FormElementItem Convert( IFieldType fieldType, AttributeCache attribute )
@@ -62,6 +63,10 @@ namespace Avalanche.Field.Converters
             else if ( fieldType is CurrencyFieldType || fieldType is DecimalFieldType )
             {
                 element.Keyboard = Keyboard.Numeric;
+            }
+            else if (fieldType is PhoneNumberFieldType )
+            {
+                element.Keyboard = Keyboard.Telephone;
             }
 
             return element;

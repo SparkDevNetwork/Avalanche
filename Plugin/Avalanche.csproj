@@ -85,6 +85,7 @@
     <Compile Include="Controls\ActionItem.cs" />
     <Compile Include="Field\Converters\AddressFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\FieldTypeConverter.cs" />
+    <Compile Include="Field\Converters\MemoFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\SelectMultiFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\BooleanFieldTypeConverter.cs" />
     <Compile Include="Field\Converters\SelectSingleFieldTypeConverter.cs" />
