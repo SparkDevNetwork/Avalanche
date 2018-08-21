@@ -92,7 +92,7 @@ namespace Avalanche
             mergeObjects["parameter"] = parameter;
 
             var limit = 10;
-            while ( lava.HasLavaCommandFields() && limit > 0 )
+            while ( ( lava.HasLavaCommandFields() || lava.HasMergeFields() ) && limit > 0 )
             {
                 lava = lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
                 limit--;
