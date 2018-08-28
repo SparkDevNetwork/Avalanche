@@ -37,9 +37,8 @@ namespace Avalanche.Droid
 
             Plugin.CurrentActivity.CrossCurrentActivity.Current.Activity = this;
             CachedImageRenderer.Init();
+
             var t = IsPlayServicesAvailable();
-
-
             RegisterChannel();
 
             global::Xamarin.Forms.Forms.Init( this, bundle );
@@ -53,12 +52,15 @@ namespace Avalanche.Droid
         {
             string chanName = "General";
             var importance = NotificationImportance.Default;
-            NotificationChannel chan = new NotificationChannel( "org.southeastchristian.seccapp.notifications", chanName, importance );
-            chan.Description = "General updates and important messages.";
-            chan.EnableVibration( true );
-            chan.LockscreenVisibility = NotificationVisibility.Public;
-            NotificationManager notificationManager = ( NotificationManager ) GetSystemService( NotificationService );
-            notificationManager.CreateNotificationChannel( chan );
+            if ( Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O )
+            {
+                NotificationChannel chan = new NotificationChannel( "org.southeastchristian.seccapp.notifications", chanName, importance );
+                chan.Description = "General updates and important messages.";
+                chan.EnableVibration( true );
+                chan.LockscreenVisibility = NotificationVisibility.Public;
+                NotificationManager notificationManager = ( NotificationManager ) GetSystemService( NotificationService );
+                notificationManager.CreateNotificationChannel( chan );
+            }
         }
 
         string debug;

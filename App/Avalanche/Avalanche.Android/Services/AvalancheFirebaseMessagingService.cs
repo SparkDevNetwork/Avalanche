@@ -20,8 +20,11 @@ namespace FCMClient
                      .SetContentText( message.GetNotification().Body )
                      .SetSmallIcon( Resource.Drawable.notification )
                      .SetAutoCancel( true )
-                     .SetVisibility( NotificationVisibility.Public )
-                     .SetChannelId( "org.southeastchristian.seccapp.notifications" );
+                     .SetVisibility( NotificationVisibility.Public );
+            if ( Android.OS.Build.VERSION.SdkInt >= Android.OS.BuildVersionCodes.O )
+            {
+                     builder = builder.SetChannelId( "org.southeastchristian.seccapp.notifications" );
+            }
 
             var textStyle = new Notification.BigTextStyle();
             textStyle.BigText( message.GetNotification().Body );
