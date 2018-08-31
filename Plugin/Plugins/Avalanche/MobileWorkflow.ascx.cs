@@ -318,7 +318,10 @@ namespace RockWeb.Plugins.Avalanche
                 if ( formAttribute.IsVisible )
                 {
                     var attribute = AttributeCache.Read( formAttribute.AttributeId );
-
+                    if ( attribute == null )
+                    {
+                        continue;
+                    }
                     string value = attribute.DefaultValue;
                     if ( _workflow != null && _workflow.AttributeValues.ContainsKey( attribute.Key ) && _workflow.AttributeValues[attribute.Key] != null )
                     {

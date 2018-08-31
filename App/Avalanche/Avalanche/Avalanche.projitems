@@ -31,7 +31,6 @@
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\Preload.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\TextOverImage.xaml.cs">
       <DependentUpon>TextOverImage.xaml</DependentUpon>
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Blocks\VideoPlayerBlock.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Components\FormElements\ButtonElement.cs" />

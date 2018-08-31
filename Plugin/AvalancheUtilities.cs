@@ -88,8 +88,16 @@ namespace Avalanche
             {
                 mergeObjects = GetMergeFields( currentPerson );
             }
+
             mergeObjects["parameter"] = parameter;
-            return lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
+
+            var limit = 10;
+            while ( ( lava.HasLavaCommandFields() || lava.HasMergeFields() ) && limit > 0 )
+            {
+                lava = lava.ResolveMergeFields( mergeObjects, null, enabledLavaCommands );
+                limit--;
+            }
+            return lava;
         }
 
         public static Dictionary<string, Object> GetMergeFields( Person currentPerson )

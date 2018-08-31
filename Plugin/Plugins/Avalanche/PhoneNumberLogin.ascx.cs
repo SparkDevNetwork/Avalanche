@@ -27,6 +27,7 @@ using Rock;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
+using Rock.Communication;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -34,7 +35,8 @@ namespace RockWeb.Plugins.Avalanche
     [Category( "Avalanche" )]
     [Description( "Block to log in with your phone number" )]
 
-    [WorkflowTypeField( "Workflow", "Workflow which will send the text message" )]
+    [DefinedValueField( Rock.SystemGuid.DefinedType.COMMUNICATION_SMS_FROM, "From", "The number to originate message from (configured under Admin Tools > General Settings > Defined Types > SMS From Values).", true, false, "", "", 0 )]
+    [TextField( "Message", "Message that will be sent along with the login code.", true, "Use {{ password }} to log into.  If you recieved this message by mistake please disregard." )]
     [TextField( "Help Url", "Page to send the user to if their phonenumber could not be resolved.", false )]
     public partial class PhoneNumberLogin : AvalancheBlock
     {
@@ -130,10 +132,28 @@ namespace RockWeb.Plugins.Avalanche
                 { "Password" , userLogin.Password }
             };
 
-            if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Workflow" ) ) )
+            var recipients = new List<RecipientData>();
+            recipients.Add( new RecipientData( resource ) );
+
+            var smsMessage = new RockSMSMessage();
+            smsMessage.SetRecipients( recipients );
+
+            // Get the From value
+            Guid? fromGuid = GetAttributeValue( "From" ).AsGuidOrNull();
+            if ( fromGuid.HasValue )
             {
-                userLogin.LaunchWorkflow( GetAttributeValue( "Workflow" ).AsGuid(), workflowName, atts );
+                var fromValue = DefinedValueCache.Read( fromGuid.Value, rockContext );
+                if ( fromValue != null )
+                {
+                    smsMessage.FromNumber = DefinedValueCache.Read( fromValue.Id );
+                }
             }
+
+            var mergeObjects = new Dictionary<string, object> { { "password", userLogin.Password } };
+            var message = AvalancheUtilities.ProcessLava( GetAttributeValue( "Message" ), CurrentPerson, mergeObjects: mergeObjects );
+
+            smsMessage.Message = message;
+            smsMessage.Send();
 
             return "1|Success!";
         }
