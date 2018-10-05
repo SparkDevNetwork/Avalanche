@@ -243,12 +243,12 @@ namespace Avalanche.Controls
             {
                 if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )
                 {
-                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, ppPage.SelectedValue, tbParameter.Text );
+                    return string.Format( "{0}^{1}^{2}", ddlActionList.SelectedValue, ppPage.SelectedValue, tbParameter.Text );
                 }
 
                 if ( ddlActionList.SelectedValue == "4" )
                 {
-                    return string.Format( "{0}|{1}|{2}", ddlActionList.SelectedValue, tbTarget.Text, ddlRckipid.SelectedValue );
+                    return string.Format( "{0}^{1}^{2}", ddlActionList.SelectedValue, tbTarget.Text, ddlRckipid.SelectedValue );
                 }
 
                 return ddlActionList.SelectedValue;
@@ -256,7 +256,15 @@ namespace Avalanche.Controls
             set
             {
                 EnsureChildControls();
-                var values = value.Split( '|' );
+                string[] values = null;
+                if ( value.Contains( '^' ) )
+                {
+                    values = value.Split( '^' );
+                }
+                else
+                {
+                    values = value.Split( '|' );
+                }
                 ddlActionList.SelectedValue = values[0];
 
                 if ( ddlActionList.SelectedValue == "1" || ddlActionList.SelectedValue == "2" )

@@ -17,7 +17,16 @@ namespace Avalanche.Models
 
         public void SetResponse( string attributeValue )
         {
-            var actionItems = ( attributeValue ?? "" ).Split( new char[] { '|' } );
+            char[] splitchar = { };
+            if ( attributeValue.Contains( "^" ) )
+            {
+                splitchar = new char[] { '^' };
+            }
+            else
+            {
+                splitchar = new char[] { '|' };
+            }
+            var actionItems = ( attributeValue ?? "" ).Split( splitchar );
 
             if ( actionItems.Length > 0 && !string.IsNullOrWhiteSpace( actionItems[0] ) )
             {

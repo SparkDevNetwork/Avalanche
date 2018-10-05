@@ -44,7 +44,16 @@ namespace Avalanche
 
         public static void SetActionItems( string ActionItemValue, Dictionary<string, string> CustomAttributes, Person CurrentPerson, Dictionary<string, object> MergeObjects = null, string EnabledLavaCommands = "", string parameter = "" )
         {
-            var actionItems = ( ActionItemValue ?? "" ).Split( new char[] { '|' } );
+            char[] splitchar = { };
+            if ( ActionItemValue.Contains( "^" ) )
+            {
+                splitchar = new char[] { '^' };
+            }
+            else
+            {
+                splitchar = new char[] { '|' };
+            }
+            var actionItems = ( ActionItemValue ?? "" ).Split( splitchar );
 
             if ( actionItems.Length > 0 && !string.IsNullOrWhiteSpace( actionItems[0] ) )
             {
