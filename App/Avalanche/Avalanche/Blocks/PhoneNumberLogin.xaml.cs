@@ -46,7 +46,6 @@ namespace Avalanche.Blocks
                 btnPin.FontSize = Convert.ToDouble( Attributes["FontSize"] );
             }
 
-
             MessageHandler.Response += MessageHandler_Response;
             return this;
         }

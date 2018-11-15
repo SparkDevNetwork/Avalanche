@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -421,7 +421,10 @@ $(document).ready(function() {
             }
             var count = GetAttributeValue( "Count" ).AsInteger();
 
-            content = content.Skip( page * count ).Take( count ).ToList();
+            if ( count > 0 )
+            {
+                content = content.Skip( page * count ).Take( count ).ToList();
+            }
 
             var titleLava = GetAttributeValue( "TitleLava" );
             var descriptionLava = GetAttributeValue( "DescriptionLava" );
@@ -1016,9 +1019,13 @@ $(document).ready(function() {
         public MobileBlock GetMobile( string parameter )
         {
             var pageGuid = GetAttributeValue( "DetailPage" );
-            CustomAttributes["Resource"] = PageCache.Read( pageGuid.AsGuid() ).Id.ToString();
-            CustomAttributes["ActionType"] = "1";
-            CustomAttributes["InitialRequest"] = "0";
+            var page = PageCache.Read( pageGuid.AsGuid() );
+            if ( page != null )
+            {
+                CustomAttributes["Resource"] = page.Id.ToString();
+                CustomAttributes["ActionType"] = "1";
+                CustomAttributes["InitialRequest"] = "0";
+            }
             var valueGuid = GetAttributeValue( "Component" );
             var value = DefinedValueCache.Read( valueGuid );
             if ( value != null )
