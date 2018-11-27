@@ -95,7 +95,7 @@ namespace Avalanche.Blocks
             slPin.IsVisible = false;
             slLoading.IsVisible = true;
 
-            var response = await RockClient.LogIn( "__PHONENUMBER__+1" + phoneNumber, ePin.Text );
+            var response = await RockClient.LogIn( "SMS_" + phoneNumber, ePin.Text );
             switch ( response )
             {
                 case LoginResponse.Error:

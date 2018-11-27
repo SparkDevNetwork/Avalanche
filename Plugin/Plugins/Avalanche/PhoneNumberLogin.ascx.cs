@@ -28,6 +28,7 @@ using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
 using Rock.Communication;
+using Rock.Security.ExternalAuthentication;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -35,8 +36,6 @@ namespace RockWeb.Plugins.Avalanche
     [Category( "Avalanche" )]
     [Description( "Block to log in with your phone number" )]
 
-    [DefinedValueField( Rock.SystemGuid.DefinedType.COMMUNICATION_SMS_FROM, "From", "The number to originate message from (configured under Admin Tools > General Settings > Defined Types > SMS From Values).", true, false, "", "", 0 )]
-    [TextField( "Message", "Message that will be sent along with the login code.", true, "Use {{ password }} to log into.  If you recieved this message by mistake please disregard." )]
     [TextField( "Help Url", "Page to send the user to if their phonenumber could not be resolved.", false )]
     public partial class PhoneNumberLogin : AvalancheBlock
     {
@@ -59,10 +58,9 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> body )
         {
             string response = GenerateCode( request );
-
 
             return new MobileBlockResponse()
             {
@@ -76,7 +74,7 @@ namespace RockWeb.Plugins.Avalanche
         {
             if ( resource == null || resource.Length != 10 )
             {
-                return "Please enter a 10 digit phone number.";
+                return "0|Please enter a 10 digit phone number.";
             }
 
             RockContext rockContext = new RockContext();
@@ -99,63 +97,15 @@ namespace RockWeb.Plugins.Avalanche
 
             var person = numberOwners.FirstOrDefault();
 
-            UserLoginService userLoginService = new UserLoginService( rockContext );
-            var userLogin = userLoginService.Queryable()
-                .Where( u => u.UserName == ( "__PHONENUMBER__+1" + resource ) )
-                .FirstOrDefault();
+            var smsAuthentication = new SMSAuthentication();
+            var success = smsAuthentication.SendSMSAuthentication( resource );
 
-            if ( userLogin == null )
+            if ( success )
             {
-                var entityTypeId = EntityTypeCache.Read( "Avalanche.Security.Authentication.PhoneNumber" ).Id;
-
-                userLogin = new UserLogin()
-                {
-                    UserName = "__PHONENUMBER__+1" + resource,
-                    EntityTypeId = entityTypeId,
-                };
-                userLoginService.Add( userLogin );
+                return "1|Success!";
             }
+            return "0|We are sorry, we could not send the login request at this time. Please login using a different method.";
 
-            userLogin.PersonId = person.Id;
-            userLogin.LastPasswordChangedDateTime = Rock.RockDateTime.Now;
-            userLogin.FailedPasswordAttemptWindowStartDateTime = Rock.RockDateTime.Now;
-            userLogin.FailedPasswordAttemptCount = 0;
-            userLogin.IsConfirmed = true;
-            userLogin.Password = new Random().Next( 100000, 999999 ).ToString();
-
-            rockContext.SaveChanges();
-
-            var workflowName = string.Format( "{0} ({1})", person.FullName, resource );
-            var atts = new Dictionary<string, string>
-            {
-                { "PhoneNumber",resource },
-                { "Password" , userLogin.Password }
-            };
-
-            var recipients = new List<RecipientData>();
-            recipients.Add( new RecipientData( resource ) );
-
-            var smsMessage = new RockSMSMessage();
-            smsMessage.SetRecipients( recipients );
-
-            // Get the From value
-            Guid? fromGuid = GetAttributeValue( "From" ).AsGuidOrNull();
-            if ( fromGuid.HasValue )
-            {
-                var fromValue = DefinedValueCache.Read( fromGuid.Value, rockContext );
-                if ( fromValue != null )
-                {
-                    smsMessage.FromNumber = DefinedValueCache.Read( fromValue.Id );
-                }
-            }
-
-            var mergeObjects = new Dictionary<string, object> { { "password", userLogin.Password } };
-            var message = AvalancheUtilities.ProcessLava( GetAttributeValue( "Message" ), CurrentPerson, mergeObjects: mergeObjects );
-
-            smsMessage.Message = message;
-            smsMessage.Send();
-
-            return "1|Success!";
         }
     }
 }
