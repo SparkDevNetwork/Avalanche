@@ -24,14 +24,23 @@ namespace Avalanche.Startup
 
             foreach ( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
             {
-                foreach ( var type in assembly.GetTypes() )
+                try
                 {
-                    var customAttributes = type.GetCustomAttributes( typeof( ConvertForFieldType ), true );
-                    foreach ( var attribute in customAttributes as ConvertForFieldType[] )
+
+                    foreach ( var type in assembly.GetTypes() )
                     {
-                        FieldTypeExtensions.FieldTypeConverters.Add( attribute.FieldTypeName, Activator.CreateInstance( type ) as FieldTypeConverter );
+                        try
+                        {
+                            var customAttributes = type.GetCustomAttributes( typeof( ConvertForFieldType ), true );
+                            foreach ( var attribute in customAttributes as ConvertForFieldType[] )
+                            {
+                                FieldTypeExtensions.FieldTypeConverters[attribute.FieldTypeName] = Activator.CreateInstance( type ) as FieldTypeConverter;
+                            }
+                        }
+                        catch { }
                     }
                 }
+                catch { }
             }
         }
     }
