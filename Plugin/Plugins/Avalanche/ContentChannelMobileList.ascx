@@ -62,6 +62,8 @@
                                         Required="false" />
                                     <Rock:RockTextBox ID="tbSubtitleLava" runat="server" Label="Subtitle Lava" 
                                         Help="Lava to display the details of each \{\{Item\}\}" Required="false" />
+                                    <Rock:RockTextBox ID="tbOrder" runat="server" Label="Order Lava" 
+                                        Help="Lava to help order the items in the list \{\{Item\}\}" Required="false" />
                                 </div>
                                 <div class="col-md-6">
                                     <Rock:KeyValueList ID="kvlOrder" runat="server" Label="Order Items By" KeyPrompt="Field" ValuePrompt="Direction"
