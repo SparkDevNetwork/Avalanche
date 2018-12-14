@@ -65,7 +65,7 @@ namespace Avalanche
             if (App.Current.Properties.ContainsKey("PreloadImages") 
                 && !string.IsNullOrWhiteSpace(App.Current.Properties["PreloadImages"].ToString())) 
             {
-                foreach (var imageSource in App.Current.Properties["PreloadImages"].ToString().Split(","))
+                foreach (var imageSource in App.Current.Properties["PreloadImages"].ToString().Split(','))
                 {
                     sl.Children.Add(new FFImageLoading.Forms.CachedImage { Source = imageSource, Opacity = 0 });
                 }

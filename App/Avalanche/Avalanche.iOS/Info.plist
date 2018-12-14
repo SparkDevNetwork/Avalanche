@@ -74,7 +74,7 @@
 	<key>XSAppIconAssets</key>
 	<string>Resources/Media.xcassets/AppIcons.appiconset</string>
 	<key>CFBundleShortVersionString</key>
-	<string>2.0.3</string>
+	<string>2.0.4</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>audio</string>
@@ -82,9 +82,11 @@
 	</array>
 	<key>CFBundleIdentifier</key>
 	<string>org.southeastchristian.seccapp</string>
-	<key>CFBundleVersion</key>
-	<string>2</string>
 	<key>UIStatusBarStyle</key>
 	<string>UIStatusBarStyleLightContent</string>
+	<key>CFBundleName</key>
+	<string>Southeast Christian</string>
+	<key>CFBundleVersion</key>
+	<string>1</string>
 </dict>
 </plist>
