@@ -11,5 +11,6 @@ namespace Avalanche.Models
         public MobilePage Header { get; set; }
         public MobilePage Footer { get; set; }
         public MobilePage Page { get; set; }
+        public Dictionary<string,string> Attributes { get; set; }
     }
 }
