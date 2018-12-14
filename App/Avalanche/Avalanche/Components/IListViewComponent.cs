@@ -26,12 +26,14 @@ namespace Avalanche.Components
     {
         bool IsRefreshing { get; set; }
         bool CanRefresh { get; set; }
-        ObservableCollection<ListElement> ItemsSource { get; set; }
+        List<ListElement> ItemsSource { get; set; }
         object SelectedItem { get; set; }
         double Columns { get; set; }
 
         event EventHandler Refreshing;
         event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
         event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
+
+        void Draw();
     }
 }
