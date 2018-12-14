@@ -94,10 +94,11 @@
     <Compile Include="Field\Types\ActionItemFieldType.cs" />
     <Compile Include="IMobileResource.cs" />
     <Compile Include="Lava\CustomFilters.cs" />
-    <Compile Include="Migrations\CarouselListView.cs" />
-    <Compile Include="Migrations\Interactions.cs" />
-    <Compile Include="Migrations\Init.cs" />
-    <Compile Include="Migrations\Layouts.cs" />
+    <Compile Include="Migrations\005AppAttributes.cs" />
+    <Compile Include="Migrations\004CarouselListView.cs" />
+    <Compile Include="Migrations\002Interactions.cs" />
+    <Compile Include="Migrations\001Init.cs" />
+    <Compile Include="Migrations\003Layouts.cs" />
     <Compile Include="Models\FormElementItem.cs" />
     <Compile Include="Models\FormResponse.cs" />
     <Compile Include="Models\HomeRequest.cs" />

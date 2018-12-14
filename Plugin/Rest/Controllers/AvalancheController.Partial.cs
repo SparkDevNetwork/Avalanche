@@ -15,18 +15,12 @@
 //
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.ServiceModel.Channels;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Http;
-using System.Xml;
-using System.Xml.Serialization;
 using Avalanche.Models;
 using Avalanche.Transactions;
 using Newtonsoft.Json;
@@ -50,6 +44,8 @@ namespace Avalanche.Rest.Controllers
         public HomeRequest GetHome()
         {
             var homeRequest = new HomeRequest();
+
+            homeRequest.Attributes = GlobalAttributesCache.Value( "AvalancheAttributes" ).AsDictionary();
 
             var footer = GlobalAttributesCache.Value( "AvalancheFooterPage" ).AsIntegerOrNull();
             if ( footer != null )
@@ -137,8 +133,12 @@ namespace Avalanche.Rest.Controllers
         {
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
-            var blockCache = BlockCache.Read( id );
-            var pageCache = PageCache.Read( blockCache.PageId ?? 0 );
+            var blockCache = BlockCache.Get( id );
+            if ( blockCache == null )
+            {
+                return new MobileBlockResponse();
+            }
+            var pageCache = PageCache.Get( blockCache.PageId ?? 0 );
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
             string layoutPath = PageCache.FormatPath( theme, layout );
