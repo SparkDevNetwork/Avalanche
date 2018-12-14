@@ -21,6 +21,7 @@ namespace Avalanche.Models
     public class ListElement
     {
         public string Id { get; set; }
+        public int Order { get; set; }
 
         public string Title { get; set; }
         public double FontSize { get; set; } = 20;
