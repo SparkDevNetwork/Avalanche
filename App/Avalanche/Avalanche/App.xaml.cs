@@ -32,21 +32,7 @@ namespace Avalanche
         {
             if ( App.Current.Properties.ContainsKey( "SecondRun" ) )
             {
-                var startup = new FFImageLoading.Forms.CachedImage { Opacity = 0 };
-                startup.Finish += Startup_Finish;
-                startup.Source = "https://rock.secc.org/Content/SEApp/Sermons.jpg";
-                var sl = new StackLayout();
-                MainPage = new ContentPage()
-                {
-                    Content = sl,
-                    BackgroundColor = Color.Black
-                };
-                sl.Children.Add( new ActivityIndicator { IsRunning = true, Color = Color.White } );
-                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Stories.jpg", Opacity = 0 } );
-                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Events.jpg", Opacity = 0 } );
-                sl.Children.Add( new FFImageLoading.Forms.CachedImage { Source = "https://rock.secc.org/Content/SEApp/Serve.jpg", Opacity = 0 } );
-
-                sl.Children.Add( startup );
+                DoAppStartup();
             }
             else
             {
@@ -56,6 +42,38 @@ namespace Avalanche
             System.Net.ServicePointManager.SecurityProtocol = System.Net.SecurityProtocolType.Tls | System.Net.SecurityProtocolType.Tls11 | System.Net.SecurityProtocolType.Tls12;
             RockClient.CreateDatabase();
             Task.Factory.StartNew( new Action( backgroundAction ) );
+        }
+
+        private void DoAppStartup()
+        {
+            //The purpose of this loading section is to improve image load time on the home page
+            //Getting the images into memory can take some time, and if other things start
+            //Running first, such as the database or HTTP requests, this can get started very late
+            //Causing an unpleasent first experience.
+            var sl = new StackLayout();
+            MainPage = new ContentPage()
+            {
+                Content = sl,
+                BackgroundColor = Color.Black
+            };
+            sl.Children.Add(new ActivityIndicator {
+                IsRunning = true,
+                Color = Color.White, 
+                Margin = new Thickness(0,30,0,0) 
+             });
+
+            if (App.Current.Properties.ContainsKey("PreloadImages") 
+                && !string.IsNullOrWhiteSpace(App.Current.Properties["PreloadImages"].ToString())) 
+            {
+                foreach (var imageSource in App.Current.Properties["PreloadImages"].ToString().Split(","))
+                {
+                    sl.Children.Add(new FFImageLoading.Forms.CachedImage { Source = imageSource, Opacity = 0 });
+                }
+            }
+
+            var finalImage = new FFImageLoading.Forms.CachedImage { Opacity = 0 };
+            finalImage.Finish += Startup_Finish;
+            finalImage.Source = "pixel.png"; sl.Children.Add(finalImage);
         }
 
         private void Startup_Finish( object sender, FFImageLoading.Forms.CachedImageEvents.FinishEventArgs e )
