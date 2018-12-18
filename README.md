@@ -11,7 +11,7 @@ Avalanche currently powers the Southeast Christian Church app, with other non-pr
 
 We have a great [Quick Start](https://github.com/secc/Avalanche/wiki/Quick-Start) guide so you can get to playing very quickly.
 
-The Southeast Christian Church app source code is hosted here as well. This way you can see any customization we may have made and learn from them.
+The Southeast Christian Church app source code is hosted here as well. This way you can see any customizations we may have made and learn from them.
 
 ## Contributing
 
