@@ -70,7 +70,6 @@ namespace Avalanche.Components.ListView
         public event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
 
         private double YScroll = 0;
-        private double RefreshYScroll = 0;
 
         public ColumnListView()
         {
@@ -104,10 +103,7 @@ namespace Avalanche.Components.ListView
 
         public void  Draw()
         {
-            if ( RefreshYScroll == 0)
-            {
-                RefreshYScroll = YScroll;
-            }
+            double refreshYScroll = gGrid.Height;
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
             gGrid.ColumnDefinitions.Clear();
@@ -131,15 +127,11 @@ namespace Avalanche.Components.ListView
                          Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
                 itemNumber++;
             }
-            if ( RefreshYScroll > 0)
+            Device.BeginInvokeOnMainThread( async () =>
             {
-                Device.BeginInvokeOnMainThread( async () =>
-                {
-                    await Task.Delay( 100 );
-                    await svScrollView.ScrollToAsync( 0, RefreshYScroll, false );
-                    RefreshYScroll = 0;
-                } );
-            }
+                await Task.Delay( 100 );
+                await svScrollView.ScrollToAsync( 0, refreshYScroll, false );
+            } );
         }
 
         private void AddCell( ListElement item, int x, int y )
