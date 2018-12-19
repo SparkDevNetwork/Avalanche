@@ -63,12 +63,14 @@ namespace Avalanche.Components.ListView
         public List<ListElement> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
         public bool CanRefresh { get; set; }
+        public Task<int> RefreshScroll { get; private set; }
 
         public event EventHandler Refreshing;
         public event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
         public event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
 
         private double YScroll = 0;
+        private double RefreshYScroll = 0;
 
         public ColumnListView()
         {
@@ -102,7 +104,10 @@ namespace Avalanche.Components.ListView
 
         public void  Draw()
         {
-            double preDrawScroll = Convert.ToDouble(YScroll.ToString());
+            if ( RefreshYScroll == 0)
+            {
+                RefreshYScroll = YScroll;
+            }
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
             gGrid.ColumnDefinitions.Clear();
@@ -126,11 +131,15 @@ namespace Avalanche.Components.ListView
                          Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
                 itemNumber++;
             }
-            Device.BeginInvokeOnMainThread(async () =>
+            if ( RefreshYScroll > 0)
             {
-                await Task.Delay(100);
-                await svScrollView.ScrollToAsync(0, preDrawScroll, false);
-            });
+                Device.BeginInvokeOnMainThread( async () =>
+                {
+                    await Task.Delay( 100 );
+                    await svScrollView.ScrollToAsync( 0, RefreshYScroll, false );
+                    RefreshYScroll = 0;
+                } );
+            }
         }
 
         private void AddCell( ListElement item, int x, int y )
@@ -227,11 +236,6 @@ namespace Avalanche.Components.ListView
             sl.GestureRecognizers.Add( tgr );
             gGrid.Children.Add( sl, x, y );
         }
-
-        public void ScrollTo( object item, ScrollToPosition position, bool animated )
-        {
-            throw new NotImplementedException( "ScrollTo for CardListView has not been implemented." );
-            //svScrollView.ScrollToAsync( 0, 0, animated );
-        }
+        
     }
 }
