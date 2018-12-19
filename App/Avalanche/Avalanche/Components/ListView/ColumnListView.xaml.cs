@@ -103,35 +103,52 @@ namespace Avalanche.Components.ListView
 
         public void  Draw()
         {
-            double refreshYScroll = gGrid.Height;
-            gGrid.Children.Clear();
-            gGrid.RowDefinitions.Clear();
-            gGrid.ColumnDefinitions.Clear();
-
-            for ( var i = 0; i < Columns; i++ )
+            // Check to see if we should redraw
+            var existingIndex = 0;
+            bool redraw = false || gGrid.Children.Count == 0;
+            foreach (var child in gGrid.Children )
             {
-                gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
+                if (child is StackLayout )
+                {
+                    var id = child.StyleId;
+                    if (ItemsSource.FindIndex(i => i.Id == id) != existingIndex )
+                    {
+                        redraw = true;
+                        break;
+                    }
+                    existingIndex++;
+                }
             }
-            gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
 
-            while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
+            // If we need to redraw, then clear it all out and set things up
+            if ( redraw )
             {
+                gGrid.Children.Clear();
+                gGrid.RowDefinitions.Clear();
+                gGrid.ColumnDefinitions.Clear();
+
+                for ( var i = 0; i < Columns; i++ )
+                {
+                    gGrid.ColumnDefinitions.Add( new ColumnDefinition() { Width = new GridLength( 1, GridUnitType.Star ) } );
+                }
                 gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
-            }
 
+                while ( gGrid.RowDefinitions.Count < ItemsSource.Count / Columns )
+                {
+                    gGrid.RowDefinitions.Add( new RowDefinition() { Height = new GridLength( 1, GridUnitType.Auto ) } );
+                }
+            }
             int itemNumber = 0;
             foreach ( ListElement item in ItemsSource )
             {
-                AddCell( item,
-                         ( itemNumber ) % Convert.ToInt32( Columns ),
-                         Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
+                if ( itemNumber >= existingIndex )
+                {
+                    AddCell( item,
+                             ( itemNumber ) % Convert.ToInt32( Columns ),
+                             Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
+                }
                 itemNumber++;
             }
-            Device.BeginInvokeOnMainThread( async () =>
-            {
-                await Task.Delay( 100 );
-                await svScrollView.ScrollToAsync( 0, refreshYScroll, false );
-            } );
         }
 
         private void AddCell( ListElement item, int x, int y )
@@ -141,6 +158,7 @@ namespace Avalanche.Components.ListView
                 HorizontalOptions = LayoutOptions.Center,
                 Spacing = 0
             };
+            sl.StyleId = item.Id;
             if ( !string.IsNullOrWhiteSpace( item.Image ) )
             {
                 if ( item.Image.Contains( ".svg" ) )
