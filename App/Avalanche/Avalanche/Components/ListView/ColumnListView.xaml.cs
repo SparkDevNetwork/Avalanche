@@ -102,6 +102,7 @@ namespace Avalanche.Components.ListView
 
         public void  Draw()
         {
+            double preDrawScroll = Convert.ToDouble(YScroll.ToString());
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
             gGrid.ColumnDefinitions.Clear();
@@ -125,11 +126,11 @@ namespace Avalanche.Components.ListView
                          Convert.ToInt32( Math.Floor( ( itemNumber ) / Columns ) ) );
                 itemNumber++;
             }
-                Device.BeginInvokeOnMainThread(async () =>
-                {
-                    await Task.Delay(100);
-                    await svScrollView.ScrollToAsync(0, YScroll, false);
-                });
+            Device.BeginInvokeOnMainThread(async () =>
+            {
+                await Task.Delay(100);
+                await svScrollView.ScrollToAsync(0, preDrawScroll, false);
+            });
         }
 
         private void AddCell( ListElement item, int x, int y )
@@ -225,6 +226,12 @@ namespace Avalanche.Components.ListView
                 };
             sl.GestureRecognizers.Add( tgr );
             gGrid.Children.Add( sl, x, y );
+        }
+
+        public void ScrollTo( object item, ScrollToPosition position, bool animated )
+        {
+            throw new NotImplementedException( "ScrollTo for CardListView has not been implemented." );
+            //svScrollView.ScrollToAsync( 0, 0, animated );
         }
     }
 }
