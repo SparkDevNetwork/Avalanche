@@ -4,7 +4,7 @@
 if [ "$APPCENTER_XAMARIN_CONFIGURATION" == "Release" ];
 then
     echo "Updating google-services.json"
-	echo "\$(GOOGLE_SERVICES_JSON)" > $APPCENTER_SOURCE_DIRECTORY/App/Avalanche/Avalanche.Android/google-services.json
+	echo $GOOGLE_SERVICES_JSON | sed 's/\\"/"/g' > $APPCENTER_SOURCE_DIRECTORY/App/Avalanche/Avalanche.Android/google-services.json
 else
     echo "Current connfiguration is $APPCENTER_XAMARIN_CONFIGURATION"
 fi
