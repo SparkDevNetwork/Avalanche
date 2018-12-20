@@ -149,6 +149,11 @@ namespace Avalanche.Components.ListView
                 }
                 itemNumber++;
             }
+            Device.BeginInvokeOnMainThread( async () =>
+            {
+                await Task.Delay( 150 );
+                await svScrollView.ScrollToAsync( 0, YScroll, false );
+            } );
         }
 
         private void AddCell( ListElement item, int x, int y )
