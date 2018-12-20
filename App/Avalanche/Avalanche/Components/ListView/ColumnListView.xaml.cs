@@ -151,7 +151,10 @@ namespace Avalanche.Components.ListView
             }
             Device.BeginInvokeOnMainThread( async () =>
             {
-                await Task.Delay( 150 );
+                // This is a hack to try to maintain scroll position on iOS
+                await Task.Delay( 75 );
+                await svScrollView.ScrollToAsync( 0, YScroll, false );
+                await Task.Delay( 75 );
                 await svScrollView.ScrollToAsync( 0, YScroll, false );
             } );
         }
