@@ -75,7 +75,7 @@ namespace Avalanche.Rest.Controllers
                 HttpContext.Current.Items.Add( "CurrentPerson", person );
             }
 
-            var pageCache = PageCache.Read( id );
+            var pageCache = PageCache.Get( id );
             if ( pageCache == null || !pageCache.IsAuthorized( Authorization.VIEW, person ) )
             {
                 return new MobilePage();
@@ -101,7 +101,7 @@ namespace Avalanche.Rest.Controllers
             {
                 if ( block.IsAuthorized( Authorization.VIEW, person ) )
                 {
-                    var blockCache = BlockCache.Read( block.Id );
+                    var blockCache = BlockCache.Get( block.Id );
                     try
                     {
                         var control = ( RockBlock ) cmsPage.TemplateControl.LoadControl( blockCache.BlockType.Path );
@@ -173,8 +173,8 @@ namespace Avalanche.Rest.Controllers
             var body = JsonConvert.DeserializeObject<Dictionary<string, string>>( content );
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
-            var blockCache = BlockCache.Read( id );
-            var pageCache = PageCache.Read( blockCache.PageId ?? 0 );
+            var blockCache = BlockCache.Get( id );
+            var pageCache = PageCache.Get( blockCache.PageId ?? 0 );
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
             string layoutPath = PageCache.FormatPath( theme, layout );
@@ -225,7 +225,7 @@ namespace Avalanche.Rest.Controllers
             InteractionInformation interactionInformation = JsonConvert.DeserializeObject<InteractionInformation>( content );
 
             var homePageId = GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger();
-            var pageCache = PageCache.Read( homePageId );
+            var pageCache = PageCache.Get( homePageId );
             var siteId = pageCache.SiteId;
             var person = GetPerson();
 

@@ -35,10 +35,10 @@ namespace Avalanche.Field.Converters
     {
         public override FormElementItem Convert( IFieldType fieldType, AttributeCache attribute )
         {
-            var dfState = DefinedTypeCache.Read( Rock.SystemGuid.DefinedType.LOCATION_ADDRESS_STATE.AsGuid() );
+            var dfState = DefinedTypeCache.Get( Rock.SystemGuid.DefinedType.LOCATION_ADDRESS_STATE.AsGuid() );
             var statesList = dfState.DefinedValues.Select( dv => dv.Value ).OrderBy( dv => dv ).ToList();
             var states = string.Join( ",", statesList );
-            var globalAttributesCache = GlobalAttributesCache.Read();
+            var globalAttributesCache = GlobalAttributesCache.Get();
             var defaultState = globalAttributesCache.OrganizationState;
             var attributes = new Dictionary<string, string>
             {
@@ -94,7 +94,7 @@ namespace Avalanche.Field.Converters
                 return "";
             }
             RockContext rockContext = new RockContext();
-            var globalAttributesCache = GlobalAttributesCache.Read();
+            var globalAttributesCache = GlobalAttributesCache.Get();
             LocationService locationService = new LocationService( rockContext );
             var location = locationService.Get( locationData["Street1"], locationData["Street2"], locationData["City"], locationData["State"], locationData["PostalCode"], globalAttributesCache.OrganizationCountry );
             if ( location != null )

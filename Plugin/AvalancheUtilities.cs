@@ -109,7 +109,7 @@ namespace Avalanche
 
         public static string GetLayout( string layoutName )
         {
-            var definedType = DefinedTypeCache.Read( LayoutsDefinedType.AsGuid() );
+            var definedType = DefinedTypeCache.Get( LayoutsDefinedType.AsGuid() );
             var value = definedType.DefinedValues.Where( d => d.Value.Replace( " ", "" ).ToLower() == layoutName.Replace( " ", "" ).ToLower() ).FirstOrDefault();
             var content = value.GetAttributeValue( "Content" );
             return content;
@@ -140,7 +140,7 @@ namespace Avalanche
             {
                 PersonAliasId = PersonAliasId,
                 DeviceUniqueIdentifier = deviceId,
-                PersonalDeviceTypeValueId = DefinedValueCache.Read( Rock.SystemGuid.DefinedValue.PERSONAL_DEVICE_TYPE_MOBILE.AsGuid() ).Id
+                PersonalDeviceTypeValueId = DefinedValueCache.Get( Rock.SystemGuid.DefinedValue.PERSONAL_DEVICE_TYPE_MOBILE.AsGuid() ).Id
             };
             personalDeviceService.Add( device );
             rockContext.SaveChanges();
