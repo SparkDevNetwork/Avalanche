@@ -13,21 +13,13 @@
 // </copyright>
 //
 using System;
-using System.ComponentModel;
-using Rock.Model;
-using Rock.Security;
-using System.Web.UI;
-using Rock.Web.Cache;
-using Rock.Web.UI;
-using System.Web;
-using Rock.Data;
-using System.Linq;
 using System.Collections.Generic;
-using Rock;
+using System.ComponentModel;
 using Avalanche;
 using Avalanche.Models;
 using Rock.Attribute;
-using Rock.Communication;
+using Rock.Data;
+using Rock.Model;
 using Rock.Security.ExternalAuthentication;
 
 namespace RockWeb.Plugins.Avalanche
@@ -77,27 +69,16 @@ namespace RockWeb.Plugins.Avalanche
                 return "0|Please enter a 10 digit phone number.";
             }
 
-            RockContext rockContext = new RockContext();
-            PhoneNumberService phoneNumberService = new PhoneNumberService( rockContext );
-            var numberOwners = phoneNumberService.Queryable()
-                .Where( pn => pn.Number == resource )
-                .Select( pn => pn.Person )
-                .DistinctBy( p => p.Id )
-                .ToList();
-
-            if ( numberOwners.Count == 0 )
-            {
-                return "0|We are sorry, we could not find your phone number in our records.";
-            }
-
-            if ( numberOwners.Count > 1 )
-            {
-                return "2|We are sorry, we dected more than one person with your number in our records.";
-            }
-
-            var person = numberOwners.FirstOrDefault();
-
             var smsAuthentication = new SMSAuthentication();
+            RockContext rockContext = new RockContext();
+            string error;
+            var person = smsAuthentication.GetNumberOwner( resource, rockContext, out error );
+
+            if ( person == null )
+            {
+                return "0|" + error;
+            }
+
             var success = smsAuthentication.SendSMSAuthentication( resource );
 
             if ( success )
