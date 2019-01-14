@@ -79,19 +79,15 @@ namespace RockWeb.Plugins.Avalanche
             family.Add(
                 new ListElement
                 {
-                    Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + CurrentPerson.PhotoUrl,
                     Id = CurrentPersonAlias.Guid.ToString(),
-                    Title = CurrentPerson.FullName,
                     Description = GetInfo( CurrentPerson, true )
                 } );
 
-            foreach ( var member in CurrentPerson.GetFamilyMembers() )
+            foreach ( var member in CurrentPerson.GetFamilyMembers().OrderByDescending(gm => gm.Person.Age) )
             {
                 family.Add( new ListElement
                 {
-                    Image = GlobalAttributesCache.Value( "InternalApplicationRoot" ) + member.Person.PhotoUrl,
                     Id = member.Person.PrimaryAlias.Guid.ToString(),
-                    Title = member.Person.FullName,
                     Description = GetInfo( member.Person, false )
                 } );
             }
@@ -135,7 +131,7 @@ namespace RockWeb.Plugins.Avalanche
 
             if ( person.BirthDate != null )
             {
-                markdown.Append( string.Format( "{0} *({1})* \n", person.FormatAge(), person.BirthDate.Value.ToString( "MM/dd/yyyy" ) ) );
+                markdown.Append( string.Format( "## {0} \n {1} *({2})* \n", person.FullName, person.FormatAge(), person.BirthDate.Value.ToString( "MM/dd/yyyy" ) ) );
             }
             markdown.Append( person.Gender != Gender.Unknown ? person.Gender.ToString() + "\n" : string.Empty );
             markdown.Append( person.MaritalStatusValueId.DefinedValue() );
