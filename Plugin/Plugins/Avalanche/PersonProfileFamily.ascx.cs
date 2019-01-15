@@ -83,7 +83,7 @@ namespace RockWeb.Plugins.Avalanche
                     Description = GetInfo( CurrentPerson, true )
                 } );
 
-            foreach ( var member in CurrentPerson.GetFamilyMembers().OrderByDescending(gm => gm.Person.Age) )
+            foreach ( var member in CurrentPerson.GetFamilyMembers().OrderBy(gm => gm.Person.BirthDate) )
             {
                 family.Add( new ListElement
                 {
