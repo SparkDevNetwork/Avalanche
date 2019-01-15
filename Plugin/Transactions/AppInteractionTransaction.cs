@@ -1,5 +1,5 @@
 ﻿// <copyright>
-// Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -59,7 +59,7 @@ namespace Avalanche.Transactions
             {
                 using ( var rockContext = new RockContext() )
                 {
-                    int channelMediumTypeValueId = DefinedValueCache.Read( AvalancheUtilities.AppMediumValue.AsGuid() ).Id;
+                    int channelMediumTypeValueId = DefinedValueCache.Get( AvalancheUtilities.AppMediumValue.AsGuid() ).Id;
                     var interactionChannelService = new InteractionChannelService( rockContext );
                     var interactionService = new InteractionService( rockContext );
                     var interactionChannel = interactionChannelService.Queryable()
@@ -70,10 +70,10 @@ namespace Avalanche.Transactions
                     if ( interactionChannel == null )
                     {
                         interactionChannel = new InteractionChannel();
-                        interactionChannel.Name = SiteCache.Read( SiteId ?? 1 ).Name;
+                        interactionChannel.Name = SiteCache.Get( SiteId ?? 1 ).Name;
                         interactionChannel.ChannelTypeMediumValueId = channelMediumTypeValueId;
                         interactionChannel.ChannelEntityId = this.SiteId;
-                        interactionChannel.ComponentEntityTypeId = EntityTypeCache.Read<Rock.Model.Page>().Id;
+                        interactionChannel.ComponentEntityTypeId = EntityTypeCache.Get<Rock.Model.Page>().Id;
                         interactionChannelService.Add( interactionChannel );
                         rockContext.SaveChanges();
                     }

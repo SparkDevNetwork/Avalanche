@@ -16,7 +16,7 @@ using Rock.Plugin;
 
 namespace Avalanche.Migrations
 {
-    [MigrationNumber( 3, "1.7.0" )]
+    [MigrationNumber( 3, "1.8.0" )]
     class Layouts : Migration
     {
         public override void Up()

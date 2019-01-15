@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ namespace Avalanche.Components.ListView
                 aiLoading.IsRunning = value;
             }
         }
-        public ObservableCollection<ListElement> ItemsSource { get; set; }
+        public List<ListElement> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
 
         public bool CanRefresh { get; set; }
@@ -79,8 +79,7 @@ namespace Avalanche.Components.ListView
         public CardListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<ListElement>();
-            ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
+            ItemsSource = new List<ListElement>();
 
             for ( var i = 0; i < Columns; i++ )
             {
@@ -104,25 +103,9 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private void ItemsSource_CollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
-        {
-            if ( e.Action == NotifyCollectionChangedAction.Add )
-            {
-                AddItems( e );
-            }
-            else
-            {
-                ResetItems( e );
-            }
-        }
 
-        private void ResetItems( NotifyCollectionChangedEventArgs e )
-        {
-            _resetItems();
-        }
-
-        private void _resetItems()
-        {
+        public void Draw()
+         {
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
             gGrid.ColumnDefinitions.Clear();

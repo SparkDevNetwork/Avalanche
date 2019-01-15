@@ -1,5 +1,5 @@
 ﻿// <copyright>
-// Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,12 @@ using Rock.Plugin;
 
 namespace Avalanche.Migrations
 {
-    [MigrationNumber( 2, "1.7.0" )]
-    class Interactions : Migration
+    [MigrationNumber( 5, "1.8.0" )]
+    class AppAttributes : Migration
     {
         public override void Up()
         {
-            RockMigrationHelper.UpdateDefinedValue( Rock.SystemGuid.DefinedType.INTERACTION_CHANNEL_MEDIUM, "Avalanche App", "Used for tracking requests from an Avalanche app.", AvalancheUtilities.AppMediumValue );
+            RockMigrationHelper.AddGlobalAttribute( Rock.SystemGuid.FieldType.KEY_VALUE_LIST, "", "", "Avalanche Attributes", "Attributes to send to Avalanche to change it's behaviour.", 0, "", "C4FE37BA-1504-4D45-974A-06E472CE2780" );
         }
 
         public override void Down()

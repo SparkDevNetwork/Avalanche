@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ namespace Avalanche.Components.ListView
         public double Columns { get; set; } //does nothing
         public double ImageWidth { get; set; } = 0;
         public bool IsRefreshing { get; set; }
-        public ObservableCollection<ListElement> ItemsSource { get; set; }
-        //iOS version of this plugin crashes when we remove itesm from our itemsource so we proxy as a workaround
+        public List<ListElement> ItemsSource { get; set; }
+        //iOS version of this plugin crashes when we remove items from our itemsource so we proxy as a workaround
         public ObservableCollection<ListElement> ItemsSourceProxy { get; set; }
         public object SelectedItem { get; set; }
         public bool CanRefresh { get; set; }
@@ -64,43 +64,39 @@ namespace Avalanche.Components.ListView
         public CarouselListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<ListElement>();
+            ItemsSource = new List<ListElement>();
             ItemsSourceProxy = new ObservableCollection<ListElement>();
 
             Carousel.PositionSelected += Carousel_PositionSelected;
             Carousel.ItemsSource = ItemsSourceProxy;
-            ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
         }
 
-        private void ItemsSource_CollectionChanged( object sender, NotifyCollectionChangedEventArgs e )
+        public void Draw( )
         {
-            if ( e.Action == NotifyCollectionChangedAction.Add )
+            foreach (ListElement item in ItemsSource)
             {
-                foreach ( ListElement item in e.NewItems )
+                var add = true;
+                foreach (var i in ItemsSourceProxy)
                 {
-                    var add = true;
-                    foreach ( var i in ItemsSourceProxy )
+                    if (!string.IsNullOrEmpty(i.Id) && i.Id == item.Id)
                     {
-                        if ( !string.IsNullOrEmpty( i.Id ) && i.Id == item.Id )
-                        {
-                            i.ActionType = item.ActionType;
-                            i.Description = item.Description;
-                            i.DescriptionFontSize = item.DescriptionFontSize;
-                            i.DescriptionTextColor = item.DescriptionTextColor;
-                            i.FontSize = item.FontSize;
-                            i.Image = item.Image;
-                            i.Resource = item.Resource;
-                            i.TextColor = item.TextColor;
-                            i.Title = item.Title;
+                        i.ActionType = item.ActionType;
+                        i.Description = item.Description;
+                        i.DescriptionFontSize = item.DescriptionFontSize;
+                        i.DescriptionTextColor = item.DescriptionTextColor;
+                        i.FontSize = item.FontSize;
+                        i.Image = item.Image;
+                        i.Resource = item.Resource;
+                        i.TextColor = item.TextColor;
+                        i.Title = item.Title;
 
-                            add = false;
-                            break;
-                        }
+                        add = false;
+                        break;
                     }
-                    if ( add )
-                    {
-                        ItemsSourceProxy.Add( item );
-                    }
+                }
+                if (add)
+                {
+                    ItemsSourceProxy.Add(item);
                 }
             }
         }

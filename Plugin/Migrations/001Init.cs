@@ -16,7 +16,7 @@ using Rock.Plugin;
 
 namespace Avalanche.Migrations
 {
-    [MigrationNumber( 1, "1.7.0" )]
+    [MigrationNumber( 1, "1.8.0" )]
     class Init : Migration
     {
         public override void Up()

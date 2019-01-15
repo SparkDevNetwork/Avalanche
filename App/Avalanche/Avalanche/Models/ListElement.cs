@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ namespace Avalanche.Models
     public class ListElement
     {
         public string Id { get; set; }
+        public int Order { get; set; }
 
         public string Title { get; set; }
         public double FontSize { get; set; } = 20;

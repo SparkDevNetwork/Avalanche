@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -57,7 +57,7 @@ namespace Avalanche.Components.ListView
                 _isRefreshing = value;
             }
         }
-        public ObservableCollection<ListElement> ItemsSource { get; set; }
+        public List<ListElement> ItemsSource { get; set; }
         public object SelectedItem { get; set; }
         public bool CanRefresh { get; set; }
 
@@ -68,8 +68,7 @@ namespace Avalanche.Components.ListView
         public HorizontalListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<ListElement>();
-            ItemsSource.CollectionChanged += ItemsSource_CollectionChanged;
+            ItemsSource = new List<ListElement>();
 
             svScrollView.Scrolled += SvScrollView_Scrolled;
 
@@ -88,19 +87,8 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private void ItemsSource_CollectionChanged( object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e )
-        {
-            if ( e.Action == NotifyCollectionChangedAction.Add )
-            {
-                AddItems( e );
-            }
-            else
-            {
-                ResetItems( e );
-            }
-        }
 
-        private void ResetItems( NotifyCollectionChangedEventArgs e )
+        public void Draw( )
         {
             slStackLayout.Children.Clear();
             foreach ( var item in ItemsSource )
@@ -109,13 +97,6 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        private void AddItems( NotifyCollectionChangedEventArgs e )
-        {
-            foreach ( ListElement item in e.NewItems )
-            {
-                AddCell( item );
-            }
-        }
 
         protected override void OnSizeAllocated( double width, double height )
         {

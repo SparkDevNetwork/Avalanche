@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -113,6 +113,8 @@ namespace Avalanche.Blocks
             {
                 AddElement( element );
             }
+            listViewComponent.ItemsSource = listViewComponent.ItemsSource.OrderBy(e => e.Order).ToList();
+            listViewComponent.Draw();
             listViewComponent.IsRefreshing = false;
         }
 
@@ -139,7 +141,7 @@ namespace Avalanche.Blocks
                     break;
                 }
             }
-            listViewComponent.ItemsSource.Add( element );
+            listViewComponent.ItemsSource.Add(element);
         }
 
         #region Events
@@ -181,6 +183,8 @@ namespace Avalanche.Blocks
                     }
                 }
                 listViewComponent.IsRefreshing = false;
+                listViewComponent.ItemsSource = listViewComponent.ItemsSource.OrderBy(i => i.Order).ToList();
+                listViewComponent.Draw();
             }
             catch ( Exception ex )
             {

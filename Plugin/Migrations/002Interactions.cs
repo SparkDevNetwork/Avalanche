@@ -1,5 +1,4 @@
 ﻿// <copyright>
-// Copyright Southeast Christian Church
 
 //
 // Licensed under the  Southeast Christian Church License (the "License");
@@ -13,18 +12,20 @@
 // limitations under the License.
 // </copyright>
 //
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Rock.Plugin;
 
-namespace Avalanche.Attribute
+namespace Avalanche.Migrations
 {
-    [AttributeUsage( AttributeTargets.Class, AllowMultiple = true )]
-    public class ConvertForFieldType : System.Attribute
+    [MigrationNumber( 2, "1.8.0" )]
+    class Interactions : Migration
     {
-        public string FieldTypeName { get; private set; }
-        public ConvertForFieldType( Type fieldType ) => FieldTypeName = fieldType.FullName;
+        public override void Up()
+        {
+            RockMigrationHelper.UpdateDefinedValue( Rock.SystemGuid.DefinedType.INTERACTION_CHANNEL_MEDIUM, "Avalanche App", "Used for tracking requests from an Avalanche app.", AvalancheUtilities.AppMediumValue );
+        }
+
+        public override void Down()
+        {
+        }
     }
 }

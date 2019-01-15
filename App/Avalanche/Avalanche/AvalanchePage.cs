@@ -12,9 +12,6 @@
 // limitations under the License.
 // </copyright>
 //
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Avalanche.Models;
 using Avalanche.Utilities;
 using Avalanche.Views;
@@ -43,6 +40,7 @@ namespace Avalanche
             {
                 App.Navigation.Navigation.PushModalAsync( new LaunchPage() );
                 App.Current.Properties["SecondRun"] = true;
+                App.Current.SavePropertiesAsync();
             }
         }
 
@@ -67,6 +65,11 @@ namespace Avalanche
                 }
             }
             AvalancheNavigation.AllowResize = true;
+            var appAttributes = observableResource.Resource.Attributes;
+            if ( appAttributes != null && appAttributes.ContainsKey( "PreloadImages" ) )
+            {
+                App.Current.Properties["PreloadImages"] = appAttributes;
+            }
         }
 
         protected override void OnSizeAllocated( double width, double height )

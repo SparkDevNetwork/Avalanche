@@ -16,7 +16,7 @@ using Rock.Plugin;
 
 namespace Avalanche.Migrations
 {
-    [MigrationNumber( 4, "1.7.0" )]
+    [MigrationNumber( 4, "1.8.0" )]
     class CarouselListView : Migration
     {
         public override void Up()

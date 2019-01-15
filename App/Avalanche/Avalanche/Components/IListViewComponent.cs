@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,12 +26,14 @@ namespace Avalanche.Components
     {
         bool IsRefreshing { get; set; }
         bool CanRefresh { get; set; }
-        ObservableCollection<ListElement> ItemsSource { get; set; }
+        List<ListElement> ItemsSource { get; set; }
         object SelectedItem { get; set; }
         double Columns { get; set; }
 
         event EventHandler Refreshing;
         event EventHandler<SelectedItemChangedEventArgs> ItemSelected;
         event EventHandler<ItemVisibilityEventArgs> ItemAppearing;
+
+        void Draw();
     }
 }

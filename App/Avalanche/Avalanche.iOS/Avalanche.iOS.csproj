@@ -29,8 +29,6 @@
     <MtouchLink>None</MtouchLink>
     <MtouchDebug>true</MtouchDebug>
     <CodesignKey>iPhone Developer</CodesignKey>
-    <MtouchSdkVersion>
-    </MtouchSdkVersion>
     <CodesignProvision>
     </CodesignProvision>
     <MtouchExtraArgs>--registrar:static</MtouchExtraArgs>
@@ -136,6 +134,7 @@
     <BundleResource Include="Resources\OpenSans-Regular.ttf" />
     <BundleResource Include="Resources\OpenSans-Semibold.ttf" />
     <BundleResource Include="Resources\OpenSans-SemiboldItalic.ttf" />
+    <BundleResource Include="Resources\pixel.png" />
   </ItemGroup>
   <ItemGroup>
     <BundleResource Include="Resources\Default.png" />

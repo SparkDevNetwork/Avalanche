@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,18 +15,12 @@
 //
 using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Net.Http;
 using System.ServiceModel.Channels;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using System.Web;
 using System.Web.Compilation;
 using System.Web.Http;
-using System.Xml;
-using System.Xml.Serialization;
 using Avalanche.Models;
 using Avalanche.Transactions;
 using Newtonsoft.Json;
@@ -50,6 +44,8 @@ namespace Avalanche.Rest.Controllers
         public HomeRequest GetHome()
         {
             var homeRequest = new HomeRequest();
+
+            homeRequest.Attributes = GlobalAttributesCache.Value( "AvalancheAttributes" ).AsDictionary();
 
             var footer = GlobalAttributesCache.Value( "AvalancheFooterPage" ).AsIntegerOrNull();
             if ( footer != null )
@@ -79,7 +75,7 @@ namespace Avalanche.Rest.Controllers
                 HttpContext.Current.Items.Add( "CurrentPerson", person );
             }
 
-            var pageCache = PageCache.Read( id );
+            var pageCache = PageCache.Get( id );
             if ( pageCache == null || !pageCache.IsAuthorized( Authorization.VIEW, person ) )
             {
                 return new MobilePage();
@@ -105,7 +101,7 @@ namespace Avalanche.Rest.Controllers
             {
                 if ( block.IsAuthorized( Authorization.VIEW, person ) )
                 {
-                    var blockCache = BlockCache.Read( block.Id );
+                    var blockCache = BlockCache.Get( block.Id );
                     try
                     {
                         var control = ( RockBlock ) cmsPage.TemplateControl.LoadControl( blockCache.BlockType.Path );
@@ -137,8 +133,12 @@ namespace Avalanche.Rest.Controllers
         {
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
-            var blockCache = BlockCache.Read( id );
-            var pageCache = PageCache.Read( blockCache.PageId ?? 0 );
+            var blockCache = BlockCache.Get( id );
+            if ( blockCache == null )
+            {
+                return new MobileBlockResponse();
+            }
+            var pageCache = PageCache.Get( blockCache.PageId ?? 0 );
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
             string layoutPath = PageCache.FormatPath( theme, layout );
@@ -173,8 +173,8 @@ namespace Avalanche.Rest.Controllers
             var body = JsonConvert.DeserializeObject<Dictionary<string, string>>( content );
             var person = GetPerson();
             HttpContext.Current.Items.Add( "CurrentPerson", person );
-            var blockCache = BlockCache.Read( id );
-            var pageCache = PageCache.Read( blockCache.PageId ?? 0 );
+            var blockCache = BlockCache.Get( id );
+            var pageCache = PageCache.Get( blockCache.PageId ?? 0 );
             string theme = pageCache.Layout.Site.Theme;
             string layout = pageCache.Layout.FileName;
             string layoutPath = PageCache.FormatPath( theme, layout );
@@ -225,7 +225,7 @@ namespace Avalanche.Rest.Controllers
             InteractionInformation interactionInformation = JsonConvert.DeserializeObject<InteractionInformation>( content );
 
             var homePageId = GlobalAttributesCache.Value( "AvalancheHomePage" ).AsInteger();
-            var pageCache = PageCache.Read( homePageId );
+            var pageCache = PageCache.Get( homePageId );
             var siteId = pageCache.SiteId;
             var person = GetPerson();
 

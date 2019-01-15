@@ -1,6 +1,6 @@
 ﻿// <copyright>
 // Copyright Southeast Christian Church
-// Copyright Mark Lee
+
 //
 // Licensed under the  Southeast Christian Church License (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,7 @@ namespace Avalanche.Components.ListView
             }
         }
 
-        public ObservableCollection<ListElement> ItemsSource { get; set; }
+        public List<ListElement> ItemsSource { get; set; }
 
         public bool CanRefresh
         {
@@ -101,12 +101,22 @@ namespace Avalanche.Components.ListView
         public ThumbnailListView()
         {
             InitializeComponent();
-            ItemsSource = new ObservableCollection<ListElement>();
-            lvListView.ItemsSource = ItemsSource;
+            ItemsSource = new List<ListElement>();
+            lvListView.ItemsSource = new ObservableCollection<ListElement>();
 
             lvListView.Refreshing += LvListView_Refreshing;
             lvListView.ItemSelected += LvListView_ItemSelected;
             lvListView.ItemAppearing += LvListView_ItemAppearing;
+        }
+
+        public void Draw()
+        {
+            var source = ((ObservableCollection<ListElement>)lvListView.ItemsSource);
+            source.Clear();
+            foreach( var item in ItemsSource)
+            {
+                source.Add(item);
+            }
         }
 
     }
