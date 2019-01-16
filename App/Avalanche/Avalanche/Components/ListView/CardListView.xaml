@@ -5,7 +5,7 @@
     <ContentView.Content>
         <ScrollView x:Name="svScrollView">
             <ActivityIndicator x:Name="aiLoading" HeightRequest="20" WidthRequest="20" IsRunning="True" />
-            <Grid x:Name="gGrid" RowSpacing="15" ColumnSpacing="15">
+            <Grid x:Name="gGrid" ColumnSpacing="15">
             </Grid>
         </ScrollView>
     </ContentView.Content>
