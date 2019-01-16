@@ -15,16 +15,12 @@
 //
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Avalanche.CustomControls;
 using Avalanche.Models;
 using FFImageLoading.Forms;
 using FFImageLoading.Svg.Forms;
-using FFImageLoading.Transformations;
 using Xam.Forms.Markdown;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -105,7 +101,7 @@ namespace Avalanche.Components.ListView
 
 
         public void Draw()
-         {
+        {
             gGrid.Children.Clear();
             gGrid.RowDefinitions.Clear();
             gGrid.ColumnDefinitions.Clear();
@@ -150,6 +146,7 @@ namespace Avalanche.Components.ListView
         {
             var frame = new Frame()
             {
+                Margin = new Thickness( 10, 10, 10, 10 ),
                 Padding = new Thickness( 0, 0, 0, 10 ),
                 HasShadow = true
             };
@@ -187,7 +184,7 @@ namespace Avalanche.Components.ListView
                     sl.Children.Add( img );
                 }
             }
-            else
+            else if ( !string.IsNullOrWhiteSpace( item.Icon ) )
             {
                 IconLabel icon = new IconLabel()
                 {
@@ -200,22 +197,28 @@ namespace Avalanche.Components.ListView
                 sl.Children.Add( icon );
             }
 
-            Label title = new Label()
+            if ( !string.IsNullOrWhiteSpace( item.Title ) )
             {
-                Text = item.Title,
-                HorizontalOptions = LayoutOptions.Center,
-                FontSize = item.FontSize,
-                TextColor = item.TextColor,
-                Margin = new Thickness( 10, 0 )
-            };
-            sl.Children.Add( title );
+                Label title = new Label()
+                {
+                    Text = item.Title,
+                    HorizontalOptions = LayoutOptions.Center,
+                    FontSize = item.FontSize,
+                    TextColor = item.TextColor,
+                    Margin = new Thickness( 10, 0 )
+                };
+                sl.Children.Add( title );
+            }
 
-            MarkdownView description = new MarkdownView()
+            if ( !string.IsNullOrWhiteSpace( item.Description ) )
             {
-                Markdown = item.Description,
-                Margin = new Thickness( 10, 0 )
-            };
-            sl.Children.Add( description );
+                MarkdownView description = new MarkdownView()
+                {
+                    Markdown = item.Description,
+                    Margin = new Thickness( 10, 0 )
+                };
+                sl.Children.Add( description );
+            }
 
             TapGestureRecognizer tgr = new TapGestureRecognizer()
             {
