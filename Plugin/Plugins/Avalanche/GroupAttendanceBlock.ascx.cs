@@ -13,16 +13,16 @@
 // </copyright>
 //
 using System;
-using System.ComponentModel;
-using Rock.Model;
-using Rock.Security;
-using Rock.Data;
-using System.Linq;
 using System.Collections.Generic;
-using Rock;
+using System.ComponentModel;
+using System.Linq;
 using Avalanche;
 using Avalanche.Models;
 using Newtonsoft.Json;
+using Rock;
+using Rock.Data;
+using Rock.Model;
+using Rock.Security;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -82,7 +82,7 @@ namespace RockWeb.Plugins.Avalanche
             if ( group.Schedule != null )
             {
                 AttendanceService attendanceService = new AttendanceService( rockContext );
-                var occurances = attendanceService.Queryable().Where( a => a.GroupId == group.Id )
+                var occurances = attendanceService.Queryable().Where( a => a.Occurrence.GroupId == group.Id )
                     .DistinctBy( s => s.StartDateTime )
                     .Select( s => s.StartDateTime )
                     .Take( 50 )
@@ -156,13 +156,13 @@ namespace RockWeb.Plugins.Avalanche
 
                     var attendanceData = new AttendanceService( rockContext )
                         .Queryable()
-                        .Where( a => a.GroupId == group.Id && a.StartDateTime == occurenceDate )
+                        .Where( a => a.Occurrence.GroupId == group.Id && a.StartDateTime == occurenceDate )
                         .ToList();
 
                     if ( didNotMeetOverride == null )
                     {
                         didNotMeet = ( attendanceData.Where( a => a.DidAttend == true ).Count() <= 0
-                                       && attendanceData.Where( a => a.DidNotOccur == true ).Count() > 0 );
+                                       && attendanceData.Where( a => a.Occurrence.DidNotOccur == true ).Count() > 0 );
                     }
                     else
                     {
@@ -239,28 +239,28 @@ namespace RockWeb.Plugins.Avalanche
             return form;
         }
 
-        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> body )
         {
 
             if ( request == "save" )
             {
-                return SaveAttendance( Body );
+                return SaveAttendance( body );
             }
 
-            GetGroupMembers( Body["groupId"] );
+            GetGroupMembers( body["groupId"] );
 
-            if ( Body.ContainsKey( "schedule" ) )
+            if ( body.ContainsKey( "schedule" ) )
             {
                 bool? didNotMeetOverride = null;
                 if ( request == "didNotMeet" )
                 {
-                    didNotMeetOverride = Body["didNotMeet"].AsBoolean();
+                    didNotMeetOverride = body["didNotMeet"].AsBoolean();
                 }
 
                 var response = new FormResponse
                 {
                     Success = true,
-                    FormElementItems = GetForm( Body["schedule"], didNotMeetOverride: didNotMeetOverride )
+                    FormElementItems = GetForm( body["schedule"], didNotMeetOverride: didNotMeetOverride )
                 };
 
                 return new MobileBlockResponse()
@@ -294,7 +294,7 @@ namespace RockWeb.Plugins.Avalanche
                     var attendanceService = new AttendanceService( rockContext );
                     var attendanceData = attendanceService
                         .Queryable( "PersonAlias" )
-                        .Where( a => a.GroupId == group.Id && a.StartDateTime == occurenceDate );
+                        .Where( a => a.Occurrence.GroupId == group.Id && a.StartDateTime == occurenceDate );
 
                     var personAliasService = new PersonAliasService( rockContext );
 
@@ -308,28 +308,19 @@ namespace RockWeb.Plugins.Avalanche
                             var attendancePerson = new PersonService( rockContext ).Get( personId );
                             if ( attendancePerson != null )
                             {
-                                attendanceItem = new Attendance()
-                                {
-                                    Id = 0,
-                                    PersonAliasId = attendancePerson.PrimaryAliasId,
-                                    GroupId = group.Id,
-                                    ScheduleId = group.ScheduleId,
-                                    StartDateTime = occurenceDate,
-                                    CampusId = group.CampusId
-                                };
-                                attendanceService.Add( attendanceItem );
+                                attendanceService.AddOrUpdate( attendancePerson.PrimaryAliasId ?? 0, occurenceDate, group.Id, null, group.ScheduleId, group.CampusId );
                             }
                         }
 
                         if ( body["didNotMeet"].AsBoolean() )
                         {
                             attendanceItem.DidAttend = false;
-                            attendanceItem.DidNotOccur = true;
+                            attendanceItem.Occurrence.DidNotOccur = true;
                         }
                         else
                         {
                             List<string> groupMemberAttendedIds = groupMemberAttendedIds = body["groupMembers"].SplitDelimitedValues( false ).ToList();
-                            attendanceItem.DidNotOccur = false;
+                            attendanceItem.Occurrence.DidNotOccur = false;
                             attendanceItem.DidAttend = groupMemberAttendedIds.Contains( personId.ToString() );
                         }
                     }
