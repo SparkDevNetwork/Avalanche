@@ -14,19 +14,18 @@
 // </copyright>
 //
 using System;
-using System.ComponentModel;
-using Rock.Model;
-using System.Web.UI;
-using Rock.Web.Cache;
-using Rock.Data;
-using System.Linq;
 using System.Collections.Generic;
-using Rock;
+using System.ComponentModel;
+using System.Linq;
+using System.Web.UI;
 using Avalanche;
-using Avalanche.Models;
-using Rock.Attribute;
 using Avalanche.Attribute;
-using Newtonsoft.Json;
+using Avalanche.Models;
+using Rock;
+using Rock.Attribute;
+using Rock.Data;
+using Rock.Model;
+using Rock.Web.Cache;
 
 namespace RockWeb.Plugins.Avalanche
 {
@@ -40,6 +39,7 @@ namespace RockWeb.Plugins.Avalanche
     [DefinedValueField( AvalancheUtilities.MobileListViewComponent, "Component", "Different components will display your list in different ways." )]
     [CodeEditorField( "Lava", "Lava to display list items.", Rock.Web.UI.Controls.CodeEditorMode.Lava, defaultValue: defaultLava )]
     [BooleanField( "Only Show If Leader", "Should groups be hidden from all users except leaders?", true )]
+    [MarkdownField( "No Groups Markdown", "Markdown to show if no groups can be found.", defaultValue: "We are sorry, we could not find any groups." )]
     public partial class GroupListBlock : AvalancheBlock
     {
         public const string defaultLava = @"[
@@ -78,6 +78,23 @@ namespace RockWeb.Plugins.Avalanche
 
         public override MobileBlock GetMobile( string parameter )
         {
+            var groups = GetGroups();
+
+            CustomAttributes["Content"] = AvalancheUtilities.ProcessLava(
+                GetAttributeValue( "NoGroupsMarkdown" ),
+                CurrentPerson,
+                parameter,
+                GetAttributeValue( "EnabledLavaCommands" ) );
+
+            if ( !groups.Any() )
+            {
+                return new MobileBlock()
+                {
+                    BlockType = "Avalanche.Blocks.MarkdownDetail",
+                    Attributes = CustomAttributes
+                };
+            }
+
             AvalancheUtilities.SetActionItems( GetAttributeValue( "ActionItem" ),
                                    CustomAttributes,
                                    CurrentPerson, AvalancheUtilities.GetMergeFields( CurrentPerson ),
@@ -85,14 +102,13 @@ namespace RockWeb.Plugins.Avalanche
                                    parameter );
 
             var valueGuid = GetAttributeValue( "Component" );
-            var value = DefinedValueCache.Read( valueGuid );
+            var value = DefinedValueCache.Get( valueGuid );
             if ( value != null )
             {
                 CustomAttributes["Component"] = value.GetAttributeValue( "ComponentType" );
             }
 
             CustomAttributes["InitialRequest"] = parameter; //Request for pull to refresh
-            var groups = GetGroups();
             Dictionary<string, object> mergeObjects = new Dictionary<string, object>
             {
                 { "Groups", groups }
@@ -103,7 +119,7 @@ namespace RockWeb.Plugins.Avalanche
                                                               parameter,
                                                               GetAttributeValue( "EnabledLavaCommands" ),
                                                               mergeObjects );
-            content = content.Replace("\\", "\\\\");
+            content = content.Replace( "\\", "\\\\" );
             CustomAttributes["Content"] = content;
 
             return new MobileBlock()
@@ -113,7 +129,7 @@ namespace RockWeb.Plugins.Avalanche
             };
         }
 
-        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> Body )
+        public override MobileBlockResponse HandleRequest( string request, Dictionary<string, string> body )
         {
             var groups = GetGroups();
             Dictionary<string, object> mergeObjects = new Dictionary<string, object>
@@ -161,9 +177,9 @@ namespace RockWeb.Plugins.Avalanche
 
             var qry = groupService.Queryable()
                 .Where( g => ids.Contains( g.Id ) )
-                .SelectMany( g => g.Groups )
+                .SelectMany( g => g.Groups.Where( g2 => g2.IsActive ) )
                 .Join(
-                    groupMemberService.Queryable(),
+                    groupMemberService.Queryable().Where( gm => gm.GroupMemberStatus == GroupMemberStatus.Active ),
                     g => g.Id,
                     m => m.GroupId,
                     ( g, m ) => new { Group = g, Member = m } );
