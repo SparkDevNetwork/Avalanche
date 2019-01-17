@@ -73,7 +73,7 @@ namespace Avalanche
             var appAttributes = observableResource.Resource.Attributes;
             if (appAttributes!=null && appAttributes.ContainsKey("PreloadImages")) 
             {
-                App.Current.Properties["PreloadImages"] = appAttributes;
+                App.Current.Properties["PreloadImages"] = appAttributes["PreloadImages"];
             }
         }
 
