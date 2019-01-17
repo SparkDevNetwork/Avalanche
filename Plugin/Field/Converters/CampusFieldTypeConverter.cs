@@ -33,7 +33,7 @@ namespace Avalanche.Field.Converters
             {
                 Type = FormElementType.Picker,
                 Keyboard = Keyboard.Text,
-                Options = CampusCache.All().ToDictionary( c => c.Name, c => c.Guid.ToString() )
+                Options = CampusCache.All().ToDictionary( c => c.Guid.ToString(), c => c.Name )
             };
 
             return element;

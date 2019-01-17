@@ -53,7 +53,7 @@ namespace Avalanche.Field.Converters
 
                 if ( definedTypeValue != null )
                 {
-                    element.Options = values.ToDictionary( dv => dv.Value, dv => dv.Guid.ToString() );
+                    element.Options = values.ToDictionary( dv => dv.Guid.ToString(), dv => dv.Value );
                 }
 
                 var allowmultiple = attribute.QualifierValues.GetValueOrNull( "allowmultiple" );
@@ -62,7 +62,6 @@ namespace Avalanche.Field.Converters
                     element.Type = FormElementType.CheckboxList;
                 }
             }
-
 
             return element;
         }
