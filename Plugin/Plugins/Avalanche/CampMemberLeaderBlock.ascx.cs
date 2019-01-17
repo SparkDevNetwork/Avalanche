@@ -119,11 +119,11 @@ namespace RockWeb.Plugins.Avalanche
 
                 if ( member.Person.PhotoUrl.Contains( ".svg" ) )
                 {
-                    groupMemeber.Icon = "fa fa-user";
+                    groupMemeber.Icon = "fa fa-user-circle";
                 }
                 else
                 {
-                    groupMemeber.Image = url + member.Person.PhotoUrl + "&mode=crop&width=90&height=90";
+                    groupMemeber.Image = url + member.Person.PhotoUrl + "&mode=crop&scale=both&w=90&h=90&s.roundcorners=100&margin=5";
                 }
 
                 groupMembers.Add( groupMemeber );
