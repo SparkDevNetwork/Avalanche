@@ -79,6 +79,8 @@ namespace RockWeb.Plugins.Avalanche
             family.Add(
                 new ListElement
                 {
+					Image = "https://rock.secc.org/Content/SEApp/InvisibleStripe.png",
+                    Title = CurrentPerson.FullName,
                     Id = CurrentPersonAlias.Guid.ToString(),
                     Description = GetInfo( CurrentPerson, true )
                 } );
@@ -87,6 +89,8 @@ namespace RockWeb.Plugins.Avalanche
             {
                 family.Add( new ListElement
                 {
+					Image = "https://rock.secc.org/Content/SEApp/InvisibleStripe.png",
+                    Title = member.Person.FullName,
                     Id = member.Person.PrimaryAlias.Guid.ToString(),
                     Description = GetInfo( member.Person, false )
                 } );
@@ -131,7 +135,7 @@ namespace RockWeb.Plugins.Avalanche
 
             if ( person.BirthDate != null )
             {
-                markdown.Append( string.Format( "## {0} \n {1} *({2})* \n", person.FullName, person.FormatAge(), person.BirthDate.Value.ToString( "MM/dd/yyyy" ) ) );
+                markdown.Append( string.Format( "{0} *({1})* \n",  person.FormatAge(), person.BirthDate.Value.ToString( "MM/dd/yyyy" ) ) );
             }
             markdown.Append( person.Gender != Gender.Unknown ? person.Gender.ToString() + "\n" : string.Empty );
             markdown.Append( person.MaritalStatusValueId.DefinedValue() );
