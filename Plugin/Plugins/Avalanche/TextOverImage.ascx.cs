@@ -54,7 +54,11 @@ namespace RockWeb.Plugins.Avalanche
                                                                 CurrentPerson,
                                                                 "",
                                                                 GetAttributeValue( "EnabledLavaCommands" ) );
-            lLava.Text = GetAttributeValue( "Text" );
+            lLava.Text = AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
+                                                                                CurrentPerson,
+                                                                                "",
+                                                                                GetAttributeValue( "EnabledLavaCommands" )
+                                                                                );
         }
 
         public override MobileBlock GetMobile( string parameter )
@@ -67,7 +71,12 @@ namespace RockWeb.Plugins.Avalanche
 
             if ( !string.IsNullOrWhiteSpace( GetAttributeValue( "Text" ) ) )
             {
-                CustomAttributes["Text"] = GetAttributeValue( "Text" );
+                //CustomAttributes["Text"] = GetAttributeValue( "Text" );
+                CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ),
+                                                                                CurrentPerson,
+                                                                                parameter,
+                                                                                GetAttributeValue( "EnabledLavaCommands" )
+                                                                                ) );
             }
 
             if ( GetAttributeValue( "AspectRatio" ).AsDouble() != 0 )

@@ -64,8 +64,8 @@ namespace RockWeb.Plugins.Avalanche
                                    parameter );
 
 
-            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter ) );
-            CustomAttributes.Add( "Icon", AvalancheUtilities.ProcessLava( GetAttributeValue( "Icon" ), CurrentPerson, parameter ) );
+            CustomAttributes.Add( "Text", AvalancheUtilities.ProcessLava( GetAttributeValue( "Text" ), CurrentPerson, parameter, GetAttributeValue( "EnabledLavaCommands" ) ) );
+            CustomAttributes.Add( "Icon", AvalancheUtilities.ProcessLava( GetAttributeValue( "Icon" ), CurrentPerson, parameter, GetAttributeValue( "EnabledLavaCommands" ) ) );
 
             return new MobileBlock()
             {
