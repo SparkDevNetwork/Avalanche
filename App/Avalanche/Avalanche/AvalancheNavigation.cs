@@ -43,7 +43,7 @@ namespace Avalanche
                     return;
                 }
             }
-            App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
+            App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ), false );
         }
 
         public static void RemovePage()
@@ -62,7 +62,7 @@ namespace Avalanche
                     return;
                 }
             }
-            await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ) );
+            await App.Navigation.Navigation.PushAsync( new MainPage( "page/" + resource, parameter ), false );
             App.Navigation.Navigation.RemovePage( currentPage );
         }
 
